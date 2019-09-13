@@ -1,0 +1,283 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[includeheadfoot,margin=2cm]{geometry}
+\usepackage{times}
+\usepackage{booktabs}
+\usepackage{xspace}
+\frenchspacing
+\renewcommand{\ttdefault}{cmtt}
+\author{Thor Kristoffersen}
+\date{\today}
+\title{Guide to Building a Machine}
+\newcommand{\PC}{\textbf{program counter}\xspace}
+\newcommand{\SP}{\textbf{stack pointer}\xspace}
+\newcommand{\TERM}{\textbf{terminated}\xspace}
+\newcommand{\F}{\textbf{false}\xspace}
+\newcommand{\T}{\textbf{true}\xspace}
+\newcommand{\num}[1]{\texttt{#1}\xspace}
+\newcommand{\hex}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 16}}$\xspace}
+\newcommand{\bin}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 2}}$\xspace}
+\newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
+\newcommand{\op}[1]{#1}
+\newcommand{\EXIT}    [1]{\op{\hex{00}}\xspace}
+\newcommand{\NOP}     [1]{\op{\hex{01}}\xspace}
+\newcommand{\JUMP}    [1]{\op{\hex{02}}\xspace}
+\newcommand{\JUMPZERO}[1]{\op{\hex{03}}\xspace}
+\newcommand{\SETSP}   [1]{\op{\hex{04}}\xspace}
+\newcommand{\GETPC}   [1]{\op{\hex{05}}\xspace}
+\newcommand{\GETSP}   [1]{\op{\hex{06}}\xspace}
+\newcommand{\PUSHZ}   [1]{\op{\hex{07}}\xspace}
+\newcommand{\PUSHB}   [1]{\op{\hex{08}}\xspace}
+\newcommand{\PUSHS}   [1]{\op{\hex{09}}\xspace}
+\newcommand{\PUSHI}   [1]{\op{\hex{0A}}\xspace}
+\newcommand{\PUSHL}   [1]{\op{\hex{0B}}\xspace}
+\begin{document}
+
+\maketitle
+
+\noindent
+This film contains programs that can be executed on a machine.
+The purpose of this part of the film is to guide you through the process of building this machine.
+To understand this guide, you need to have knowledge of basic 20th century mathematics and physics.
+
+You will start by building a very simple machine, and then you will extend this machine through several stages, so that by the end you will have a fully functional machine.
+
+When you have finished the machine, you are not quite ready to run programs yet.
+First you will need to install in the machine an initial program, which is supplied here.
+
+\comment{Provide time estimates for the above tasks.}
+
+\section{Building the Machine}
+\label{sec:building-machine}
+
+By following the instructions here, you can develop the machine through several stages, each stage leading to a more capable machine than the preceding one.
+
+Number systems used here include decimal, binary, and hexadecimal.
+All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
+Further detail on binary and hexadecimal notation can be found in Appendixes~\ref{sec:binary-notation} and \ref{sec:hexadecimal-notation}.
+
+\subsection{Storage}
+
+To build the machine, you first need storage to represent state consisting of binary digits (bits).
+A storage \emph{element} is a group of bits forming a unit.
+Each element has an identity, so that it can be uniquely referred to, and the contents can retrieved or stored in one atomic operation.
+This machine employs element sizes of 1, 8, and 64 bits.
+The storage is divided into three categories:
+\begin{description}
+\item[Memory] 
+The memory consists of a number of 8-bit elements, up to a maximum of $2^{64}$.
+Each memory element can be referred to using an integer in the range from $0$ to $2^{64} - 1$.
+\item[Registers] 
+There are two registers: the \PC and the \SP.
+Both of these are 64-bit elements.
+The contents of either register are interpreted as a non-negative integer referring to a memory element.
+\item[Flags] 
+There is one flag: the \TERM flag, which is a 1-bit element.
+This bit represents a value of \T or \F.
+The machine will stop if and only if this is set to \T.
+\end{description}
+We need to define a few terms to talk about storage operations.
+\begin{itemize}
+\item ``The value of an element'' means the contents as retrieved from that element.
+\item ``To set the value of an element to $x$'' means to store the value of $x$ in that element.
+\item ``To increment an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $x + n$.
+\item ``To decrement an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $x - n$.
+\item ``The value of byte $n$ in $x$'' means the contents of the 8-bit subsequence of $x$ from bit number $8n+7$ to bit number $8n$.
+\item ``To set byte $n$ in $x$ to $y$'' means to store the 8-bit sequence $y$ in the 8-bit subsequence of $x$ from bit number $8n+7$ to bit number $8n$, while keeping all other bits of $x$ unchanged.
+\end{itemize}
+Typically these would be basic operations in your implementation.
+
+\comment{Describe tests to verify that the storage is working correctly.}
+
+\subsection{A Basic Machine}
+
+When the storage has been implemented and is working correctly, you can proceed with implementing a basic version of the machine.
+For practical reasons we will build this version of the machine with a fixed memory size of $2^{8}$ elements.
+
+Machine operation proceeds through two phases: first the storage is initialized, and then the main procedure is executed.
+
+\subsubsection{Storage Initialization}
+
+To initialize the storage, you need to set registers and flags to predefined values.
+The \PC is set to the address of the first memory element, that is, $0$.
+The \SP is set to the first element beyond the range of addressable elements, that is $2^{8}$.
+The values are given in the table below.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Register or flag & Value                   \\
+    \hline
+    \PC              & \hex{0000000000000000}  \\
+    \SP              & \hex{0000000000000100}  \\
+    \TERM            & \F                      \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{The Main Procedure}
+
+When you have initialized the storage, simply execute the main procedure repeatedly until the value of the \TERM flag is \T.
+The main procedure must carry out the following steps.
+\begin{enumerate}
+\item Set the 64-bit value $p$ to the value of \PC.
+\item Increment \PC.
+\item Retrieve the 8-bit value of memory element $p$.
+\item If that value is
+  \begin{itemize}
+  \item \EXIT{}, then set the value of  \TERM to \T.
+  \item \NOP{}, then do nothing.
+  \item \JUMP{}, then do as follows:
+    \begin{enumerate}
+    \item Set the value of $a$ to 0.
+    \item Set the value of $i$ to 0.
+    \item Do the following 8 times:
+      \begin{enumerate}
+      \item Set byte $i$ of $a$ to memory element \SP.
+      \item Increment \SP by 1.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Set \PC to $a$.
+    \end{enumerate}
+  \item \PUSHL{}, then do as follows:
+    \begin{enumerate}
+    \item Decrement \PC by 8.
+    \item Set the value of $s$ to the value of \SP.
+    \item Do the following 8 times:
+      \begin{enumerate}
+      \item Set the value of memory element $s$ to the value of memory element \PC.
+      \item Increment \PC by 1.
+      \item Increment $s$ by 1.
+      \end{enumerate}
+    \end{enumerate}
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{Testing the Basic Machine}
+
+To test the machine, first initialize all memory elements to the value \hex{00}, and then set the following memory elements to the provided values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Memory element         & Value \\
+    \hline
+    \hex{0000000000000000} & \hex{01} \\
+    \hex{0000000000000001} & \hex{0B} \\
+    \hex{0000000000000002} & \hex{0F} \\
+    \hex{0000000000000003} & \hex{00} \\
+    \hex{0000000000000004} & \hex{00} \\
+    \hex{0000000000000005} & \hex{00} \\
+    \hex{0000000000000006} & \hex{00} \\
+    \hex{0000000000000007} & \hex{00} \\
+    \hex{0000000000000008} & \hex{00} \\
+    \hex{0000000000000009} & \hex{00} \\
+    \hex{000000000000000A} & \hex{02} \\
+    \hline
+  \end{tabular}
+\end{center}
+
+Now start the machine.
+When it terminates, all memory elements should remain unchanged, except the value of memory element \hex{00000000000000F8}, which should change to \hex{0F}.
+The registers and flags should have the following values:
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Register or flag & Value                   \\
+    \hline
+    \PC              & \hex{0000000000000010}  \\
+    \SP              & \hex{0000000000000100}  \\
+    \TERM            & \T                      \\
+    \hline
+  \end{tabular}
+\end{center}
+
+
+If the machine does not terminate or you did not get exactly these results, you must have made a mistake somewhere.
+Do not proceed with the next step until you have rectified the mistake and obtained the correct results.
+
+\subsection{A More Capable Machine}
+
+TODO
+
+\section{Building the Devices}
+\label{sec:building-devices}
+
+At this point you should have a machine with fully functional computational capabilities.
+What's missing are the devices that allow the machine to consume data from its environment and to produce data to its environment.
+There are four devices:
+\begin{itemize}
+\item The \emph{Image Input} device allows input of images as a two-dimensional matrix of gray-scale values.
+  This device is very important, because it is what enables the machine to load programs encoded as images on the film.
+\item The \emph{Image Output} device allows output of color images.
+  Moving images are supported by outputting a time series of still images.
+\item The \emph{Audio Output} device allows output of audio signals as a time series of amplitude values.
+\item The \emph{Text Output} device allows output of text as a stream of characters.
+\end{itemize}
+The descriptions below will only explain the correspondence between machine events and real world events.
+It is up to you to make sure that the interpretation of real world events is faithfully implemented.
+
+\subsection{Image Input}
+
+\subsection{Image Output}
+
+\subsection{Audio Output}
+
+\subsection{Text Output}
+
+\section{Installing the Initial Program}
+
+\appendix
+
+\section{Binary Notation}
+\label{sec:binary-notation}
+
+Each storage element contains a binary value, that is, a sequence of binary digits that can be retrieved or modified in one atomic operation.
+
+In this documentation, individual binary digits are referred to using non-negative integers, listed in decreasing order.  For example,
+\begin{itemize}
+\item In the binary number \bin{1000}, bit number 3 is 1.
+\item In the binary number \bin{0001}, bit number 0 is 1.
+\end{itemize}
+
+When binary values represent integers, each bit represents two to the power of the bit number.
+In other words, bit number 0 is always the least significant bit.
+
+\section{Hexadecimal Notation}
+\label{sec:hexadecimal-notation}
+
+For convenience, binary numbers are normally written in hexadecimal notation.
+Each hexadecimal digit corresponds to a group of four binary digits, as shown in the following table.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Hexadecimal digit & Group of binary digits \\
+    \hline
+    \num{0}           & \num{0000}   \\
+    \num{1}           & \num{0001}   \\
+    \num{2}           & \num{0010}   \\
+    \num{3}           & \num{0011}   \\
+    \num{4}           & \num{0100}   \\
+    \num{5}           & \num{0101}   \\
+    \num{6}           & \num{0110}   \\
+    \num{7}           & \num{0111}   \\
+    \num{8}           & \num{1000}   \\
+    \num{9}           & \num{1001}   \\
+    \num{A}           & \num{1010}   \\
+    \num{B}           & \num{1011}   \\
+    \num{C}           & \num{1100}   \\
+    \num{D}           & \num{1101}   \\
+    \num{E}           & \num{1110}   \\
+    \num{F}           & \num{1111}   \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{The Initial Program}
+\label{sec:initial-program}
+
+\comment{Include a listing in hex of the initial program.}
+\end{document}
