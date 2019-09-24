@@ -5,6 +5,7 @@
 \usepackage{times}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{mathptmx}
 \usepackage{tikz}
 \usepackage{xspace}
 \frenchspacing
@@ -56,6 +57,7 @@ First you will need to install in the machine an initial program, which is suppl
 \label{sec:building-machine}
 
 By following the instructions here, you can develop the machine through several stages, each stage leading to a more capable machine than the preceding one.
+Only when you have obtained the correct test results for each stage should you proceed with the following stage.
 
 Number systems used here include decimal, binary, and hexadecimal.
 All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
@@ -73,6 +75,7 @@ The storage is divided into three categories:
 \item[Memory] 
 The memory consists of a number of 8-bit elements, up to a maximum of $2^{64}$.
 Each memory element is named by an integer in the range from $0$ to $2^{64} - 1$.
+When testing the storage, and when building the first versions of the machine, we will limit the number of memory elements to $2^8$.
 \item[Registers] 
 There are two registers, named respectively the \PC and the \SP.
 Both of these are 64-bit elements.
@@ -80,8 +83,14 @@ The contents of either register are interpreted as a non-negative integer referr
 \item[Flags] 
 There is one flag, named the \TERM flag, which is a 1-bit element.
 This bit represents a value of \T or \F.
-The machine will stop if and only if this is set to \T.
+The machine will stop if and only if this has a value of \T.
 \end{description}
+In addition to the storage elements defined here, it is sometimes necessary to use additional storage elements temporarily.
+These will be introduced whenever needed and are named by single letters.
+
+\subsection{Storage Operations}
+\label{sec:storage-operations}
+
 We need to define a few terms to talk about storage operations.
 \begin{itemize}
 \item ``The value of an element'' means the contents as retrieved from that element.
@@ -93,23 +102,25 @@ We need to define a few terms to talk about storage operations.
 \end{itemize}
 These should be basic operations in your implementation.
 
-To test that the storage works as it should, do the following for every storage element:
+\subsection{Testing the Storage}
+
+To test that the storage works as it should, do the following tests several times for every storage element:
 \begin{enumerate}
-\item Check that storing and getting the value of an element works.
+\item Verify that storing and getting the value of an element works.
   \begin{enumerate}
   \item Select a random bit sequence, $x$, of the same size, $s$, as the storage element.
   \item Store this bit sequence in the element.
   \item Verify that the value of the element is $x$.
   \end{enumerate}
-\item Check that your operations for incrementing and decrementing an element work.
+\item Verify that your operations for incrementing and decrementing an element work.
   \begin{enumerate}
   \item Select a random bit sequence, $n$, of size $s$, different from zero.
   \item Increment the element by $n$.
-  \item Verify that the value of the element is $(x + n) \mod s$.
+  \item Verify that the value of the element is $(x + n) \mod 2^s$.
   \item Decrement the element by $n$.
   \item Verify that the value of the element is $x$.
   \end{enumerate}
-\item Check that your byte operations work for every byte, $b$, from $0$ to $7$.
+\item Verify that your byte operations work for every byte, $b$, from $0$ to $7$.
   \begin{enumerate}
   \item Get the value of all bytes in $x$.
   \item Select a random bit sequence, $y$, of size $8$, different from the value of byte $b$.
@@ -119,9 +130,74 @@ To test that the storage works as it should, do the following for every storage 
   \end{enumerate}
 \end{enumerate}
 
+\subsection{A Couple of Basic Procedures}
+
+Some basic procedures are heavily used by the machine.
+These use the storage operations in Section~\ref{sec:storage-operations}.
+
+\subsubsection{Push 64-bit Value}
+
+Assume that we have an existing 64-bit element called $x$.
+The expression ``Push the 64-bit value $x$'', means to do the following steps:
+\begin{enumerate}
+\item Set the value of element $i$ to 8;
+\item Do the following 8 times:
+  \begin{enumerate}
+  \item Decrement $i$ by 1.
+  \item Decrement \SP by 1.
+  \item Set memory element \SP to byte $i$ of $x$.
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Pop 64-bit Value}
+
+The expression ``Pop the 64-bit value $x$'', means to do the following steps:
+\begin{enumerate}
+\item Set the value of the 64-bit element $x$ to 0;
+\item Set the value of element $i$ to 0;
+\item Do the following 8 times:
+  \begin{enumerate}
+  \item Set byte $i$ of $x$ to memory element \SP.
+  \item Increment $i$ by 1.
+  \item Increment \SP by 1.
+  \end{enumerate}
+\end{enumerate}
+The 64-bit element $x$ can now be used by other procedures.
+
+\subsection{Testing the Basic Procedures}
+
+To test the basic procedures, do as follows:
+\begin{enumerate}
+\item Set \SP to \hex{0000000000000008}.
+\item Set the 64-bit value $x$ to \hex{0123456789ABCDEF}.
+\item Push the 64-bit value $x$.
+\item Pop the 64-bit value $y$.
+\item Verify that $x=y$.
+\item Verify that the value of \SP is \hex{0000000000000008}.
+\item Verify that the contents of the first eight memory elements are as in the following table.
+\end{enumerate}
+
+\begin{center}
+  \begin{tabular}{@{}lr@{}}
+    \hline
+    Storage element        & Value    \\
+    \hline
+    \hex{0000000000000000} & \hex{EF} \\
+    \hex{0000000000000001} & \hex{CD} \\
+    \hex{0000000000000002} & \hex{AB} \\
+    \hex{0000000000000003} & \hex{89} \\
+    \hex{0000000000000004} & \hex{67} \\
+    \hex{0000000000000005} & \hex{45} \\
+    \hex{0000000000000006} & \hex{23} \\
+    \hex{0000000000000007} & \hex{01} \\
+    \hline
+  \end{tabular}
+\end{center}
+
+
 \subsection{First Version of The Machine}
 
-When the storage has been implemented and is working correctly, you can proceed with implementing a basic version of the machine.
+You can now proceed with implementing a basic version of the machine.
 For practical reasons we will build this version of the machine with a fixed memory size of $2^{8}$ elements.
 
 Machine operation proceeds through two phases: first the storage is initialized, and then the main procedure is executed.
@@ -130,7 +206,7 @@ Machine operation proceeds through two phases: first the storage is initialized,
 
 To initialize the storage, you need to set registers and flags to predefined values.
 The \PC is set to the address of the first memory element, that is, $0$.
-The \SP is set to the first element beyond the range of addressable elements, that is $2^{8}$.
+The \SP is set to the first element beyond the range of addressable elements, that is, $2^{8}$ in this version of the machine.
 The values are given in the table below.
 
 \begin{center}
@@ -159,60 +235,32 @@ The main procedure must carry out the following steps.
   \item \NOP{}, then do nothing.
   \item \JUMP{}, then do as follows:
     \begin{enumerate}
-    \item Set the value of $a$ to 0.
-    \item Set the value of $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set byte $i$ of $a$ to memory element \SP.
-      \item Increment \SP by 1.
-      \item Increment $i$ by 1.
-      \end{enumerate}
+    \item Pop the 64-bit value $a$.
     \item Set \PC to $a$.
     \end{enumerate}
   \item \SETSP, then do as follows:
     \begin{enumerate}
-    \item Set the value of $a$ to 0.
-    \item Set the value of $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set byte $i$ of $a$ to memory element \SP.
-      \item Increment \SP by 1.
-      \item Increment $i$ by 1.
-      \end{enumerate}
+    \item Pop the 64-bit value $a$.
     \item Set \SP to $a$.
     \end{enumerate}
   \item \GETPC, then do as follows:
     \begin{enumerate}
-    \item Set the value of $i$ to 0.
-    \item Decrement \SP by 8.
-    \item Set the 64-bit value $a$ to \SP.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set memory element $a+i$ to byte $i$ of \PC.
-      \item Increment $i$ by 1.
-      \end{enumerate}
+    \item Set the 64-bit value $a$ to \PC.
+    \item Push the 64-bit value $a$.
     \end{enumerate}
   \item \GETSP, then do as follows:
     \begin{enumerate}
-    \item Set the value of $i$ to 0.
-    \item Set the 64-bit value of $a$ to $\SP - 8$.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set the value of memory element $a + i$ to byte $i$ of \SP.
-      \item Increment $i$ by 1.
-      \end{enumerate}
-    \item Set \SP to the value of $a$.
+    \item Set the 64-bit value $a$ to \SP.
+    \item Push the 64-bit value $a$.
     \end{enumerate}
   \item \PUSHL{}, then do as follows:
     \begin{enumerate}
-    \item Decrement \PC by 8.
-    \item Set the value of $s$ to the value of \SP.
-    \item Do the following 8 times:
+    \item Set the 64-bit value of $a$ to 0.
       \begin{enumerate}
-      \item Set the value of memory element $s$ to the value of memory element \PC.
+      \item Set the value of byte $i$ of $a$ to the value of memory element \PC.
       \item Increment \PC by 1.
-      \item Increment $s$ by 1.
       \end{enumerate}
+    \item Push the 64-bit value $a$.
     \end{enumerate}
   \end{itemize}
 \end{enumerate}
@@ -228,30 +276,23 @@ To test the machine, first initialize all memory elements to the value \hex{00},
     \hline
     \hex{0000000000000000} & \hex{01} \\
     \hex{0000000000000001} & \hex{0B} \\
-    \hex{0000000000000002} & \hex{0C} \\
+    \hex{0000000000000002} & \hex{13} \\
     \hex{0000000000000003} & \hex{00} \\
     \hex{0000000000000004} & \hex{00} \\
     \hex{0000000000000005} & \hex{00} \\
     \hex{0000000000000006} & \hex{00} \\
     \hex{0000000000000007} & \hex{00} \\
-    \hline
-  \end{tabular}
-  \hfill
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    Memory element         & Value \\
-    \hline
     \hex{0000000000000008} & \hex{00} \\
     \hex{0000000000000009} & \hex{00} \\
     \hex{000000000000000A} & \hex{02} \\
     \hex{000000000000000B} & \hex{00} \\
-    \hex{000000000000000C} & \hex{06} \\
-    \hex{000000000000000D} & \hex{0B} \\
+    \hex{000000000000000C} & \hex{00} \\
+    \hex{000000000000000D} & \hex{00} \\
     \hex{000000000000000E} & \hex{00} \\
-    \hex{000000000000000F} & \hex{01} \\
+    \hex{000000000000000F} & \hex{00} \\
     \hline
   \end{tabular}
-  \hfill
+  \hfil
   \begin{tabular}{@{}ll@{}}
     \hline
     Memory element         & Value \\
@@ -259,11 +300,19 @@ To test the machine, first initialize all memory elements to the value \hex{00},
     \hex{0000000000000010} & \hex{00} \\
     \hex{0000000000000011} & \hex{00} \\
     \hex{0000000000000012} & \hex{00} \\
-    \hex{0000000000000013} & \hex{00} \\
-    \hex{0000000000000014} & \hex{00} \\
-    \hex{0000000000000015} & \hex{00} \\
-    \hex{0000000000000016} & \hex{04} \\
-    \hex{0000000000000017} & \hex{05} \\
+    \hex{0000000000000013} & \hex{06} \\
+    \hex{0000000000000014} & \hex{05} \\
+    \hex{0000000000000015} & \hex{0B} \\
+    \hex{0000000000000016} & \hex{F8} \\
+    \hex{0000000000000017} & \hex{00} \\
+    \hex{0000000000000018} & \hex{00} \\
+    \hex{0000000000000019} & \hex{00} \\
+    \hex{000000000000001A} & \hex{00} \\
+    \hex{000000000000001B} & \hex{00} \\
+    \hex{000000000000001C} & \hex{00} \\
+    \hex{000000000000001D} & \hex{00} \\
+    \hex{000000000000001E} & \hex{04} \\
+    \hex{000000000000001F} & \hex{00} \\
     \hline
   \end{tabular}
 \end{center}
@@ -276,18 +325,17 @@ When it terminates, all storage elements should remain unchanged, except the fol
     \hline
     Storage element        & Value                   \\
     \hline
-    \hex{0000000000000079} & \hex{01}                \\
-    \hex{00000000000000F8} & \hex{18}                \\
-    \PC                    & \hex{0000000000000019}  \\
+    \hex{00000000000000E8} & \hex{F8} \\
+    \hex{00000000000000F0} & \hex{15} \\
+    \hex{00000000000000F9} & \hex{01} \\
+    \PC                    & \hex{0000000000000020}  \\
     \SP                    & \hex{00000000000000F8}  \\
     \TERM                  & \T                      \\
     \hline
   \end{tabular}
 \end{center}
 
-
-If the machine does not terminate or you did not get exactly these results, you must have made a mistake somewhere.
-Do not proceed with the next step until you have rectified the mistake and obtained the correct results.
+If the machine does not terminate or you did not get exactly the above results, the implementation is incorrect.
 
 \subsection{Second Version of the Machine}
 
@@ -314,13 +362,15 @@ It is up to you to make sure that the interpretation of real world events is fai
 
 The \emph{Image Input} device allows input of images as a two-dimensional matrix of gray-scale values.
 The following figure shows an example of such a matrix, consisting of 32 picture elements arranged in 8 vertical columns and 4 horizontal rows.
+The spacing between the image elements is uniform in both horizontal and vertical directions.
+Both columns and rows are numbered consecutively, starting at 0.
 \begin{center}
   \begin{tikzpicture}[scale=0.5]
     \draw (0,0) grid +(8, 4);
   \end{tikzpicture}
 \end{center}
-Each picture element represents the intensity of light at that position in the image, represented as one of 256 intensities, from 0 (zero intensity) to 255 (full intensity).
-Values between 0 and 255 represent intermediate intensities.
+Each picture element represents the intensity of light at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
+Values between 0 and 255 represent intermediate intensities between these extremes.
 
 In order to implement the image input device, you will need to two extra cases to step \ref{itm:main-case} of the main procedure.
 
@@ -330,43 +380,17 @@ In order to implement the image input device, you will need to two extra cases t
   \begin{itemize}
   \item \hex{38}, then do as follows:
     \begin{enumerate}
-    \item Ready the next image to be input into the machine.
-    \item Set the value of $c$ to the number of columns in the image.
-    \item Set the value of $i$ to 8.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Decrement $i$ by 1.
-      \item Decrement \SP by 1.
-      \item Set the value of memory element \SP to byte $i$ of $c$.
-      \end{enumerate}
-    \item Set the value of $r$ to the number of rows in the image.
-    \item Set the value of $i$ to 8.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Decrement $i$ by 1.
-      \item Decrement \SP by 1.
-      \item Set the value of memory element \SP to byte $i$ of $r$.
-      \end{enumerate}
+    \item Ready the next image to be consumed by the machine.
+    \item Set the 64-bit value of $c$ to the number of columns in the image.
+    \item Push the 64-bit value $c$.
+    \item Set the 64-bit value of $r$ to the number of rows in the image.
+    \item Push the 64-bit value $r$.
     \end{enumerate}
   \item \hex{39}, then do as follows:
     \begin{enumerate}
-    \item Set the value of $x$ to 0.
-    \item Set the value of $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set byte $i$ of $x$ to the value of memory element \SP.
-      \item Increment $i$ by 1.
-      \item Increment \SP by 1.
-      \end{enumerate}
-    \item Set the value of $y$ to 0.
-    \item Set the value of $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set byte $i$ of $y$ to the value of memory element \SP.
-      \item Increment $i$ by 1.
-      \item Increment \SP by 1.
-      \end{enumerate}
-    \item Find the intensity of light in the image at column $x$ and row $y$, as an 8-bit element, $z$.
+    \item Pop the 64-bit value $x$.
+    \item Pop the 64-bit value $y$.
+    \item Find the intensity of light in the image at column $x$ and row $y$, represented as an 8-bit value, $z$.
     \item Decrement \SP.
     \item Set the value of memory element \SP to $z$.
     \end{enumerate}
