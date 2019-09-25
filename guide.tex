@@ -325,12 +325,12 @@ When it terminates, all storage elements should remain unchanged, except the fol
     \hline
     Storage element        & Value                   \\
     \hline
-    \hex{00000000000000E8} & \hex{F8} \\
-    \hex{00000000000000F0} & \hex{15} \\
-    \hex{00000000000000F9} & \hex{01} \\
     \PC                    & \hex{0000000000000020}  \\
     \SP                    & \hex{00000000000000F8}  \\
     \TERM                  & \T                      \\
+    \hex{00000000000000E8} & \hex{F8} \\
+    \hex{00000000000000F0} & \hex{15} \\
+    \hex{00000000000000F9} & \hex{01} \\
     \hline
   \end{tabular}
 \end{center}
@@ -361,14 +361,21 @@ It is up to you to make sure that the interpretation of real world events is fai
 \subsection{Image Input}
 
 The \emph{Image Input} device allows input of images as a two-dimensional matrix of gray-scale values.
-The following figure shows an example of such a matrix, consisting of 32 picture elements arranged in 8 vertical columns and 4 horizontal rows.
-The spacing between the image elements is uniform in both horizontal and vertical directions.
-Both columns and rows are numbered consecutively, starting at 0.
+The following figure shows an example of such a matrix, consisting of 32 picture elements arranged in 8 columns and 4 rows.
 \begin{center}
-  \begin{tikzpicture}[scale=0.5]
-    \draw (0,0) grid +(8, 4);
+  \begin{tikzpicture}[scale=0.75]
+    \foreach \x in {0,...,7}
+    \foreach \y in {0,...,3}
+    {
+      \fill (\x,\y) circle [radius=2mm,fill=black,draw] {};
+    }
+    \foreach \x in {0,...,7} \draw (\x, -1) node {\x};
+    \foreach \y in {0,...,3} \draw (-1, 3 - \y) node {\y};
+    \draw (-0.5,-0.5) -- (7.5,-0.5) -- (7.5,3.5) -- (-0.5,3.5) -- cycle;
   \end{tikzpicture}
 \end{center}
+As shown, both columns and rows are numbered consecutively, starting at 0.
+The spacing between the picture elements is uniform in both horizontal and vertical directions.
 Each picture element represents the intensity of light at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
 Values between 0 and 255 represent intermediate intensities between these extremes.
 
