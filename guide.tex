@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[includeheadfoot,margin=2cm]{geometry}
@@ -13,30 +13,56 @@
 \author{Thor Kristoffersen}
 \date{\today}
 \title{Guide to Building a Machine}
-\newcommand{\PC}{\textbf{program counter}\xspace}
-\newcommand{\SP}{\textbf{stack pointer}\xspace}
-\newcommand{\TERM}{\textbf{terminated}\xspace}
-\newcommand{\F}{\textbf{false}\xspace}
-\newcommand{\T}{\textbf{true}\xspace}
 \newcommand{\num}[1]{\texttt{#1}\xspace}
 \newcommand{\hex}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 16}}$\xspace}
 \newcommand{\bin}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 2}}$\xspace}
+\newcommand{\PC}{\textbf{program counter}\xspace}
+\newcommand{\SP}{\textbf{stack pointer}\xspace}
+\newcommand{\TERM}{\textbf{terminated}\xspace}
+\newcommand{\F}{\bin{0}\xspace}
+\newcommand{\T}{\bin{1}\xspace}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
 \newcommand{\op}[1]{#1}
-\newcommand{\EXIT}     [1]{\op{\hex{00}}\xspace}
-\newcommand{\NOP}      [1]{\op{\hex{01}}\xspace}
-\newcommand{\JUMP}     [1]{\op{\hex{02}}\xspace}
-\newcommand{\JUMPZERO} [1]{\op{\hex{03}}\xspace}
-\newcommand{\SETSP}    [1]{\op{\hex{04}}\xspace}
-\newcommand{\GETPC}    [1]{\op{\hex{05}}\xspace}
-\newcommand{\GETSP}    [1]{\op{\hex{06}}\xspace}
-\newcommand{\PUSHZ}    [1]{\op{\hex{07}}\xspace}
-\newcommand{\PUSHB}    [1]{\op{\hex{08}}\xspace}
-\newcommand{\PUSHS}    [1]{\op{\hex{09}}\xspace}
-\newcommand{\PUSHI}    [1]{\op{\hex{0A}}\xspace}
-\newcommand{\PUSHL}    [1]{\op{\hex{0B}}\xspace}
-\newcommand{\READFRAME}[1]{\op{\hex{38}}\xspace}
-\newcommand{\READPIXEL}[1]{\op{\hex{39}}\xspace}
+\newcommand{\EXIT}      [1]{\op{\hex{00}}\xspace}
+\newcommand{\NOP}       [1]{\op{\hex{01}}\xspace}
+\newcommand{\JUMP}      [1]{\op{\hex{02}}\xspace}
+\newcommand{\JUMPZERO}  [1]{\op{\hex{03}}\xspace}
+\newcommand{\SETSP}     [1]{\op{\hex{04}}\xspace}
+\newcommand{\GETPC}     [1]{\op{\hex{05}}\xspace}
+\newcommand{\GETSP}     [1]{\op{\hex{06}}\xspace}
+\newcommand{\PUSHZ}     [1]{\op{\hex{07}}\xspace}
+\newcommand{\PUSHB}     [1]{\op{\hex{08}}\xspace}
+\newcommand{\PUSHS}     [1]{\op{\hex{09}}\xspace}
+\newcommand{\PUSHI}     [1]{\op{\hex{0A}}\xspace}
+\newcommand{\PUSHL}     [1]{\op{\hex{0B}}\xspace}
+\newcommand{\SIGXB}     [1]{\op{\hex{0C}}\xspace}
+\newcommand{\SIGXS}     [1]{\op{\hex{0D}}\xspace}
+\newcommand{\SIGXI}     [1]{\op{\hex{0E}}\xspace}
+\newcommand{\LOADB}     [1]{\op{\hex{10}}\xspace}
+\newcommand{\LOADS}     [1]{\op{\hex{11}}\xspace}
+\newcommand{\LOADI}     [1]{\op{\hex{12}}\xspace}
+\newcommand{\LOADL}     [1]{\op{\hex{13}}\xspace}
+\newcommand{\STOREB}    [1]{\op{\hex{14}}\xspace}
+\newcommand{\STORES}    [1]{\op{\hex{15}}\xspace}
+\newcommand{\STOREI}    [1]{\op{\hex{16}}\xspace}
+\newcommand{\STOREL}    [1]{\op{\hex{17}}\xspace}
+\newcommand{\ALLOCATE}  [1]{\op{\hex{18}}\xspace}
+\newcommand{\DEALLOCATE}[1]{\op{\hex{19}}\xspace}
+\newcommand{\ADD}       [1]{\op{\hex{20}}\xspace}
+\newcommand{\MULT}      [1]{\op{\hex{21}}\xspace}
+\newcommand{\DIV}       [1]{\op{\hex{22}}\xspace}
+\newcommand{\REM}       [1]{\op{\hex{23}}\xspace}
+\newcommand{\LT}        [1]{\op{\hex{24}}\xspace}
+\newcommand{\AND}       [1]{\op{\hex{28}}\xspace}
+\newcommand{\OR}        [1]{\op{\hex{29}}\xspace}
+\newcommand{\NOT}       [1]{\op{\hex{2A}}\xspace}
+\newcommand{\XOR}       [1]{\op{\hex{2B}}\xspace}
+\newcommand{\POW}       [1]{\op{\hex{2C}}\xspace}
+\newcommand{\NEWFRAME}  [1]{\op{\hex{30}}\xspace}
+\newcommand{\SETPIXEL}  [1]{\op{\hex{31}}\xspace}
+\newcommand{\ADDSAMPLE} [1]{\op{\hex{32}}\xspace}
+\newcommand{\READFRAME} [1]{\op{\hex{38}}\xspace}
+\newcommand{\READPIXEL} [1]{\op{\hex{39}}\xspace}
 \begin{document}
 
 \maketitle
@@ -67,7 +93,7 @@ Further detail on binary and hexadecimal notation can be found in Appendixes~\re
 
 To build the machine, you first need storage to represent state consisting of binary digits (bits).
 A storage \emph{element} is a group of bits forming a unit with respect to naming.
-The number of bits is called the \emph{size} of the element.
+The number of bits in an element is called the \emph{size} of the element.
 Each element has a unique name, so that it can be unambiguously referred to, and the contents can be retrieved or stored in one atomic operation.
 This machine employs element sizes of 1, 8, and 64 bits.
 The storage is divided into three categories:
@@ -82,8 +108,6 @@ Both of these are 64-bit elements.
 The contents of either register are interpreted as a non-negative integer referring to a memory element.
 \item[Flags] 
 There is one flag, named the \TERM flag, which is a 1-bit element.
-This bit represents a value of \T or \F.
-The machine will stop if and only if this has a value of \T.
 \end{description}
 In addition to the storage elements defined here, it is sometimes necessary to use additional storage elements temporarily.
 These will be introduced whenever needed and are named by single letters.
@@ -210,7 +234,7 @@ The \SP is set to the first element beyond the range of addressable elements, th
 The values are given in the table below.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
+  \begin{tabular}{@{}lr@{}}
     \hline
     Register or flag & Value                   \\
     \hline
@@ -229,7 +253,7 @@ The main procedure must carry out the following steps.
 \item Set the 64-bit value $p$ to the value of \PC.
 \item Increment \PC.
 \item Retrieve the 8-bit value of memory element $p$.
-\item\label{itm:main-case} If the value is
+\item\label{itm:main-case} If that value is
   \begin{itemize}
   \item \EXIT{}, then set the value of  \TERM to \T.
   \item \NOP{}, then do nothing.
@@ -238,17 +262,17 @@ The main procedure must carry out the following steps.
     \item Pop the 64-bit value $a$.
     \item Set \PC to $a$.
     \end{enumerate}
-  \item \SETSP, then do as follows:
+  \item \SETSP{}, then do as follows:
     \begin{enumerate}
     \item Pop the 64-bit value $a$.
     \item Set \SP to $a$.
     \end{enumerate}
-  \item \GETPC, then do as follows:
+  \item \GETPC{}, then do as follows:
     \begin{enumerate}
     \item Set the 64-bit value $a$ to \PC.
     \item Push the 64-bit value $a$.
     \end{enumerate}
-  \item \GETSP, then do as follows:
+  \item \GETSP{}, then do as follows:
     \begin{enumerate}
     \item Set the 64-bit value $a$ to \SP.
     \item Push the 64-bit value $a$.
@@ -256,6 +280,8 @@ The main procedure must carry out the following steps.
   \item \PUSHL{}, then do as follows:
     \begin{enumerate}
     \item Set the 64-bit value of $a$ to 0.
+    \item Set the 64-bit value of $i$ to 0.
+    \item Do the following 8 times:
       \begin{enumerate}
       \item Set the value of byte $i$ of $a$ to the value of memory element \PC.
       \item Increment \PC by 1.
@@ -263,6 +289,7 @@ The main procedure must carry out the following steps.
     \item Push the 64-bit value $a$.
     \end{enumerate}
   \end{itemize}
+\item If the value does not occur in the list above, abort and report an error.
 \end{enumerate}
 
 \subsubsection{Testing the Basic Machine}
@@ -337,9 +364,162 @@ When it terminates, all storage elements should remain unchanged, except the fol
 
 If the machine does not terminate or you did not get exactly the above results, the implementation is incorrect.
 
+
+\subsection{Some More Basic Procedures}
+
+\subsubsection{Integer Comparison With Zero}
+
+Given a 64-bit value, $x$,
+\begin{itemize}
+\item $x < 0$ if the most significant bit (bit number 63) is 1.
+\item $x = 0$ if all bits are 0.
+\item $x > 0$ if the most significant bit (bit number 63) is 0 and at least one other bit is 1.
+\end{itemize}
+
+\subsubsection{Integer Negation}
+
+Given a 64-bit value, $x$, is negated as follows:
+\begin{itemize}
+\item Set 
+\end{itemize}
+
+
 \subsection{Second Version of the Machine}
 
-TODO
+In the next version of the machine you will add several more cases to step \ref{itm:main-case} of the main procedure.
+
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+\item If the value is
+  \begin{itemize}
+  \item \LOADL{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $a$.
+    \item Set the 64-bit value of $n$ to 0.
+    \item Set the value of element $i$ to 0.
+    \item Do the following 8 times:
+      \begin{enumerate}
+      \item Set the value of byte $i$ of $n$ to the value of memory element $a + i$.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Push the 64-bit value $n$.
+    \end{enumerate}
+  \item \STOREL{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $a$.
+    \item Pop the 64-bit value $n$.
+    \item Set the value of element $i$ to 0.
+    \item Do the following 8 times:
+      \begin{enumerate}
+      \item Set the value of memory element $a + i$ to the value of byte $i$ of $n$.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \end{enumerate}
+  \item \ADD{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Push the 64-bit value $(x + y) \mod 2^{64}$.
+    \end{enumerate}
+  \item \MULT{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Push the 64-bit value $x y \mod 2^{64}$.
+    \end{enumerate}
+  \item \DIV{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Choose the one of the following alternatives that applies:
+      \begin{enumerate}
+      \item If $x > 0$ and $y > 0$, then push the 64-bit value $q$, such that $x = qy + r$ and $0 \leq r < y$.
+      \item If $x = 0$ or $y = 0$, then push the 64-bit value 0.
+      \end{enumerate}
+    \end{enumerate}
+  \item \REM{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Choose the one of the following alternatives that applies:
+      \begin{enumerate}
+      \item If $x > 0$ and $y > 0$, then push the 64-bit value $r$, such that $x = qy + r$ and $0 \leq r < y$.
+      \item If $x = 0$ or $y = 0$, then push the 64-bit value 0.
+      \end{enumerate}
+    \end{enumerate}
+  \item \LT{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Choose the one of the following alternatives that applies:
+      \begin{enumerate}
+      \item If $x < y$, then push the 64-bit value $2^{64} - 1$.
+      \item If $x \ge y$, then push the 64-bit value 0.
+      \end{enumerate}
+    \end{enumerate}
+  \item \AND{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Set the 64-bit value $z$ to 0.
+    \item Set the 64-bit value $i$ to 0.
+    \item Do the following 64 times:
+      \begin{enumerate}
+      \item If bit $i$ of $x$ is 1 and bit $i$ of $y$ is 1, then set bit $i$ of $z$ to 1, otherwise, set bit $i$ of $z$ to 0.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Push the 64-bit value $z$.
+    \end{enumerate}
+  \item \OR{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Set the 64-bit value $z$ to 0.
+    \item Set the 64-bit value $i$ to 0.
+    \item Do the following 64 times:
+      \begin{enumerate}
+      \item If bit $i$ of $x$ is 0 and bit $i$ of $y$ is 0, then set bit $i$ of $z$ to 0, otherwise, set bit $i$ of $z$ to 1.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Push the 64-bit value $z$.
+    \end{enumerate}
+  \item \NOT{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $x$.
+    \item Set the 64-bit value $z$ to 0.
+    \item Set the 64-bit value $i$ to 0.
+    \item Do the following 64 times:
+      \begin{enumerate}
+      \item If bit $i$ of $x$ is 1, then set bit $i$ of $z$ to 0.
+      \item If bit $i$ of $x$ is 0, then set bit $i$ of $z$ to 1.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Push the 64-bit value $z$.
+    \end{enumerate}
+  \item \XOR{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $y$.
+    \item Pop the 64-bit value $x$.
+    \item Set the 64-bit value $z$ to 0.
+    \item Set the 64-bit value $i$ to 0.
+    \item Do the following 64 times:
+      \begin{enumerate}
+      \item If bit $i$ of $x$ is different from bit $i$ of $y$, then set bit $i$ of $z$ to 1.
+      \item If bit $i$ of $x$ is the same as bit $i$ of $y$, set bit $i$ of $z$ to 0.
+      \item Increment $i$ by 1.
+      \end{enumerate}
+    \item Push the 64-bit value $z$.
+    \end{enumerate}
+  \item \POW{}, then do as follows:
+    \begin{enumerate}
+    \item Pop the 64-bit value $x$.
+    \item If $0 \le x < 64$, then push the 64-bit value $2^x$.
+    \item If $x \ge 64$, then push the 64-bit value 0.
+    \end{enumerate}
+  \item \
+  \end{itemize}
+\end{enumerate}
 
 \section{Building the Devices}
 \label{sec:building-devices}
@@ -360,14 +540,14 @@ It is up to you to make sure that the interpretation of real world events is fai
 
 \subsection{Image Input}
 
-The \emph{Image Input} device allows input of images as a two-dimensional matrix of gray-scale values.
-The following figure shows an example of such a matrix, consisting of 32 picture elements arranged in 8 columns and 4 rows.
+The \emph{Image Input} device allows input of images as a two-dimensional matrix of light intensity values.
+The following figure shows an example of such a matrix, consisting of 32 \emph{picture elements} arranged in 8 columns and 4 rows.
 \begin{center}
   \begin{tikzpicture}[scale=0.75]
     \foreach \x in {0,...,7}
     \foreach \y in {0,...,3}
     {
-      \fill (\x,\y) circle [radius=2mm,fill=black,draw] {};
+      \fill (\x,\y) circle [radius=1mm,fill=black,draw] {};
     }
     \foreach \x in {0,...,7} \draw (\x, -1) node {\x};
     \foreach \y in {0,...,3} \draw (-1, 3 - \y) node {\y};
@@ -376,10 +556,10 @@ The following figure shows an example of such a matrix, consisting of 32 picture
 \end{center}
 As shown, both columns and rows are numbered consecutively, starting at 0.
 The spacing between the picture elements is uniform in both horizontal and vertical directions.
-Each picture element represents the intensity of light at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
+Each picture element detects the intensity of light transitted or reflected at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
 Values between 0 and 255 represent intermediate intensities between these extremes.
 
-In order to implement the image input device, you will need to two extra cases to step \ref{itm:main-case} of the main procedure.
+In order to implement the image input device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
 
 \begin{enumerate}
   \setcounter{enumi}{3}
@@ -387,7 +567,7 @@ In order to implement the image input device, you will need to two extra cases t
   \begin{itemize}
   \item \hex{38}, then do as follows:
     \begin{enumerate}
-    \item Ready the next image to be consumed by the machine.
+    \item Ready the next image to be consumed by the machine, and measure the intensity of light at all picture elements.
     \item Set the 64-bit value of $c$ to the number of columns in the image.
     \item Push the 64-bit value $c$.
     \item Set the 64-bit value of $r$ to the number of rows in the image.
@@ -419,14 +599,20 @@ In order to implement the image input device, you will need to two extra cases t
 
 Each storage element contains a binary value, that is, a sequence of binary digits that can be retrieved or modified in one atomic operation.
 
-In this documentation, individual binary digits are referred to using non-negative integers, listed in decreasing order.  For example,
+In this documentation, individual binary digits are referred to using non-negative integers, listed in decreasing order.
+For an $n$-bit value, the individual bits, $b_i$, are numbered as follows:
+\[ b_{n-1} \; b_{n-2} \; \ldots \; b_{1} \; b_{0} \]
+Bit $n-1$ is called the most significant bit (MSB), and bit 0 is called the least significant bit (LSB).
+For example,
 \begin{itemize}
-\item In the binary number \bin{1000}, bit number 3 is 1.
-\item In the binary number \bin{0001}, bit number 0 is 1.
+\item in the 4-bit element \bin{0001}, bit number 0 (or LSB) is 1, and
+\item in the 4-bit element \bin{1000}, bit number 3 (or MSB) is 1.
 \end{itemize}
 
-When binary values represent integers, each bit represents two to the power of the bit number.
-In other words, bit number 0 is always the least significant bit.
+When an $n$-bit binary element is interpreted as a non-negative integer, the value of that integer is
+\[
+    v = \sum_{i=0}^{n-1} b_{i}2^{i}
+\]
 
 \section{Hexadecimal Notation}
 \label{sec:hexadecimal-notation}
