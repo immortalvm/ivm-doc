@@ -4,11 +4,13 @@
 \usepackage[includeheadfoot,margin=2cm]{geometry}
 \usepackage{times}
 \usepackage{booktabs}
+\usepackage{enumitem}
 \usepackage{amsmath}
 \usepackage{mathptmx}
 \usepackage{tikz}
 \usepackage{xspace}
 \frenchspacing
+\setlist{nosep}
 \renewcommand{\ttdefault}{cmtt}
 \author{Thor Kristoffersen}
 \date{\today}
@@ -19,50 +21,52 @@
 \newcommand{\PC}{\textbf{program counter}\xspace}
 \newcommand{\SP}{\textbf{stack pointer}\xspace}
 \newcommand{\TERM}{\textbf{terminated}\xspace}
-\newcommand{\F}{\bin{0}\xspace}
-\newcommand{\T}{\bin{1}\xspace}
+\newcommand{\F}{\bin{0}}
+\newcommand{\T}{\bin{1}}
+\newcommand{\range}[2]{\{#1,\ldots,#2\}}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
 \newcommand{\op}[1]{#1}
-\newcommand{\EXIT}      [1]{\op{\hex{00}}\xspace}
-\newcommand{\NOP}       [1]{\op{\hex{01}}\xspace}
-\newcommand{\JUMP}      [1]{\op{\hex{02}}\xspace}
-\newcommand{\JUMPZERO}  [1]{\op{\hex{03}}\xspace}
-\newcommand{\SETSP}     [1]{\op{\hex{04}}\xspace}
-\newcommand{\GETPC}     [1]{\op{\hex{05}}\xspace}
-\newcommand{\GETSP}     [1]{\op{\hex{06}}\xspace}
-\newcommand{\PUSHZ}     [1]{\op{\hex{07}}\xspace}
-\newcommand{\PUSHB}     [1]{\op{\hex{08}}\xspace}
-\newcommand{\PUSHS}     [1]{\op{\hex{09}}\xspace}
-\newcommand{\PUSHI}     [1]{\op{\hex{0A}}\xspace}
-\newcommand{\PUSHL}     [1]{\op{\hex{0B}}\xspace}
-\newcommand{\SIGXB}     [1]{\op{\hex{0C}}\xspace}
-\newcommand{\SIGXS}     [1]{\op{\hex{0D}}\xspace}
-\newcommand{\SIGXI}     [1]{\op{\hex{0E}}\xspace}
-\newcommand{\LOADB}     [1]{\op{\hex{10}}\xspace}
-\newcommand{\LOADS}     [1]{\op{\hex{11}}\xspace}
-\newcommand{\LOADI}     [1]{\op{\hex{12}}\xspace}
-\newcommand{\LOADL}     [1]{\op{\hex{13}}\xspace}
-\newcommand{\STOREB}    [1]{\op{\hex{14}}\xspace}
-\newcommand{\STORES}    [1]{\op{\hex{15}}\xspace}
-\newcommand{\STOREI}    [1]{\op{\hex{16}}\xspace}
-\newcommand{\STOREL}    [1]{\op{\hex{17}}\xspace}
-\newcommand{\ALLOCATE}  [1]{\op{\hex{18}}\xspace}
-\newcommand{\DEALLOCATE}[1]{\op{\hex{19}}\xspace}
-\newcommand{\ADD}       [1]{\op{\hex{20}}\xspace}
-\newcommand{\MULT}      [1]{\op{\hex{21}}\xspace}
-\newcommand{\DIV}       [1]{\op{\hex{22}}\xspace}
-\newcommand{\REM}       [1]{\op{\hex{23}}\xspace}
-\newcommand{\LT}        [1]{\op{\hex{24}}\xspace}
-\newcommand{\AND}       [1]{\op{\hex{28}}\xspace}
-\newcommand{\OR}        [1]{\op{\hex{29}}\xspace}
-\newcommand{\NOT}       [1]{\op{\hex{2A}}\xspace}
-\newcommand{\XOR}       [1]{\op{\hex{2B}}\xspace}
-\newcommand{\POW}       [1]{\op{\hex{2C}}\xspace}
-\newcommand{\NEWFRAME}  [1]{\op{\hex{30}}\xspace}
-\newcommand{\SETPIXEL}  [1]{\op{\hex{31}}\xspace}
-\newcommand{\ADDSAMPLE} [1]{\op{\hex{32}}\xspace}
-\newcommand{\READFRAME} [1]{\op{\hex{38}}\xspace}
-\newcommand{\READPIXEL} [1]{\op{\hex{39}}\xspace}
+\newcommand{\EXIT}      [1]{\op{\hex{00}}}
+\newcommand{\NOP}       [1]{\op{\hex{01}}}
+\newcommand{\JUMP}      [1]{\op{\hex{02}}}
+\newcommand{\JUMPZERO}  [1]{\op{\hex{03}}}
+\newcommand{\SETSP}     [1]{\op{\hex{04}}}
+\newcommand{\GETPC}     [1]{\op{\hex{05}}}
+\newcommand{\GETSP}     [1]{\op{\hex{06}}}
+\newcommand{\PUSHZ}     [1]{\op{\hex{07}}}
+\newcommand{\PUSHB}     [1]{\op{\hex{08}}}
+\newcommand{\PUSHS}     [1]{\op{\hex{09}}}
+\newcommand{\PUSHI}     [1]{\op{\hex{0A}}}
+\newcommand{\PUSHL}     [1]{\op{\hex{0B}}}
+\newcommand{\SIGXB}     [1]{\op{\hex{0C}}}
+\newcommand{\SIGXS}     [1]{\op{\hex{0D}}}
+\newcommand{\SIGXI}     [1]{\op{\hex{0E}}}
+\newcommand{\LOADB}     [1]{\op{\hex{10}}}
+\newcommand{\LOADS}     [1]{\op{\hex{11}}}
+\newcommand{\LOADI}     [1]{\op{\hex{12}}}
+\newcommand{\LOADL}     [1]{\op{\hex{13}}}
+\newcommand{\STOREB}    [1]{\op{\hex{14}}}
+\newcommand{\STORES}    [1]{\op{\hex{15}}}
+\newcommand{\STOREI}    [1]{\op{\hex{16}}}
+\newcommand{\STOREL}    [1]{\op{\hex{17}}}
+\newcommand{\ALLOCATE}  [1]{\op{\hex{18}}}
+\newcommand{\DEALLOCATE}[1]{\op{\hex{19}}}
+\newcommand{\ADD}       [1]{\op{\hex{20}}}
+\newcommand{\MULT}      [1]{\op{\hex{21}}}
+\newcommand{\DIV}       [1]{\op{\hex{22}}}
+\newcommand{\REM}       [1]{\op{\hex{23}}}
+\newcommand{\LT}        [1]{\op{\hex{24}}}
+\newcommand{\AND}       [1]{\op{\hex{28}}}
+\newcommand{\OR}        [1]{\op{\hex{29}}}
+\newcommand{\NOT}       [1]{\op{\hex{2A}}}
+\newcommand{\XOR}       [1]{\op{\hex{2B}}}
+\newcommand{\POW}       [1]{\op{\hex{2C}}}
+\newcommand{\NEWFRAME}  [1]{\op{\hex{30}}}
+\newcommand{\SETPIXEL}  [1]{\op{\hex{31}}}
+\newcommand{\ADDSAMPLE} [1]{\op{\hex{32}}}
+\newcommand{\PUTCHAR}   [1]{\op{\hex{34}}}
+\newcommand{\READFRAME} [1]{\op{\hex{38}}}
+\newcommand{\READPIXEL} [1]{\op{\hex{39}}}
 \begin{document}
 
 \maketitle
@@ -110,7 +114,7 @@ The contents of either register are interpreted as a non-negative integer referr
 There is one flag, named the \TERM flag, which is a 1-bit element.
 \end{description}
 In addition to the storage elements defined here, it is sometimes necessary to use additional storage elements temporarily.
-These will be introduced whenever needed and are named by single letters.
+These \emph{auxiliary} storage elements will be introduced whenever needed and are named by single letters.
 
 \subsection{Storage Operations}
 \label{sec:storage-operations}
@@ -119,10 +123,10 @@ We need to define a few terms to talk about storage operations.
 \begin{itemize}
 \item ``The value of an element'' means the contents as retrieved from that element.
 \item ``To set the value of an element to $x$'' means to store the value of $x$ in that element.
-\item ``To increment an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x + n) \mod s$, where $s$ is the size of the element.
-\item ``To decrement an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x - n) \mod s$, where $s$ is the size of the element.
-\item ``The value of \emph{byte} $b$ in $x$'' means the contents of the 8-bit subsequence of $x$ from bit number $8b+7$ to bit number $8b$.
-\item ``To set \emph{byte} $b$ in $x$ to $y$'' means to store the 8-bit sequence $y$ in the 8-bit subsequence of $x$ from bit number $8b+7$ to bit number $8b$, while keeping all other bits of $x$ unchanged.
+\item ``To increment an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x + n) \mod 2^s$, where $s$ is the size of the element.
+\item ``To decrement an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x - n) \mod 2^s$, where $s$ is the size of the element.
+\item ``The value of \emph{octet} $i$ in $x$'' means the contents of the 8-bit subsequence of $x$ from bit number $8i+7$ to bit number $8i$.
+\item ``To set \emph{octet} $i$ in $x$ to $y$'' means to store the 8-bit sequence $y$ in the 8-bit subsequence of $x$ from bit number $8i+7$ to bit number $8i$, while keeping all other bits of $x$ unchanged.
 \end{itemize}
 These should be basic operations in your implementation.
 
@@ -144,58 +148,110 @@ To test that the storage works as it should, do the following tests several time
   \item Decrement the element by $n$.
   \item Verify that the value of the element is $x$.
   \end{enumerate}
-\item Verify that your byte operations work for every byte, $b$, from $0$ to $7$.
+\item Verify that your octet operations work for every octet, $i$, from $0$ to $7$.
   \begin{enumerate}
-  \item Get the value of all bytes in $x$.
-  \item Select a random bit sequence, $y$, of size $8$, different from the value of byte $b$.
-  \item Set byte $b$ of the element to $y$.
-  \item Verify that the value of $b$ is $y$.
-  \item Verify that the values of all the other bytes are unchanged.
+  \item Get the value of all octets in $x$.
+  \item Select a random bit sequence, $y$, of size $8$, different from the value of octet $i$.
+  \item Set octet $i$ of the element to $y$.
+  \item Verify that the value of octet $i$ is $y$.
+  \item Verify that the values of all the other octets are unchanged.
   \end{enumerate}
 \end{enumerate}
 
-\subsection{A Couple of Basic Procedures}
+\subsection{Basic Procedures}
 
-Some basic procedures are heavily used by the machine.
+Some basic procedures are frequently used by the machine.
 These use the storage operations in Section~\ref{sec:storage-operations}.
 
-\subsubsection{Push 64-bit Value}
+\subsubsection{Push Element}
 
-Assume that we have an existing 64-bit element called $x$.
-The expression ``Push the 64-bit value $x$'', means to do the following steps:
+Assume that we have an auxiliary 64-bit element called $x$.
+The expression ``Push $x$'' means to do the following steps:
 \begin{enumerate}
-\item Set the value of element $i$ to 8;
+\item Initialize the auxiliary 8-bit element $i$ to 8.
 \item Do the following 8 times:
   \begin{enumerate}
   \item Decrement $i$ by 1.
   \item Decrement \SP by 1.
-  \item Set memory element \SP to byte $i$ of $x$.
+  \item Set memory element \SP to octet $i$ of $x$.
   \end{enumerate}
 \end{enumerate}
 
-\subsubsection{Pop 64-bit Value}
+\subsubsection{Pop Element}
 
-The expression ``Pop the 64-bit value $x$'', means to do the following steps:
+The expression ``Pop $x$'' means to do the following steps:
 \begin{enumerate}
-\item Set the value of the 64-bit element $x$ to 0;
-\item Set the value of element $i$ to 0;
+\item Initialize the auxiliary 64-bit element $x$ to 0.
+\item Initialize the auxiliary 8-bit element $i$ to 0.
 \item Do the following 8 times:
   \begin{enumerate}
-  \item Set byte $i$ of $x$ to memory element \SP.
+  \item Set octet $i$ of $x$ to memory element \SP.
   \item Increment $i$ by 1.
   \item Increment \SP by 1.
   \end{enumerate}
 \end{enumerate}
 The 64-bit element $x$ can now be used by other procedures.
 
+\subsubsection{Put Octets Into Address}
+
+Assume that we have two auxiliary 64-bit elements called $x$ and $a$, and that $n$ is either 1, 2, 4, or 8.
+The expression ``Put $n$ octets from $x$ into address $a$'' means to do the following steps:
+\begin{enumerate}
+\item Initialize the auxiliary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
+  \begin{enumerate}
+  \item Set memory element $a+i$ to octet $i$ of $x$.
+  \item Increment $i$ by 1.
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Get Octets From Address}
+
+Assume that we have an auxiliary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
+The expression ``Get $n$ octets from address $a$ into $x$'' means to do the following steps:
+\begin{enumerate}
+\item Initialize the auxiliary 64-bit element $x$ to 0.
+\item Initialize the auxiliary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
+  \begin{enumerate}
+  \item Set octet $i$ of $x$ to memory element $a+i$.
+  \end{enumerate}
+\end{enumerate}
+The auxiliary 64-bit element $x$ can now be used by other procedures.
+
+\subsubsection{Fetch Octets}
+
+Assume that $n$ is either 1, 2, 4, or 8.
+The expression ``Fetch $n$ octets into $x$'' means to do the following steps:
+\begin{enumerate}
+\item Initialize the auxiliary 64-bit element $x$ to 0.
+\item Initialize the auxiliary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
+  \begin{enumerate}
+  \item Set octet $i$ of $x$ to memory element \PC.
+  \item Increment $i$ by 1.
+  \item Increment \PC by 1.
+  \end{enumerate}
+\end{enumerate}
+The auxiliary 64-bit element $x$ can now be used by other procedures.
+
+\subsubsection{Sign Extend}
+
+Assume that we have an auxiliary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
+The expression ``Sign extend $n$ octets in $x$'' means to do the following steps:
+\begin{enumerate}
+\item If the value of bit $8n-1$ of $x$ is 1, then set the value of bit $i$ of $x$ to 1 for all bits $i \in \range{8n}{63}$.
+\item If the value of bit $8n-1$ of $x$ is 1, do nothing.
+\end{enumerate}
+
 \subsection{Testing the Basic Procedures}
 
 To test the basic procedures, do as follows:
 \begin{enumerate}
 \item Set \SP to \hex{0000000000000008}.
-\item Set the 64-bit value $x$ to \hex{0123456789ABCDEF}.
-\item Push the 64-bit value $x$.
-\item Pop the 64-bit value $y$.
+\item Initialize the auxiliary 64-bit element $x$ to \hex{0123456789ABCDEF}.
+\item Push $x$.
+\item Pop $y$.
 \item Verify that $x=y$.
 \item Verify that the value of \SP is \hex{0000000000000008}.
 \item Verify that the contents of the first eight memory elements are as in the following table.
@@ -218,6 +274,7 @@ To test the basic procedures, do as follows:
   \end{tabular}
 \end{center}
 
+\comment{Test fetch, put, get, sign extend too.}
 
 \subsection{First Version of The Machine}
 
@@ -255,38 +312,35 @@ The main procedure must carry out the following steps.
 \item Retrieve the 8-bit value of memory element $p$.
 \item\label{itm:main-case} If that value is
   \begin{itemize}
-  \item \EXIT{}, then set the value of  \TERM to \T.
+  \item \EXIT{}, then set the value of \TERM to \T.
   \item \NOP{}, then do nothing.
   \item \JUMP{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $a$.
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Pop $a$.
     \item Set \PC to $a$.
     \end{enumerate}
   \item \SETSP{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $a$.
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Pop $a$.
     \item Set \SP to $a$.
     \end{enumerate}
   \item \GETPC{}, then do as follows:
     \begin{enumerate}
-    \item Set the 64-bit value $a$ to \PC.
-    \item Push the 64-bit value $a$.
+    \item Initialize the auxiliary 64-bit element $a$ to \PC.
+    \item Push $a$.
     \end{enumerate}
   \item \GETSP{}, then do as follows:
     \begin{enumerate}
-    \item Set the 64-bit value $a$ to \SP.
-    \item Push the 64-bit value $a$.
+    \item Initialize the auxiliary 64-bit element $a$ to \SP.
+    \item Push $a$.
     \end{enumerate}
   \item \PUSHL{}, then do as follows:
     \begin{enumerate}
-    \item Set the 64-bit value of $a$ to 0.
-    \item Set the 64-bit value of $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set the value of byte $i$ of $a$ to the value of memory element \PC.
-      \item Increment \PC by 1.
-      \end{enumerate}
-    \item Push the 64-bit value $a$.
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Fetch 8 octets into $a$.
+    \item Push $a$.
     \end{enumerate}
   \end{itemize}
 \item If the value does not occur in the list above, abort and report an error.
@@ -364,30 +418,9 @@ When it terminates, all storage elements should remain unchanged, except the fol
 
 If the machine does not terminate or you did not get exactly the above results, the implementation is incorrect.
 
-
-\subsection{Some More Basic Procedures}
-
-\subsubsection{Integer Comparison With Zero}
-
-Given a 64-bit value, $x$,
-\begin{itemize}
-\item $x < 0$ if the most significant bit (bit number 63) is 1.
-\item $x = 0$ if all bits are 0.
-\item $x > 0$ if the most significant bit (bit number 63) is 0 and at least one other bit is 1.
-\end{itemize}
-
-\subsubsection{Integer Negation}
-
-Given a 64-bit value, $x$, is negated as follows:
-\begin{itemize}
-\item Set 
-\end{itemize}
-
-
 \subsection{Second Version of the Machine}
 
 In the next version of the machine you will add several more cases to step \ref{itm:main-case} of the main procedure.
-
 
 \begin{enumerate}
   \setcounter{enumi}{3}
@@ -395,26 +428,17 @@ In the next version of the machine you will add several more cases to step \ref{
   \begin{itemize}
   \item \LOADL{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $a$.
-    \item Set the 64-bit value of $n$ to 0.
-    \item Set the value of element $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set the value of byte $i$ of $n$ to the value of memory element $a + i$.
-      \item Increment $i$ by 1.
-      \end{enumerate}
-    \item Push the 64-bit value $n$.
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Pop $a$.
+    \item Get 8 octets from address $a$ into $x$.
+    \item Push $x$.
     \end{enumerate}
   \item \STOREL{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $a$.
-    \item Pop the 64-bit value $n$.
-    \item Set the value of element $i$ to 0.
-    \item Do the following 8 times:
-      \begin{enumerate}
-      \item Set the value of memory element $a + i$ to the value of byte $i$ of $n$.
-      \item Increment $i$ by 1.
-      \end{enumerate}
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Pop $a$.
+    \item Pop $x$.
+    \item Put 8 octets from $x$ into address $a$.
     \end{enumerate}
   \item \ADD{}, then do as follows:
     \begin{enumerate}
@@ -424,100 +448,196 @@ In the next version of the machine you will add several more cases to step \ref{
     \end{enumerate}
   \item \MULT{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
-    \item Push the 64-bit value $x y \mod 2^{64}$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
+    \item Push $x y \mod 2^{64}$.
     \end{enumerate}
   \item \DIV{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
     \item Choose the one of the following alternatives that applies:
       \begin{enumerate}
-      \item If $x > 0$ and $y > 0$, then push the 64-bit value $q$, such that $x = qy + r$ and $0 \leq r < y$.
-      \item If $x = 0$ or $y = 0$, then push the 64-bit value 0.
+      \item If $x > 0$ and $y > 0$, then push $q$, such that $x = qy + r$ and $0 \leq r < y$.
+      \item If $x = 0$ or $y = 0$, then push 0.
       \end{enumerate}
     \end{enumerate}
   \item \REM{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
     \item Choose the one of the following alternatives that applies:
       \begin{enumerate}
-      \item If $x > 0$ and $y > 0$, then push the 64-bit value $r$, such that $x = qy + r$ and $0 \leq r < y$.
-      \item If $x = 0$ or $y = 0$, then push the 64-bit value 0.
+      \item If $x > 0$ and $y > 0$, then push $r$, such that $x = qy + r$ and $0 \leq r < y$.
+      \item If $x = 0$ or $y = 0$, then push 0.
       \end{enumerate}
     \end{enumerate}
   \item \LT{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
     \item Choose the one of the following alternatives that applies:
       \begin{enumerate}
-      \item If $x < y$, then push the 64-bit value $2^{64} - 1$.
-      \item If $x \ge y$, then push the 64-bit value 0.
+      \item If $x < y$, then push $2^{64} - 1$.
+      \item If $x \ge y$, then push 0.
       \end{enumerate}
     \end{enumerate}
   \item \AND{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
-    \item Set the 64-bit value $z$ to 0.
-    \item Set the 64-bit value $i$ to 0.
-    \item Do the following 64 times:
-      \begin{enumerate}
-      \item If bit $i$ of $x$ is 1 and bit $i$ of $y$ is 1, then set bit $i$ of $z$ to 1, otherwise, set bit $i$ of $z$ to 0.
-      \item Increment $i$ by 1.
-      \end{enumerate}
-    \item Push the 64-bit value $z$.
+    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
+    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 1 and bit $i$ of $y$ is 1, then set bit $i$ of $z$ to 1, otherwise, set bit $i$ of $z$ to 0.
+    \item Push $z$.
     \end{enumerate}
   \item \OR{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
-    \item Set the 64-bit value $z$ to 0.
-    \item Set the 64-bit value $i$ to 0.
-    \item Do the following 64 times:
-      \begin{enumerate}
-      \item If bit $i$ of $x$ is 0 and bit $i$ of $y$ is 0, then set bit $i$ of $z$ to 0, otherwise, set bit $i$ of $z$ to 1.
-      \item Increment $i$ by 1.
-      \end{enumerate}
-    \item Push the 64-bit value $z$.
+    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
+    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 0 and bit $i$ of $y$ is 0, then set bit $i$ of $z$ to 0, otherwise, set bit $i$ of $z$ to 1. %
+    \item Push $z$.
     \end{enumerate}
   \item \NOT{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $x$.
-    \item Set the 64-bit value $z$ to 0.
-    \item Set the 64-bit value $i$ to 0.
-    \item Do the following 64 times:
-      \begin{enumerate}
-      \item If bit $i$ of $x$ is 1, then set bit $i$ of $z$ to 0.
-      \item If bit $i$ of $x$ is 0, then set bit $i$ of $z$ to 1.
-      \item Increment $i$ by 1.
-      \end{enumerate}
-    \item Push the 64-bit value $z$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $z$ to 0.
+    \item Pop $x$.
+    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 1, then set bit $i$ of $z$ to 0, otherwise set bit $i$ of $z$ to 1.
+    \item Push $z$.
     \end{enumerate}
   \item \XOR{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
-    \item Set the 64-bit value $z$ to 0.
-    \item Set the 64-bit value $i$ to 0.
-    \item Do the following 64 times:
-      \begin{enumerate}
-      \item If bit $i$ of $x$ is different from bit $i$ of $y$, then set bit $i$ of $z$ to 1.
-      \item If bit $i$ of $x$ is the same as bit $i$ of $y$, set bit $i$ of $z$ to 0.
-      \item Increment $i$ by 1.
-      \end{enumerate}
+    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item Pop $y$.
+    \item Pop $x$.
+    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is different from bit $i$ of $y$, then set bit $i$ of $z$ to 1, otherwise set bit $i$ of $z$ to 0.
     \item Push the 64-bit value $z$.
     \end{enumerate}
   \item \POW{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $x$.
-    \item If $0 \le x < 64$, then push the 64-bit value $2^x$.
-    \item If $x \ge 64$, then push the 64-bit value 0.
+    \item Initialize the auxiliary 64-bit element $x$ to 0.
+    \item Pop $x$.
+    \item If $0 \le x < 64$, then push $2^x$.
+    \item If $x \ge 64$, then push 0.
     \end{enumerate}
-  \item \
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Third Version of the Machine}
+
+In the third version of the machine you will add still more cases to step \ref{itm:main-case} of the main procedure.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+\item If the value is
+  \begin{itemize}
+  \item \JUMPZERO{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Fetch 1 octet into $a$.
+    \item Sign extend 1 octet in $a$.
+    \item Pop $x$.
+    \item If the value of $x$ is 0, then increment \PC by $a$, otherwise do nothing.
+    \end{enumerate}
+  \item \PUSHB{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Fetch 1 octet into $a$.
+    \item Push $a$.
+    \end{enumerate}
+  \item \PUSHS{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Fetch 2 octets into $a$.
+    \item Push $a$.
+    \end{enumerate}
+  \item \PUSHI{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Fetch 4 octets into $a$.
+    \item Push $a$.
+    \end{enumerate}
+  \item \SIGXB{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $x$ to 0.
+    \item Pop $x$.
+    \item Sign extend 1 octet in $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \SIGXS{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $x$ to 0.
+    \item Pop $x$.
+    \item Sign extend 2 octets in $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \SIGXI{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $x$ to 0.
+    \item Pop $x$.
+    \item Sign extend 4 octets in $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \LOADB{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Pop $a$.
+    \item Get 1 octet from address $a$ into $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \LOADS{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Pop $a$.
+    \item Get 2 octets from address $a$ into $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \LOADI{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $a$ to 0.
+    \item Pop $a$.
+    \item Get 4 octets from address $a$ into $x$.
+    \item Push $x$.
+    \end{enumerate}
+  \item \STOREB{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Pop $a$.
+    \item Pop $x$.
+    \item Put 1 octet from $x$ into address $a$.
+    \end{enumerate}
+  \item \STORES{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Pop $a$.
+    \item Pop $x$.
+    \item Put 2 octets from $x$ into address $a$.
+    \end{enumerate}
+  \item \STOREI{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
+    \item Pop $a$.
+    \item Pop $x$.
+    \item Put 4 octets from $x$ into address $a$.
+    \end{enumerate}
+  \item \ALLOCATE{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the 64-bit element $n$ and $a$ to 0.
+    \item Pop $n$.
+    \item Create a new range of $n$ new memory elements.
+    \item Set $a$ to the integer that names the first element in the range.
+    \item Push $a$.
+    \end{enumerate}
+  \item \DEALLOCATE{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the 64-bit element $a$ to 0.
+    \item Pop $a$.
+    \item Destroy the memory range whose first element is $a$.
+    \end{enumerate}
   \end{itemize}
 \end{enumerate}
 
@@ -556,7 +676,7 @@ The following figure shows an example of such a matrix, consisting of 32 \emph{p
 \end{center}
 As shown, both columns and rows are numbered consecutively, starting at 0.
 The spacing between the picture elements is uniform in both horizontal and vertical directions.
-Each picture element detects the intensity of light transitted or reflected at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
+Each picture element detects the intensity of light transmitted or reflected at that position in the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
 Values between 0 and 255 represent intermediate intensities between these extremes.
 
 In order to implement the image input device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
@@ -565,18 +685,20 @@ In order to implement the image input device, you will need to add two extra cas
   \setcounter{enumi}{3}
 \item If the value is
   \begin{itemize}
-  \item \hex{38}, then do as follows:
+  \item \READFRAME{}, then do as follows:
     \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements $c$ and $r$ to 0.
     \item Ready the next image to be consumed by the machine, and measure the intensity of light at all picture elements.
-    \item Set the 64-bit value of $c$ to the number of columns in the image.
-    \item Push the 64-bit value $c$.
-    \item Set the 64-bit value of $r$ to the number of rows in the image.
-    \item Push the 64-bit value $r$.
+    \item Set the value of $c$ to the number of columns in the image.
+    \item Push $c$.
+    \item Set the value of $r$ to the number of rows in the image.
+    \item Push $r$.
     \end{enumerate}
-  \item \hex{39}, then do as follows:
+  \item \READPIXEL{}, then do as follows:
     \begin{enumerate}
-    \item Pop the 64-bit value $x$.
-    \item Pop the 64-bit value $y$.
+    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
+    \item Pop $x$.
+    \item Pop $y$.
     \item Find the intensity of light in the image at column $x$ and row $y$, represented as an 8-bit value, $z$.
     \item Decrement \SP.
     \item Set the value of memory element \SP to $z$.
@@ -586,9 +708,69 @@ In order to implement the image input device, you will need to add two extra cas
 
 \subsection{Image Output}
 
+In order to implement the image output device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+\item If the value is
+  \begin{itemize}
+  \item \NEWFRAME{}, then do as follows:
+    \begin{enumerate}
+    \item Finish and render the frame constructed so far.
+    \item Initialize the auxiliary 64-bit elements $r$, $w$, and $h$ to 0.
+    \item Pop $r$.
+    \item Pop $h$.
+    \item Pop $w$.
+    \item Set the frame rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.
+    \end{enumerate}
+  \item \SETPIXEL{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements  $x$, $y$, $r$, $g$, and $b$, to 0.
+    \item Pop $b$.
+    \item Pop $g$.
+    \item Pop $r$.
+    \item Pop $y$.
+    \item Pop $x$.
+    \item Set the picture element at column $x$ and row $y$ to the point in the color space represented by the tuple $(r,g,b)$.
+    \end{enumerate}
+  \end{itemize}
+\end{enumerate}
+
 \subsection{Audio Output}
 
+In order to implement the audio output device, you will need to add one extra case to step \ref{itm:main-case} of the main procedure.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+\item If the value is
+  \begin{itemize}
+  \item \NEWFRAME{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit elements  $l$ and $r$ to 0.
+    \item Pop $r$.
+    \item Pop $l$.
+    \item Set the audio signal magnitude of the left channel to $l$.
+    \item Set the audio signal magnitude of the right channel to $r$.
+    \end{enumerate}
+  \end{itemize}
+\end{enumerate}
+
 \subsection{Text Output}
+
+In order to implement the text output device, you will need to add one extra case to step \ref{itm:main-case} of the main procedure.
+
+\begin{enumerate}
+  \setcounter{enumi}{3}
+\item If the value is
+  \begin{itemize}
+  \item \PUTCHAR{}, then do as follows:
+    \begin{enumerate}
+    \item Initialize the auxiliary 64-bit element $c$ to 0.
+    \item Pop $c$.
+    \item Produce the character with Unicode code point $c$.
+    \end{enumerate}
+  \end{itemize}
+\end{enumerate}
 
 \section{Installing the Initial Program}
 
