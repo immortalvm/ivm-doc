@@ -644,12 +644,12 @@ At this point you should have a machine with fully functional computational capa
 What's missing are the devices that allow the machine to consume data from its environment and to produce data to its environment.
 There are four devices:
 \begin{itemize}
-\item The \emph{Image Input} device allows input of images as a two-dimensional matrix of gray-scale values.
+\item The \emph{Image Input} device allows the machine to consume images as a two-dimensional matrix of gray-scale values.
   This device is very important, because it is what enables the machine to load programs encoded as images on the film.
-\item The \emph{Image Output} device allows output of color images.
-  Moving images are supported by outputting a time series of still images.
-\item The \emph{Audio Output} device allows output of audio signals as a time series of amplitude values.
-\item The \emph{Text Output} device allows output of text as a stream of characters.
+\item The \emph{Image Output} device allows the machine to produce color images.
+  Moving images are supported by producing a time series of still images.
+\item The \emph{Audio Output} device allows the machine to produce audio signals as a time series of amplitude values.
+\item The \emph{Text Output} device allows the machine to produce text as a stream of characters.
 \end{itemize}
 The descriptions below will only explain the correspondence between machine events and real world events.
 It is up to you to make sure that the interpretation of real world events is faithfully implemented.
