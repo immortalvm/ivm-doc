@@ -54,8 +54,6 @@
 \newcommand{\STORES}    [1]{\op{\hex{15}}}
 \newcommand{\STOREI}    [1]{\op{\hex{16}}}
 \newcommand{\STOREL}    [1]{\op{\hex{17}}}
-\newcommand{\ALLOCATE}  [1]{\op{\hex{18}}}
-\newcommand{\DEALLOCATE}[1]{\op{\hex{19}}}
 \newcommand{\ADD}       [1]{\op{\hex{20}}}
 \newcommand{\MULT}      [1]{\op{\hex{21}}}
 \newcommand{\DIV}       [1]{\op{\hex{22}}}
@@ -258,12 +256,7 @@ The temporary 64-bit element $x$ can now be used by other procedures.
 Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
 The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following:
 \begin{stepnumbers}
-\item If the value of $\bitno{x}{8n-1}$ is 1,
-  \begin{itemize}[label=]
-  \item then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1,
-  \item otherwise do nothing.
-  \end{itemize}
-
+\item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
 \end{stepnumbers}
 The temporary 64-bit element $x$ can now be used by other procedures.
 
@@ -305,9 +298,9 @@ You can now proceed with implementing a basic version of the machine with $2^{8}
 
 Machine operation proceeds through two phases: first the storage is initialized, and then the main procedure is executed.
 
-\subsubsection{Storage Initialization}
+\subsubsection{Setting Up the Storage}
 
-To initialize the storage, you need to set the elements to predefined values.
+To set up the storage, you need to set the elements to predefined values.
 $\PC$ is set to $0$, and $\SP$ is set to the number of elements in $\MEM{}$, that is, $2^{8}$ in this version of the machine.
 The values are given in the table below.
 
@@ -325,14 +318,13 @@ The values are given in the table below.
 
 \subsubsection{The Main Procedure}
 
-When you have initialized the storage, simply execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
+When you have set up the storage, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
 \item \proc{Fetch} 1 octet into $k$.
 \item\label{itm:main-case} If $k$ is
   \begin{description}
-  \item[\EXIT{}] then set $\TERM$ to $\T$.
   \item[\NOP{}] then do nothing.
   \item[\JUMP{}] then
     \begin{stepnumbers}
@@ -346,11 +338,7 @@ The main procedure must carry out the following steps.
     \item \proc{Fetch} 1 octet into $a$.
     \item \proc{Extend} sign for 1 octet in $a$.
     \item \proc{Pop} $x$.
-    \item If the value of $x$ is 0,
-      \begin{itemize}[label=]
-      \item then increment $\PC$ by $a$,
-      \item otherwise do nothing.
-      \end{itemize}
+    \item If the value of $x$ is 0, then increment $\PC$ by $a$.
     \end{stepnumbers}
   \item[\SETSP{}] then
     \begin{stepnumbers}
@@ -375,12 +363,12 @@ The main procedure must carry out the following steps.
     \item \proc{Push} $a$.
     \end{stepnumbers}
   \end{description}
-\item If the value does not occur in the list above, abort and report an error.
+\item If the value does not occur in the list above, then set $\TERM$ to $\T$.
 \end{stepnumbers}
 
 \subsubsection{Testing the Basic Machine}
 
-To test the machine, first initialize all elements in $\MEM{}$ to the value $\hex{00}$, and then set the following elements to the provided values.
+To test the machine, first set all elements in $\MEM{}$ to the value $\hex{00}$, and then set the following elements to the provided values.
 
 \begin{center}
   \begin{tabular}{@{}ll@{}}
@@ -682,20 +670,6 @@ In the third version of the machine you will add still more cases to step \ref{i
     \item \proc{Pop} $a$.
     \item \proc{Pop} $x$.
     \item \proc{Put} 4 octets from $x$ into index $a$.
-    \end{stepnumbers}
-  \item[\ALLOCATE{}] then
-    \begin{stepnumbers}
-    \item Initialize the 64-bit element $n$ and $a$ to 0.
-    \item \proc{Pop} $n$.
-    \item Create a new range of $n$ new elements in $\MEM{}$.
-    \item Set $a$ to the integer that names the first element in the range.
-    \item \proc{Push} $a$.
-    \end{stepnumbers}
-  \item[\DEALLOCATE{}] then
-    \begin{stepnumbers}
-    \item Initialize the 64-bit element $a$ to 0.
-    \item \proc{Pop} $a$.
-    \item Discard the range of elements in $\MEM{}$ whose first element is $a$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
