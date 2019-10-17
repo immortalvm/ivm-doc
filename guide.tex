@@ -8,24 +8,29 @@
 \usepackage{amsmath}
 \usepackage{mathptmx}
 \usepackage{tikz}
-\usepackage{xspace}
+\usepackage{xifthen}
 \frenchspacing
 \setlist{nosep}
 \renewcommand{\ttdefault}{cmtt}
 \author{Thor Kristoffersen}
 \date{\today}
 \title{Guide to Building a Machine}
-\newcommand{\num}[1]{\texttt{#1}\xspace}
-\newcommand{\hex}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 16}}$\xspace}
-\newcommand{\bin}[1]{\num{#1}$_{\textup{\tiny\hskip-1ex 2}}$\xspace}
-\newcommand{\PC}{\textbf{program counter}\xspace}
-\newcommand{\SP}{\textbf{stack pointer}\xspace}
-\newcommand{\TERM}{\textbf{terminated}\xspace}
+\newcommand{\num}[1]{\texttt{#1}}
+\newcommand{\hex}[1]{\num{#1}_{\textup{\tiny 16}}}
+\newcommand{\bin}[1]{\num{#1}_{\textup{\tiny 2}}}
+\newcommand{\MEM}[1]{\ifthenelse{\equal{#1}{}}{M}{M[#1]}}
+\newcommand{\PC}{P}
+\newcommand{\SP}{S}
+\newcommand{\TERM}{T}
 \newcommand{\F}{\bin{0}}
 \newcommand{\T}{\bin{1}}
+\newcommand{\octno}[2]{#1.\mathrm{octet}[#2]}
+\newcommand{\bitno}[2]{#1.\mathrm{bit}[#2]}
 \newcommand{\range}[2]{\{#1,\ldots,#2\}}
+\newcommand{\proc}[1]{\textsc{#1}}
+\newcommand{\modulo}[2]{#1 \mod #2}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
-\newcommand{\op}[1]{#1}
+\newcommand{\op}[1]{$#1$}
 \newcommand{\EXIT}      [1]{\op{\hex{00}}}
 \newcommand{\NOP}       [1]{\op{\hex{01}}}
 \newcommand{\JUMP}      [1]{\op{\hex{02}}}
@@ -78,21 +83,18 @@
 \maketitle
 
 \noindent
-This film contains programs that can be executed on a machine.
+This film contains programs that can be executed by a machine.
 The purpose of this part of the film is to guide you through the process of building this machine.
-To understand this guide, you need to have knowledge of basic 20th-century mathematics and physics.
+Using this guide, it should be possible for one person to build a machine in two weeks.
+To understand the guide, it is necessary to have knowledge of basic 20th-century mathematics and physics.
 
-You will start by building a very simple machine, and then you will extend this machine through several stages, so that by the end you will have a fully functional machine.
-
-When you have finished the machine, you are not quite ready to run programs yet.
-First you will need to install in the machine an initial program, which is supplied here.
-
-\comment{Provide time estimates for the above tasks.}
+When you have finished the machine, you will need to install an initial program in it before you can use it to execute programs.
+This initial program is supplied as part of the film.
 
 \section{Building the Machine}
 \label{sec:building-machine}
 
-By following the instructions here, you can develop the machine through several stages, each stage leading to a more capable machine than the preceding one.
+You will start by building a very simple machine, and then you will extend this machine through several stages, so that by the end you will have a fully functional machine.
 Only when you have obtained the correct test results for each stage should you proceed with the following stage.
 
 Number systems used here include decimal, binary, and hexadecimal.
@@ -101,259 +103,276 @@ Further detail on binary and hexadecimal notation can be found in Appendixes~\re
 
 \subsection{Storage}
 
-To build the machine, you first need storage to represent state consisting of binary digits (bits).
-A storage \emph{element} is a group of bits forming a unit with respect to naming.
+To build the machine, you first need some form of storage to represent state consisting of binary digits (bits).
+
+\subsubsection{Representing State}
+
+An \emph{element} is a group of bits in the storage that forms a unit with respect to naming.
 The number of bits in an element is called the \emph{size} of the element.
 Each element has a unique name, so that it can be unambiguously referred to, and the contents can be retrieved or stored in one atomic operation.
-This machine employs element sizes of 1, 8, and 64 bits.
-The storage is divided into three categories:
-\begin{description}
-\item[Memory] 
-The memory consists of a number of 8-bit elements, up to a maximum of $2^{64}$.
-Each memory element is named by an integer in the range from $0$ to $2^{64} - 1$.
-When testing the storage, and when building the first versions of the machine, we will limit the number of memory elements to $2^8$.
-\item[Registers] 
-There are two registers, named respectively the \PC and the \SP.
-Both of these are 64-bit elements.
-The contents of either register are interpreted as a non-negative integer referring to a memory element.
-\item[Flags] 
-There is one flag, named the \TERM flag, which is a 1-bit element.
-\end{description}
-In addition to the elements defined here, it is sometimes necessary to use additional elements temporarily.
-These \emph{auxiliary} elements will be created and initialized whenever needed and are named by single letters.
+The following elements are employed by the machine:
+\begin{itemize}
+\item \emph{1-bit elements.}
+  There is one 1-bit element, named $\TERM$.
+\item \emph{8-bit elements.}
+  $\MEM{}$ is an array of 8-bit elements that is indexed by an integer in the range from $0$ to $2^{64} - 1$.
+  In other words, the element in $\MEM{}$ at index $i$ is named $\MEM{i}$.
+\item \emph{64-bit elements.}
+  There are two 64-bit elements, named $\PC$ and $\SP$.
+\end{itemize}
+In addition to the elements defined in this list, it will be necessary for some tasks to use some temporary elements.
+This is explained in Section~\ref{sec:storage-operations}
 
-\subsection{Storage Operations}
+\subsubsection{Notation}
+
+For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ of $x$.
+
+A group of 8 bits is called an \emph{octet}, and in a 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ of $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
+
+\subsubsection{Operations}
 \label{sec:storage-operations}
 
-We need to define a few terms to talk about storage operations.
-\begin{itemize}
-\item ``The value of an element'' means the contents as retrieved from that element.
-\item ``To set the value of an element to $x$'' means to store the value of $x$ in that element.
-\item ``To increment an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x + n) \mod 2^s$, where $s$ is the size of the element.
-\item ``To decrement an element by $n$'' means to set the value of $x$ to the value of the element and then set that element to $(x - n) \mod 2^s$, where $s$ is the size of the element.
-\item ``The value of \emph{octet} $i$ in $x$'' means the contents of the 8-bit subsequence of $x$ from bit number $8i+7$ to bit number $8i$.
-\item ``To set \emph{octet} $i$ in $x$ to $y$'' means to store the 8-bit sequence $y$ in the 8-bit subsequence of $x$ from bit number $8i+7$ to bit number $8i$, while keeping all other bits of $x$ unchanged.
-\end{itemize}
+We need to define a few terms to talk about storage.
 These should be basic operations in your implementation.
+\begin{itemize}
+\item ``The value of an element.'' means the contents as retrieved from that element.
+\item ``To set an element to $x$'' means to store the value of $x$ in that element.
+\item ``The value of an octet.'' means the contents as retrieved from that octet.
+\item ``To set an octet to $x$'' means to store the value of $x$ in that octet, while keeping all other contents unchanged.
+\item ``To increment an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x + n)}{2^s}$, where $s$ is the size of the element.
+\item ``To decrement an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x - n)}{2^s}$, where $s$ is the size of the element.
+\item  ``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
+  Temporary elements can be discarded when they are no longer needed.
+\end{itemize}
 
-\subsection{Testing the Storage}
+\subsubsection{Testing the Storage Operations}
 
-To test that the storage works as it should, do the following tests several times for every storage element:
+To test that the storage works as it should, do the following tests several times for every element, that is, $\PC$, $\SP$, $\TERM$, and all elements from $\MEM{0}$ to $\MEM{2^8-1}$.
+
+\paragraph{Element Values}
+
+Verify that your operations for storing and getting the value of an element work for every element, $x$, of size $s$.
 \begin{stepnumbers}
-\item Verify that storing and getting the value of an element works.
-  \begin{stepletters}
-  \item Select a random bit sequence, $x$, of the same size, $s$, as the storage element.
-  \item Store this bit sequence in the element.
-  \item Verify that the value of the element is $x$.
-  \end{stepletters}
-\item Verify that your operations for incrementing and decrementing an element work.
-  \begin{stepletters}
-  \item Select a random bit sequence, $n$, of size $s$, different from zero.
-  \item Increment the element by $n$.
-  \item Verify that the value of the element is $(x + n) \mod 2^s$.
-  \item Decrement the element by $n$.
-  \item Verify that the value of the element is $x$.
-  \end{stepletters}
-\item Verify that your octet operations work for every octet, $i$, from $0$ to $7$.
-  \begin{stepletters}
-  \item Get the value of all octets in $x$.
-  \item Select a random bit sequence, $y$, of size $8$, different from the value of octet $i$.
-  \item Set octet $i$ of the element to $y$.
-  \item Verify that the value of octet $i$ is $y$.
-  \item Verify that the values of all the other octets are unchanged.
-  \end{stepletters}
+\item Initialize the temporary element, $y$, of size $s$.
+\item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
+\item Set $x$ to $y$.
+\item Verify that $x = y$.
 \end{stepnumbers}
+
+\paragraph{Incrementing and Decrementing}
+
+Verify that your operations for incrementing and decrementing an element work for every element, $x$, of size $s$.
+\begin{stepnumbers}
+\item Initialize the temporary elements, $y$ and $z$, of size $s$.
+\item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
+\item For all $i \in \range{0}{s-1}$, set $\bitno{z}{i}$ to a random bit value.
+\item Set $x$ to $y$.
+\item Increment $x$ by $z$.
+\item Verify that $x = \modulo{(y + z)}{2^s}$.
+\item Decrement $x$ by $z$.
+\item Verify that $x = y$.
+\end{stepnumbers}
+
+\paragraph{Octets}
+
+Verify that your octet operations work for every 64-bit element, $x$, and every octet, $\octno{x}{n}$ where $n \in \range{0}{7}$.
+\begin{stepnumbers}
+\item Initialize the temporary element, $y$, of size 64.
+\item Initialize the temporary element, $z$, of size 8.
+\item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
+\item For all $i \in \range{0}{7}$, set $\bitno{z}{i}$ to a random bit value.
+\item Set $x$ to $y$.
+\item Set $\octno{x}{n}$ to $z$.
+\item Verify that $\octno{x}{n} = z$.
+\item Verify that $\octno{x}{i} = \octno{y}{i}$ where $i \in \range{0}{7}$ and $i \neq n$.
+\end{stepnumbers}
+
 
 \subsection{Basic Procedures}
 
-Some basic procedures are frequently used by the machine.
-These use the storage operations in Section~\ref{sec:storage-operations}.
+You will need to implement six basic procedures that are frequently used by the machine.
+These use the storage operations described in Section~\ref{sec:storage-operations}.
 
-\subsubsection{Push Element}
+\subsubsection{Descriptions of Procedures}
 
-Assume that we have an auxiliary 64-bit element called $x$.
-The expression ``Push $x$'' means to do the following steps:
+\paragraph{\proc{Put} Octets}
+
+Assume that we have two temporary 64-bit elements called $x$ and $a$, and that $n$ is either 1, 2, 4, or 8.
+The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the following steps:
 \begin{stepnumbers}
-\item Initialize the auxiliary 8-bit element $i$ to 8.
-\item Do the following 8 times:
+\item Initialize the temporary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
   \begin{stepletters}
-  \item Decrement $i$ by 1.
-  \item Decrement \SP by 1.
-  \item Set memory element \SP to octet $i$ of $x$.
+  \item Set $\MEM{a+i}$ to $\octno{x}{i}$.
+  \item Increment $i$ by 1.
   \end{stepletters}
 \end{stepnumbers}
 
-\subsubsection{Pop Element}
+\paragraph{\proc{Get} Octets}
 
-The expression ``Pop $x$'' means to do the following steps:
+Assume that we have a temporary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
+The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the following steps:
 \begin{stepnumbers}
-\item Initialize the auxiliary 64-bit element $x$ to 0.
-\item Initialize the auxiliary 8-bit element $i$ to 0.
-\item Do the following 8 times:
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item Initialize the temporary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
   \begin{stepletters}
-  \item Set octet $i$ of $x$ to memory element \SP.
+  \item Set $\octno{x}{i}$ to $\MEM{a+i}$.
   \item Increment $i$ by 1.
-  \item Increment \SP by 1.
   \end{stepletters}
+\end{stepnumbers}
+The temporary 64-bit element $x$ can now be used by other procedures.
+
+\paragraph{\proc{Push} Element}
+
+Assume that we have a temporary 64-bit element called $x$.
+The expression ``\proc{Push} $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Decrement $\SP$ by 8.
+\item \proc{Put} 8 octets from $x$ into index $\SP$.
+\end{stepnumbers}
+
+\paragraph{\proc{Pop} Element}
+
+The expression ``\proc{Pop} $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item \proc{Get} 8 octets from index $\SP$ into $x$.
+\item Increment $\SP$ by 8.
 \end{stepnumbers}
 The 64-bit element $x$ can now be used by other procedures.
 
-\subsubsection{Put Octets Into Memory}
-
-Assume that we have two auxiliary 64-bit elements called $x$ and $a$, and that $n$ is either 1, 2, 4, or 8.
-The expression ``Put $n$ octets from $x$ into memory at $a$'' means to do the following steps:
-\begin{stepnumbers}
-\item Initialize the auxiliary 8-bit element $i$ to 0.
-\item Do the following $n$ times:
-  \begin{stepletters}
-  \item Set memory element $a+i$ to octet $i$ of $x$.
-  \item Increment $i$ by 1.
-  \end{stepletters}
-\end{stepnumbers}
-
-\subsubsection{Get Octets From Memory}
-
-Assume that we have an auxiliary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
-The expression ``Get $n$ octets from memory at $a$ into $x$'' means to do the following steps:
-\begin{stepnumbers}
-\item Initialize the auxiliary 64-bit element $x$ to 0.
-\item Initialize the auxiliary 8-bit element $i$ to 0.
-\item Do the following $n$ times:
-  \begin{stepletters}
-  \item Set octet $i$ of $x$ to memory element $a+i$.
-  \item Increment $i$ by 1.
-  \end{stepletters}
-\end{stepnumbers}
-The auxiliary 64-bit element $x$ can now be used by other procedures.
-
-\subsubsection{Fetch Octets}
+\paragraph{\proc{Fetch} Octets}
 
 Assume that $n$ is either 1, 2, 4, or 8.
-The expression ``Fetch $n$ octets into $x$'' means to do the following steps:
+The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following steps:
 \begin{stepnumbers}
-\item Initialize the auxiliary 64-bit element $x$ to 0.
-\item Initialize the auxiliary 8-bit element $i$ to 0.
-\item Do the following $n$ times:
-  \begin{stepletters}
-  \item Set octet $i$ of $x$ to memory element \PC.
-  \item Increment $i$ by 1.
-  \item Increment \PC by 1.
-  \end{stepletters}
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item \proc{Get} $n$ octets from index $\PC$ into $x$.
+\item Increment $\PC$ by $n$.
 \end{stepnumbers}
-The auxiliary 64-bit element $x$ can now be used by other procedures.
+The temporary 64-bit element $x$ can now be used by other procedures.
 
-\subsubsection{Sign Extend}
+\paragraph{\proc{Extend} Sign}
 
-Assume that we have an auxiliary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
-The expression ``Sign extend $n$ octets in $x$'' means to do the following:
+Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
+The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following:
 \begin{stepnumbers}
-\item If the value of bit $8n-1$ of $x$ is 1, then for all $i \in \range{8n}{63}$ set the value of bit $i$ of $x$ to 1, otherwise do nothing.
-\end{stepnumbers}
-The auxiliary 64-bit element $x$ can now be used by other procedures.
+\item If the value of $\bitno{x}{8n-1}$ is 1,
+  \begin{itemize}[label=]
+  \item then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1,
+  \item otherwise do nothing.
+  \end{itemize}
 
-\subsection{Testing the Basic Procedures}
+\end{stepnumbers}
+The temporary 64-bit element $x$ can now be used by other procedures.
+
+\subsubsection{Testing the Basic Procedures}
 
 To test the basic procedures, do as follows:
 \begin{stepnumbers}
-\item Set \SP to \hex{0000000000000008}.
-\item Initialize the auxiliary 64-bit element $x$ to \hex{0123456789ABCDEF}.
-\item Push $x$.
-\item Pop $y$.
+\item Set $\SP$ to $\hex{0000000000000008}$.
+\item Initialize the temporary 64-bit element $x$ to $\hex{0123456789ABCDEF}$.
+\item \proc{Push} $x$.
+\item \proc{Pop} $y$.
 \item Verify that $x=y$.
-\item Verify that the value of \SP is \hex{0000000000000008}.
-\item Verify that the contents of the first eight memory elements are as in the following table.
+\item Verify that the value of $\SP$ is $\hex{0000000000000008}$.
+\item Verify that the contents of the first eight elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
     \hline
-    Storage element        & Value    \\
+    Element        & Value    \\
     \hline
-    \hex{0000000000000000} & \hex{EF} \\
-    \hex{0000000000000001} & \hex{CD} \\
-    \hex{0000000000000002} & \hex{AB} \\
-    \hex{0000000000000003} & \hex{89} \\
-    \hex{0000000000000004} & \hex{67} \\
-    \hex{0000000000000005} & \hex{45} \\
-    \hex{0000000000000006} & \hex{23} \\
-    \hex{0000000000000007} & \hex{01} \\
+    $\MEM{\hex{00}}$ & $\hex{EF}$ \\
+    $\MEM{\hex{01}}$ & $\hex{CD}$ \\
+    $\MEM{\hex{02}}$ & $\hex{AB}$ \\
+    $\MEM{\hex{03}}$ & $\hex{89}$ \\
+    $\MEM{\hex{04}}$ & $\hex{67}$ \\
+    $\MEM{\hex{05}}$ & $\hex{45}$ \\
+    $\MEM{\hex{06}}$ & $\hex{23}$ \\
+    $\MEM{\hex{07}}$ & $\hex{01}$ \\
     \hline
   \end{tabular}
 \end{center}
 
-\comment{Test fetch, put, get, sign extend too.}
+\comment{Test fetch, put, get, extend too.}
 
 \subsection{First Version of The Machine}
 
-You can now proceed with implementing a basic version of the machine.
-For practical reasons we will build this version of the machine with $2^{8}$ memory elements.
+You can now proceed with implementing a basic version of the machine with $2^{8}$ elements in $\MEM{}$.
 
 Machine operation proceeds through two phases: first the storage is initialized, and then the main procedure is executed.
 
 \subsubsection{Storage Initialization}
 
-To initialize the storage, you need to set registers and flags to predefined values.
-The \PC is set to $0$, and the \SP is set to the number of memory elements in the machine, that is, $2^{8}$ in this version of the machine.
+To initialize the storage, you need to set the elements to predefined values.
+$\PC$ is set to $0$, and $\SP$ is set to the number of elements in $\MEM{}$, that is, $2^{8}$ in this version of the machine.
 The values are given in the table below.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
     \hline
-    Register or flag & Value                   \\
+    Element  & Value                   \\
     \hline
-    \PC              & \hex{0000000000000000}  \\
-    \SP              & \hex{0000000000000100}  \\
-    \TERM            & \F                      \\
+    $\PC$            & $\hex{0000000000000000}$  \\
+    $\SP$            & $\hex{0000000000000100}$  \\
+    $\TERM$          & $\F$                      \\
     \hline
   \end{tabular}
 \end{center}
 
 \subsubsection{The Main Procedure}
 
-When you have initialized the storage, simply execute the main procedure repeatedly until the value of the \TERM flag is \T.
+When you have initialized the storage, simply execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
-\item Initialize the auxiliary 64-bit element $k$ to 0.
-\item Fetch 1 octet into $k$.
+\item Initialize the temporary 64-bit element $k$ to 0.
+\item \proc{Fetch} 1 octet into $k$.
 \item\label{itm:main-case} If $k$ is
   \begin{description}
-  \item[\EXIT{}] then set the value of \TERM to \T.
+  \item[\EXIT{}] then set $\TERM$ to $\T$.
   \item[\NOP{}] then do nothing.
   \item[\JUMP{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Set \PC to $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Pop} $a$.
+    \item Set $\PC$ to $a$.
     \end{stepnumbers}
   \item[\JUMPZERO{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Fetch 1 octet into $a$.
-    \item Sign extend 1 octet in $a$.
-    \item Pop $x$.
-    \item If the value of $x$ is 0, then increment \PC by $a$, otherwise do nothing.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Fetch} 1 octet into $a$.
+    \item \proc{Extend} sign for 1 octet in $a$.
+    \item \proc{Pop} $x$.
+    \item If the value of $x$ is 0,
+      \begin{itemize}[label=]
+      \item then increment $\PC$ by $a$,
+      \item otherwise do nothing.
+      \end{itemize}
     \end{stepnumbers}
   \item[\SETSP{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Set \SP to $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Pop} $a$.
+    \item Set $\SP$ to $a$.
     \end{stepnumbers}
   \item[\GETPC{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to \PC.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to $\PC$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\GETSP{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to \SP.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to $\SP$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\PUSHL{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Fetch 8 octets into $a$.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 8 octets into $a$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \end{description}
 \item If the value does not occur in the list above, abort and report an error.
@@ -361,70 +380,84 @@ The main procedure must carry out the following steps.
 
 \subsubsection{Testing the Basic Machine}
 
-To test the machine, first initialize all memory elements to the value \hex{00}, and then set the following memory elements to the provided values.
+To test the machine, first initialize all elements in $\MEM{}$ to the value $\hex{00}$, and then set the following elements to the provided values.
 
 \begin{center}
   \begin{tabular}{@{}ll@{}}
     \hline
-    Memory element         & Value \\
+    Element         & Value \\
     \hline
-    \hex{0000000000000000} & \hex{01} \\
-    \hex{0000000000000001} & \hex{0B} \\
-    \hex{0000000000000002} & \hex{13} \\
-    \hex{0000000000000003} & \hex{00} \\
-    \hex{0000000000000004} & \hex{00} \\
-    \hex{0000000000000005} & \hex{00} \\
-    \hex{0000000000000006} & \hex{00} \\
-    \hex{0000000000000007} & \hex{00} \\
-    \hex{0000000000000008} & \hex{00} \\
-    \hex{0000000000000009} & \hex{00} \\
-    \hex{000000000000000A} & \hex{02} \\
-    \hex{000000000000000B} & \hex{00} \\
-    \hex{000000000000000C} & \hex{00} \\
-    \hex{000000000000000D} & \hex{00} \\
-    \hex{000000000000000E} & \hex{00} \\
-    \hex{000000000000000F} & \hex{00} \\
+    $\hex{00}$ & $\hex{01}$ \\
+    $\hex{01}$ & $\hex{0B}$ \\
+    $\hex{02}$ & $\hex{13}$ \\
+    $\hex{03}$ & $\hex{00}$ \\
+    $\hex{04}$ & $\hex{00}$ \\
+    $\hex{05}$ & $\hex{00}$ \\
+    $\hex{06}$ & $\hex{00}$ \\
+    $\hex{07}$ & $\hex{00}$ \\
     \hline
   \end{tabular}
   \hfil
   \begin{tabular}{@{}ll@{}}
     \hline
-    Memory element         & Value \\
+    Element         & Value \\
     \hline
-    \hex{0000000000000010} & \hex{00} \\
-    \hex{0000000000000011} & \hex{00} \\
-    \hex{0000000000000012} & \hex{00} \\
-    \hex{0000000000000013} & \hex{06} \\
-    \hex{0000000000000014} & \hex{05} \\
-    \hex{0000000000000015} & \hex{0B} \\
-    \hex{0000000000000016} & \hex{F8} \\
-    \hex{0000000000000017} & \hex{00} \\
-    \hex{0000000000000018} & \hex{00} \\
-    \hex{0000000000000019} & \hex{00} \\
-    \hex{000000000000001A} & \hex{00} \\
-    \hex{000000000000001B} & \hex{00} \\
-    \hex{000000000000001C} & \hex{00} \\
-    \hex{000000000000001D} & \hex{00} \\
-    \hex{000000000000001E} & \hex{04} \\
-    \hex{000000000000001F} & \hex{00} \\
+    $\hex{08}$ & $\hex{00}$ \\
+    $\hex{09}$ & $\hex{00}$ \\
+    $\hex{0A}$ & $\hex{02}$ \\
+    $\hex{0B}$ & $\hex{00}$ \\
+    $\hex{0C}$ & $\hex{00}$ \\
+    $\hex{0D}$ & $\hex{00}$ \\
+    $\hex{0E}$ & $\hex{00}$ \\
+    $\hex{0F}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Element         & Value \\
+    \hline
+    $\hex{10}$ & $\hex{00}$ \\
+    $\hex{11}$ & $\hex{00}$ \\
+    $\hex{12}$ & $\hex{00}$ \\
+    $\hex{13}$ & $\hex{06}$ \\
+    $\hex{14}$ & $\hex{05}$ \\
+    $\hex{15}$ & $\hex{0B}$ \\
+    $\hex{16}$ & $\hex{F8}$ \\
+    $\hex{17}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Element         & Value \\
+    \hline
+    $\hex{18}$ & $\hex{00}$ \\
+    $\hex{19}$ & $\hex{00}$ \\
+    $\hex{1A}$ & $\hex{00}$ \\
+    $\hex{1B}$ & $\hex{00}$ \\
+    $\hex{1C}$ & $\hex{00}$ \\
+    $\hex{1D}$ & $\hex{00}$ \\
+    $\hex{1E}$ & $\hex{04}$ \\
+    $\hex{1F}$ & $\hex{00}$ \\
     \hline
   \end{tabular}
 \end{center}
 
 Now start the machine.
-When it terminates, all storage elements should remain unchanged, except the following ones, which should have the indicated values.
+When it terminates, all elements should remain unchanged, except the following ones, which should have the indicated values.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
     \hline
-    Storage element        & Value                   \\
+    Element           & Value                     \\
     \hline
-    \PC                    & \hex{0000000000000020}  \\
-    \SP                    & \hex{00000000000000F8}  \\
-    \TERM                  & \T                      \\
-    \hex{00000000000000E8} & \hex{F8} \\
-    \hex{00000000000000F0} & \hex{15} \\
-    \hex{00000000000000F9} & \hex{01} \\
+    $\PC$             & $\hex{0000000000000020}$  \\
+    $\SP$             & $\hex{00000000000000F8}$  \\
+    $\TERM$           & $\T$                      \\
+    $\MEM{\hex{E8}}$ & $\hex{F8}$ \\
+    $\MEM{\hex{F0}}$ & $\hex{15}$ \\
+    $\MEM{\hex{F9}}$ & $\hex{01}$ \\
     \hline
   \end{tabular}
 \end{center}
@@ -442,88 +475,120 @@ In the next version of the machine you will add several more cases to step \ref{
   \begin{description}
   \item[\LOADL{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Pop $a$.
-    \item Get 8 octets from memory at $a$ into $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Get} 8 octets from index $a$ into $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\STOREL{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Pop $a$.
-    \item Pop $x$.
-    \item Put 8 octets from $x$ into memory at $a$.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Pop} $x$.
+    \item \proc{Put} 8 octets from $x$ into index $a$.
     \end{stepnumbers}
   \item[\ADD{}] then
     \begin{stepnumbers}
-    \item Pop the 64-bit value $y$.
-    \item Pop the 64-bit value $x$.
-    \item Push the 64-bit value $(x + y) \mod 2^{64}$.
+    \item \proc{Pop} the 64-bit value $y$.
+    \item \proc{Pop} the 64-bit value $x$.
+    \item \proc{Push} the 64-bit value $\modulo{(x + y)}{2^{64}}$.
     \end{stepnumbers}
   \item[\MULT{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item Push $x y \mod 2^{64}$.
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item \proc{Push} $\modulo{x y}{2^{64}}$.
     \end{stepnumbers}
   \item[\DIV{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item If $x > 0$ and $y > 0$, then push $q$, such that $x = qy + r$ and $0 \leq r < y$, otherwise push 0.
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x > 0$ and $y > 0$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $q$, such that $x = qy + r$ and $0 \leq r < y$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
     \end{stepnumbers}
   \item[\REM{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item If $x > 0$ and $y > 0$, then push $r$, such that $x = qy + r$ and $0 \leq r < y$, otherwise push 0.
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x > 0$ and $y > 0$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $r$, such that $x = qy + r$ and $0 \leq r < y$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
     \end{stepnumbers}
   \item[\LT{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item If $x < y$, then push $2^{64} - 1$, otherwise push 0.
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x < y$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $2^{64} - 1$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
     \end{stepnumbers}
   \item[\AND{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 1 and bit $i$ of $y$ is 1, then set bit $i$ of $z$ to 1, otherwise, set bit $i$ of $z$ to 0.
-    \item Push $z$.
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1 and $\bitno{y}{i}$ is 1,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 1,
+      \item otherwise set $\bitno{z}{i}$ 0.
+      \end{itemize}
+    \item \proc{Push} $z$.
     \end{stepnumbers}
   \item[\OR{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 0 and bit $i$ of $y$ is 0, then set bit $i$ of $z$ to 0, otherwise, set bit $i$ of $z$ to 1. %
-    \item Push $z$.
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 0 and $\bitno{y}{i}$ is 0,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 0,
+      \item otherwise set $\bitno{z}{i}$ to 1.
+      \end{itemize}
+    \item \proc{Push} $z$.
     \end{stepnumbers}
   \item[\NOT{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $z$ to 0.
-    \item Pop $x$.
-    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is 1, then set bit $i$ of $z$ to 0, otherwise set bit $i$ of $z$ to 1.
-    \item Push $z$.
+    \item Initialize the temporary 64-bit elements $x$ and $z$ to 0.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 0,
+      \item otherwise set $\bitno{z}{i}$ to 1.
+      \end{itemize}
+    \item \proc{Push} $z$.
     \end{stepnumbers}
   \item[\XOR{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item Pop $y$.
-    \item Pop $x$.
-    \item For every $i \in \range{0}{63}$, if bit $i$ of $x$ is different from bit $i$ of $y$, then set bit $i$ of $z$ to 1, otherwise set bit $i$ of $z$ to 0.
-    \item Push the 64-bit value $z$.
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is different from $\bitno{y}{i}$,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 1,
+      \item otherwise set $\bitno{z}{i}$ to 0.
+      \end{itemize}
+    \item \proc{Push} the 64-bit value $z$.
     \end{stepnumbers}
   \item[\POW{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $x$ to 0.
-    \item Pop $x$.
-    \item If $x < 64$, then push $2^x$, otherwise push 0.
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item If $x < 64$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $2^x$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
@@ -539,98 +604,98 @@ In the third version of the machine you will add still more cases to step \ref{i
   \begin{description}
   \item[\PUSHB{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Fetch 1 octet into $a$.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 1 octet into $a$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\PUSHS{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Fetch 2 octets into $a$.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 2 octets into $a$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\PUSHI{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Fetch 4 octets into $a$.
-    \item Push $a$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 4 octets into $a$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\SIGXB{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $x$ to 0.
-    \item Pop $x$.
-    \item Sign extend 1 octet in $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 1 octet in $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\SIGXS{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $x$ to 0.
-    \item Pop $x$.
-    \item Sign extend 2 octets in $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 2 octets in $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\SIGXI{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $x$ to 0.
-    \item Pop $x$.
-    \item Sign extend 4 octets in $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 4 octets in $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\LOADB{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Get 1 octet from memory at $a$ into $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Get} 1 octet from index $a$ into $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\LOADS{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Get 2 octets from memory at $a$ into $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Get} 2 octets from index $a$ into $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\LOADI{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Get 4 octets from memory at $a$ into $x$.
-    \item Push $x$.
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Get} 4 octets from index $a$ into $x$.
+    \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\STOREB{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Pop $a$.
-    \item Pop $x$.
-    \item Put 1 octet from $x$ into memory at $a$.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Pop} $x$.
+    \item \proc{Put} 1 octet from $x$ into index $a$.
     \end{stepnumbers}
   \item[\STORES{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Pop $a$.
-    \item Pop $x$.
-    \item Put 2 octets from $x$ into memory at $a$.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Pop} $x$.
+    \item \proc{Put} 2 octets from $x$ into index $a$.
     \end{stepnumbers}
   \item[\STOREI{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $a$ and $x$ to 0.
-    \item Pop $a$.
-    \item Pop $x$.
-    \item Put 4 octets from $x$ into memory at $a$.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Pop} $x$.
+    \item \proc{Put} 4 octets from $x$ into index $a$.
     \end{stepnumbers}
   \item[\ALLOCATE{}] then
     \begin{stepnumbers}
     \item Initialize the 64-bit element $n$ and $a$ to 0.
-    \item Pop $n$.
-    \item Create a new range of $n$ new memory elements.
+    \item \proc{Pop} $n$.
+    \item Create a new range of $n$ new elements in $\MEM{}$.
     \item Set $a$ to the integer that names the first element in the range.
-    \item Push $a$.
+    \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\DEALLOCATE{}] then
     \begin{stepnumbers}
     \item Initialize the 64-bit element $a$ to 0.
-    \item Pop $a$.
-    \item Discard the range of memory elements whose first element is $a$.
+    \item \proc{Pop} $a$.
+    \item Discard the range of elements in $\MEM{}$ whose first element is $a$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
@@ -685,21 +750,20 @@ In order to implement the image input device, you will need to add two extra cas
   \begin{description}
   \item[\READFRAME{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $c$ and $r$ to 0.
+    \item Initialize the temporary 64-bit elements $c$ and $r$ to 0.
     \item Ready the next image to be consumed by the machine, and measure the intensity of light at all sampling points.
-    \item Set the value of $c$ to the number of columns in the image.
-    \item Push $c$.
-    \item Set the value of $r$ to the number of rows in the image.
-    \item Push $r$.
+    \item Set $c$ to the number of columns in the image.
+    \item \proc{Push} $c$.
+    \item Set $r$ to the number of rows in the image.
+    \item \proc{Push} $r$.
     \end{stepnumbers}
   \item[\READPIXEL{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements $x$ and $y$ to 0.
-    \item Pop $x$.
-    \item Pop $y$.
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Pop} $y$.
     \item Find the intensity of light in the image at column $x$ and row $y$, represented as an 8-bit value, $z$.
-    \item Decrement \SP.
-    \item Set the value of memory element \SP to $z$.
+    \item Push $z$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
@@ -709,6 +773,8 @@ In order to implement the image input device, you will need to add two extra cas
 The \emph{Image Output} device allows the machine to produce an image represented as a two-dimensional matrix of points of color space values.
 Moving images can be produced as a sequence of images.
 
+\comment{Color space needs to be explained somewhere.}
+
 In order to implement the image output device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
 
 \begin{stepnumbers}[start=3]
@@ -717,20 +783,20 @@ In order to implement the image output device, you will need to add two extra ca
   \item[\NEWFRAME{}] then
     \begin{stepnumbers}
     \item Finish and render the frame constructed so far.
-    \item Initialize the auxiliary 64-bit elements $r$, $w$, and $h$ to 0.
-    \item Pop $r$.
-    \item Pop $h$.
-    \item Pop $w$.
+    \item Initialize the temporary 64-bit elements $r$, $w$, and $h$ to 0.
+    \item \proc{Pop} $r$.
+    \item \proc{Pop} $h$.
+    \item \proc{Pop} $w$.
     \item Set the frame rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.
     \end{stepnumbers}
   \item[\SETPIXEL{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements  $x$, $y$, $r$, $g$, and $b$, to 0.
-    \item Pop $b$.
-    \item Pop $g$.
-    \item Pop $r$.
-    \item Pop $y$.
-    \item Pop $x$.
+    \item Initialize the temporary 64-bit elements  $x$, $y$, $r$, $g$, and $b$, to 0.
+    \item \proc{Pop} $b$.
+    \item \proc{Pop} $g$.
+    \item \proc{Pop} $r$.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
     \item Set the picture element at column $x$ and row $y$ to the point in the color space represented by the tuple $(r,g,b)$.
     \end{stepnumbers}
   \end{description}
@@ -747,9 +813,9 @@ In order to implement the audio output device, you will need to add one extra ca
   \begin{description}
   \item[\NEWFRAME{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit elements  $l$ and $r$ to 0.
-    \item Pop $r$.
-    \item Pop $l$.
+    \item Initialize the temporary 64-bit elements  $l$ and $r$ to 0.
+    \item \proc{Pop} $r$.
+    \item \proc{Pop} $l$.
     \item Set the audio signal magnitude of the left channel to $l$.
     \item Set the audio signal magnitude of the right channel to $r$.
     \end{stepnumbers}
@@ -766,8 +832,8 @@ In order to implement the text output device, you will need to add one extra cas
   \begin{description}
   \item[\PUTCHAR{}] then
     \begin{stepnumbers}
-    \item Initialize the auxiliary 64-bit element $c$ to 0.
-    \item Pop $c$.
+    \item Initialize the temporary 64-bit element $c$ to 0.
+    \item \proc{Pop} $c$.
     \item Produce the character with Unicode code point $c$.
     \end{stepnumbers}
   \end{description}
@@ -780,7 +846,7 @@ In order to implement the text output device, you will need to add one extra cas
 \section{Binary Notation}
 \label{sec:binary-notation}
 
-Each storage element contains a binary value, that is, a sequence of binary digits that can be retrieved or modified in one atomic operation.
+Each element contains a binary value, that is, a sequence of binary digits that can be retrieved or modified in one atomic operation.
 
 In this documentation, individual binary digits are referred to using non-negative integers, listed in decreasing order.
 For an $n$-bit value, the individual bits, $b_i$, are numbered as follows:
@@ -788,8 +854,8 @@ For an $n$-bit value, the individual bits, $b_i$, are numbered as follows:
 Bit $n-1$ is called the most significant bit (MSB), and bit 0 is called the least significant bit (LSB).
 For example,
 \begin{itemize}
-\item in the 4-bit element \bin{0001}, bit number 0 (or LSB) is 1, and
-\item in the 4-bit element \bin{1000}, bit number 3 (or MSB) is 1.
+\item in the 4-bit element $\bin{0001}$, bit number 0 (or LSB) is 1, and
+\item in the 4-bit element $\bin{1000}$, bit number 3 (or MSB) is 1.
 \end{itemize}
 
 When an $n$-bit binary element is interpreted as a non-negative integer, the value of that integer is
