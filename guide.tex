@@ -4,6 +4,7 @@
 \usepackage[includeheadfoot,margin=2cm]{geometry}
 \usepackage{times}
 \usepackage{booktabs}
+\usepackage[small,compact]{titlesec}
 \usepackage{enumitem}
 \usepackage{amsmath}
 \usepackage{mathptmx}
@@ -14,7 +15,7 @@
 \renewcommand{\ttdefault}{cmtt}
 \author{Thor Kristoffersen}
 \date{\today}
-\title{Guide to Building a Machine}
+\title{How to Build a Machine}
 \newcommand{\num}[1]{\texttt{#1}}
 \newcommand{\hex}[1]{\num{#1}_{\textup{\tiny 16}}}
 \newcommand{\bin}[1]{\num{#1}_{\textup{\tiny 2}}}
@@ -28,7 +29,8 @@
 \newcommand{\bitno}[2]{#1.\mathrm{bit}[#2]}
 \newcommand{\range}[2]{\{#1,\ldots,#2\}}
 \newcommand{\proc}[1]{\textsc{#1}}
-\newcommand{\modulo}[2]{#1 \mod #2}
+\DeclareMathOperator{\MOD}{mod}
+\newcommand{\modulo}[2]{#1 \MOD #2}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
 \newcommand{\op}[1]{$#1$}
 \newcommand{\EXIT}      [1]{\op{\hex{00}}}
@@ -89,45 +91,49 @@ To understand the guide, it is necessary to have knowledge of basic 20th-century
 When you have finished the machine, you will need to install an initial program in it before you can use it to execute programs.
 This initial program is supplied as part of the film.
 
-\section{Building the Machine}
-\label{sec:building-machine}
-
 You will start by building a very simple machine, and then you will extend this machine through several stages, so that by the end you will have a fully functional machine.
 Only when you have obtained the correct test results for each stage should you proceed with the following stage.
 
 Number systems used here include decimal, binary, and hexadecimal.
 All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
-Further detail on binary and hexadecimal notation can be found in Appendixes~\ref{sec:binary-notation} and \ref{sec:hexadecimal-notation}.
+Further detail on binary and hexadecimal notation can be found in Appendix~\ref{sec:number-notation}.
 
-\subsection{Storage}
+\section{Storage}
 
 To build the machine, you first need some form of storage to represent state consisting of binary digits (bits).
 
-\subsubsection{Representing State}
+\subsection{Representing State}
 
 An \emph{element} is a group of bits in the storage that forms a unit with respect to naming.
 The number of bits in an element is called the \emph{size} of the element.
 Each element has a unique name, so that it can be unambiguously referred to, and the contents can be retrieved or stored in one atomic operation.
 The following elements are employed by the machine:
-\begin{itemize}
-\item \emph{1-bit elements.}
-  There is one 1-bit element, named $\TERM$.
-\item \emph{8-bit elements.}
-  $\MEM{}$ is an array of 8-bit elements that is indexed by an integer in the range from $0$ to $2^{64} - 1$.
-  In other words, the element in $\MEM{}$ at index $i$ is named $\MEM{i}$.
-\item \emph{64-bit elements.}
-  There are two 64-bit elements, named $\PC$ and $\SP$.
-\end{itemize}
+\begin{description}
+\item[1-bit elements]
+  $\TERM$ is a one 1-bit element.
+\item[8-bit elements]
+  $\MEM{}$ is an array of $2^N$ 8-bit elements that is indexed by an integer in the range from $0$ to $2^N - 1$, for $N \le 64$.
+  The element at index $i$ in $\MEM{}$ is named $\MEM{i}$.
+  $N$ is a constant that must be known at the time the machine is started.
+\item[64-bit elements]
+  $\PC$ and $\SP$ are 64-bit elements.
+\end{description}
 In addition to the elements defined in this list, it will be necessary for some tasks to use some temporary elements.
 This is explained in Section~\ref{sec:storage-operations}
 
-\subsubsection{Notation}
+\subsection{Notation}
 
-For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ of $x$.
+For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ in $x$.
 
-A group of 8 bits is called an \emph{octet}, and in a 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ of $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
+A group of 8 bits is called an \emph{octet}, and in a 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ in $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
 
-\subsubsection{Operations}
+The modulo operation $\modulo{x}{y}$ for $y>0$ is defined as follows:
+\[ \modulo{x}{y} = x - y \left \lfloor \frac{x}{y} \right \rfloor \]
+where
+\[ \left \lfloor x \right \rfloor = \{ m \in \mathrm{Z} : m \le x \} \]
+and $\mathrm{Z}$ is the set of integers.
+
+\subsection{Operations}
 \label{sec:storage-operations}
 
 We need to define a few terms to talk about storage.
@@ -140,14 +146,13 @@ These should be basic operations in your implementation.
 \item ``To increment an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x + n)}{2^s}$, where $s$ is the size of the element.
 \item ``To decrement an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x - n)}{2^s}$, where $s$ is the size of the element.
 \item  ``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
-  Temporary elements can be discarded when they are no longer needed.
 \end{itemize}
 
-\subsubsection{Testing the Storage Operations}
+\subsection{Testing the Storage Operations}
 
-To test that the storage works as it should, do the following tests several times for every element, that is, $\PC$, $\SP$, $\TERM$, and all elements from $\MEM{0}$ to $\MEM{2^8-1}$.
+To test that the storage works as it should, do the following tests several times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $N=8$ and $i \in \range{0}{2^N-1}$.
 
-\paragraph{Element Values}
+\subsubsection{Element Values}
 
 Verify that your operations for storing and getting the value of an element work for every element, $x$, of size $s$.
 \begin{stepnumbers}
@@ -157,7 +162,7 @@ Verify that your operations for storing and getting the value of an element work
 \item Verify that $x = y$.
 \end{stepnumbers}
 
-\paragraph{Incrementing and Decrementing}
+\subsubsection{Incrementing and Decrementing}
 
 Verify that your operations for incrementing and decrementing an element work for every element, $x$, of size $s$.
 \begin{stepnumbers}
@@ -171,7 +176,7 @@ Verify that your operations for incrementing and decrementing an element work fo
 \item Verify that $x = y$.
 \end{stepnumbers}
 
-\paragraph{Octets}
+\subsubsection{Octets}
 
 Verify that your octet operations work for every 64-bit element, $x$, and every octet, $\octno{x}{n}$ where $n \in \range{0}{7}$.
 \begin{stepnumbers}
@@ -186,14 +191,14 @@ Verify that your octet operations work for every 64-bit element, $x$, and every 
 \end{stepnumbers}
 
 
-\subsection{Basic Procedures}
+\section{Basic Procedures}
 
 You will need to implement six basic procedures that are frequently used by the machine.
 These use the storage operations described in Section~\ref{sec:storage-operations}.
 
-\subsubsection{Descriptions of Procedures}
+\subsection{Descriptions of Procedures}
 
-\paragraph{\proc{Put} Octets}
+\subsubsection{\proc{Put} Octets}
 
 Assume that we have two temporary 64-bit elements called $x$ and $a$, and that $n$ is either 1, 2, 4, or 8.
 The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the following steps:
@@ -206,7 +211,7 @@ The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the
   \end{stepletters}
 \end{stepnumbers}
 
-\paragraph{\proc{Get} Octets}
+\subsubsection{\proc{Get} Octets}
 
 Assume that we have a temporary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
 The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the following steps:
@@ -221,7 +226,7 @@ The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the
 \end{stepnumbers}
 The temporary 64-bit element $x$ can now be used by other procedures.
 
-\paragraph{\proc{Push} Element}
+\subsubsection{\proc{Push} Element}
 
 Assume that we have a temporary 64-bit element called $x$.
 The expression ``\proc{Push} $x$'' means to do the following steps:
@@ -230,7 +235,7 @@ The expression ``\proc{Push} $x$'' means to do the following steps:
 \item \proc{Put} 8 octets from $x$ into index $\SP$.
 \end{stepnumbers}
 
-\paragraph{\proc{Pop} Element}
+\subsubsection{\proc{Pop} Element}
 
 The expression ``\proc{Pop} $x$'' means to do the following steps:
 \begin{stepnumbers}
@@ -240,7 +245,7 @@ The expression ``\proc{Pop} $x$'' means to do the following steps:
 \end{stepnumbers}
 The 64-bit element $x$ can now be used by other procedures.
 
-\paragraph{\proc{Fetch} Octets}
+\subsubsection{\proc{Fetch} Octets}
 
 Assume that $n$ is either 1, 2, 4, or 8.
 The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following steps:
@@ -251,7 +256,7 @@ The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following st
 \end{stepnumbers}
 The temporary 64-bit element $x$ can now be used by other procedures.
 
-\paragraph{\proc{Extend} Sign}
+\subsubsection{\proc{Extend} Sign}
 
 Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
 The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following:
@@ -260,16 +265,16 @@ The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the foll
 \end{stepnumbers}
 The temporary 64-bit element $x$ can now be used by other procedures.
 
-\subsubsection{Testing the Basic Procedures}
+\subsection{Testing the Basic Procedures}
 
-To test the basic procedures, do as follows:
+To test the basic procedures, do as follows, with $N=3$:
 \begin{stepnumbers}
-\item Set $\SP$ to $\hex{0000000000000008}$.
+\item Set $\SP$ to $\hex{08}$.
 \item Initialize the temporary 64-bit element $x$ to $\hex{0123456789ABCDEF}$.
 \item \proc{Push} $x$.
 \item \proc{Pop} $y$.
 \item Verify that $x=y$.
-\item Verify that the value of $\SP$ is $\hex{0000000000000008}$.
+\item Verify that the value of $\SP$ is $\hex{08}$.
 \item Verify that the contents of the first eight elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
 
@@ -292,13 +297,13 @@ To test the basic procedures, do as follows:
 
 \comment{Test fetch, put, get, extend too.}
 
-\subsection{First Version of The Machine}
+\section{First Version of The Machine}
 
-You can now proceed with implementing a basic version of the machine with $2^{8}$ elements in $\MEM{}$.
+You can now proceed with implementing a basic version of the machine with $N=8$.
 
-Machine operation proceeds through two phases: first the storage is initialized, and then the main procedure is executed.
+Machine operation proceeds through two phases: first the storage is set up, and then the main procedure is executed.
 
-\subsubsection{Setting Up the Storage}
+\subsection{Setting Up the Storage}
 
 To set up the storage, you need to set the elements to predefined values.
 $\PC$ is set to $0$, and $\SP$ is set to the number of elements in $\MEM{}$, that is, $2^{8}$ in this version of the machine.
@@ -316,7 +321,7 @@ The values are given in the table below.
   \end{tabular}
 \end{center}
 
-\subsubsection{The Main Procedure}
+\subsection{The Main Procedure}
 
 When you have set up the storage, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
@@ -366,7 +371,7 @@ The main procedure must carry out the following steps.
 \item If the value does not occur in the list above, then set $\TERM$ to $\T$.
 \end{stepnumbers}
 
-\subsubsection{Testing the Basic Machine}
+\subsection{Testing the Basic Machine}
 
 To test the machine, first set all elements in $\MEM{}$ to the value $\hex{00}$, and then set the following elements to the provided values.
 
@@ -433,7 +438,7 @@ To test the machine, first set all elements in $\MEM{}$ to the value $\hex{00}$,
 \end{center}
 
 Now start the machine.
-When it terminates, all elements should remain unchanged, except the following ones, which should have the indicated values.
+When it terminates, all elements should remain unchanged, except the following ones, which should have the indicated values, otherwise the implementation is incorrect.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
@@ -450,11 +455,9 @@ When it terminates, all elements should remain unchanged, except the following o
   \end{tabular}
 \end{center}
 
-If the machine does not terminate or you did not get exactly the above results, the implementation is incorrect.
-
 \comment{Test \JUMPZERO{} too.}
 
-\subsection{Second Version of the Machine}
+\section{Second Version of the Machine}
 
 In the next version of the machine you will add several more cases to step \ref{itm:main-case} of the main procedure.
 
@@ -583,7 +586,7 @@ In the next version of the machine you will add several more cases to step \ref{
 
 \comment{More tests here.}
 
-\subsection{Third Version of the Machine}
+\section{Third Version of the Machine}
 
 In the third version of the machine you will add still more cases to step \ref{itm:main-case} of the main procedure.
 
@@ -815,29 +818,29 @@ In order to implement the text output device, you will need to add one extra cas
 
 \section{Installing the Initial Program}
 
+You first need to obtain the intial program from elsewhere on the film as a sequence of octets.
+These octets must be stored consecutively in $\MEM{}$, from index $0$ and up.
+When this is done, the machine can now be started, and it can then load a program from the film and execute it.
+
 \appendix
 
-\section{Binary Notation}
+
+\section{Number Notation}
+\label{sec:number-notation}
+
+\subsection{Binary Notation}
 \label{sec:binary-notation}
 
-Each element contains a binary value, that is, a sequence of binary digits that can be retrieved or modified in one atomic operation.
-
+Each element contains a value represented as a sequence of binary digits.
 In this documentation, individual binary digits are referred to using non-negative integers, listed in decreasing order.
 For an $n$-bit value, the individual bits, $b_i$, are numbered as follows:
 \[ b_{n-1} \; b_{n-2} \; \ldots \; b_{1} \; b_{0} \]
-Bit $n-1$ is called the most significant bit (MSB), and bit 0 is called the least significant bit (LSB).
-For example,
-\begin{itemize}
-\item in the 4-bit element $\bin{0001}$, bit number 0 (or LSB) is 1, and
-\item in the 4-bit element $\bin{1000}$, bit number 3 (or MSB) is 1.
-\end{itemize}
-
 When an $n$-bit binary element is interpreted as a non-negative integer, the value of that integer is
 \[
     v = \sum_{i=0}^{n-1} b_{i}2^{i}
 \]
 
-\section{Hexadecimal Notation}
+\subsection{Hexadecimal Notation}
 \label{sec:hexadecimal-notation}
 
 For convenience, binary numbers are normally written in hexadecimal notation.
@@ -846,7 +849,7 @@ Each hexadecimal digit corresponds to a group of four binary digits, as shown in
 \begin{center}
   \begin{tabular}{@{}ll@{}}
     \hline
-    Hexadecimal digit & Group of binary digits \\
+    Hexadecimal digit & Binary digits \\
     \hline
     \num{0}           & \num{0000}   \\
     \num{1}           & \num{0001}   \\
@@ -856,6 +859,13 @@ Each hexadecimal digit corresponds to a group of four binary digits, as shown in
     \num{5}           & \num{0101}   \\
     \num{6}           & \num{0110}   \\
     \num{7}           & \num{0111}   \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    Hexadecimal digit & Binary digits \\
+    \hline
     \num{8}           & \num{1000}   \\
     \num{9}           & \num{1001}   \\
     \num{A}           & \num{1010}   \\
@@ -868,8 +878,4 @@ Each hexadecimal digit corresponds to a group of four binary digits, as shown in
   \end{tabular}
 \end{center}
 
-\section{The Initial Program}
-\label{sec:initial-program}
-
-\comment{Include a listing in hex of the initial program.}
 \end{document}
