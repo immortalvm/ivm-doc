@@ -98,13 +98,13 @@ Number systems used here include decimal, binary, and hexadecimal.
 All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
 Further detail on binary and hexadecimal notation can be found in Appendix~\ref{sec:number-notation}.
 
-\section{Storage}
+\section{Memory}
 
-To build the machine, you first need some form of storage to represent state consisting of binary digits (bits).
+To build the machine, you first need some form of memory to represent state consisting of binary digits (bits).
 
 \subsection{Representing State}
 
-An \emph{element} is a group of bits in the storage that forms a unit with respect to naming.
+An \emph{element} is a group of bits in the memory that forms a unit with respect to naming.
 The number of bits in an element is called the \emph{size} of the element.
 Each element has a unique name, so that it can be unambiguously referred to, and the contents can be retrieved or stored in one atomic operation.
 The following elements are employed by the machine:
@@ -119,7 +119,7 @@ The following elements are employed by the machine:
   $\PC$ and $\SP$ are 64-bit elements.
 \end{description}
 In addition to the elements defined in this list, it will be necessary for some tasks to use some temporary elements.
-This is explained in Section~\ref{sec:storage-operations}
+This is explained in Section~\ref{sec:memory-operations}
 
 \subsection{Notation}
 
@@ -132,9 +132,9 @@ The modulo operation, $\modulo{x}{y}$, for $y>0$, is defined here as follows:
 where $\left \lfloor x \right \rfloor$ is defined as the unique integer such that $\left \lfloor x \right \rfloor \le x < (\left \lfloor x \right \rfloor + 1)$.
     
 \subsection{Operations}
-\label{sec:storage-operations}
+\label{sec:memory-operations}
 
-We need to define a few terms to talk about storage.
+We need to define a few terms to talk about memory.
 These should be basic operations in your implementation.
 \begin{itemize}
 \item ``The value of an element.'' means the contents as retrieved from that element.
@@ -146,9 +146,9 @@ These should be basic operations in your implementation.
 \item  ``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
 \end{itemize}
 
-\subsection{Testing the Storage Operations}
+\subsection{Testing the Memory Operations}
 
-To test that the storage works as it should, do the following tests many times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N=8$.
+To test that the memory works as it should, do the following tests many times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N=8$.
 
 \subsubsection{Element Values}
 
@@ -188,11 +188,14 @@ Verify that your octet operations work for every 64-bit element, $x$, and every 
 \item Verify that $\octno{x}{i} = \octno{y}{i}$ where $i \in \range{0}{7}$ and $i \neq n$.
 \end{stepnumbers}
 
+\subsection{Summary of Memory}
+
+The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, $\MEM{}$, and the constant $N$.
 
 \section{Basic Procedures}
 
 You will need to implement six basic procedures that are frequently used by the machine.
-These use the storage operations described in Section~\ref{sec:storage-operations}.
+These use the memory operations described in Section~\ref{sec:memory-operations}.
 
 \subsection{Descriptions of Procedures}
 
@@ -369,13 +372,13 @@ To test \proc{Fetch} and \proc{Extend}, do as follows, with $N=4$:
 
 You can now proceed with implementing a basic version of the machine with $N=8$.
 
-Machine operation proceeds through two phases: first the storage is set up, and then the main procedure is executed.
+Machine operation proceeds through two phases: first the memory is set up, and then the main procedure is executed.
 
-\subsection{Setting Up the Storage}
+\subsection{Setting Up the Memory}
 
-To set up the storage, you need to set all elements to predefined values.
+To set up the memory, you need to set all elements to predefined values.
 $\MEM{i}$ is set to 0 for every $i \in \range{0}{2^N-1}$, $\PC$ is set to $0$, and $\SP$ is set to $2^N$.
-The values are given in the table below.
+The values for $N=8$ are given in the table below.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
@@ -391,7 +394,7 @@ The values are given in the table below.
 
 \subsection{The Main Procedure}
 
-When you have set up the storage, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
+When you have set up the memory, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
@@ -857,8 +860,9 @@ In order to implement the image output device, you will need to add two extra ca
 
 \subsection{Audio Output}
 
-The \emph{Audio Output} device allows the machine to produce two-channel audio signal encoded digitally as Linear Pulse Code Modulation.
-The device must create an audio signal in the form of a curve passing through a series of magnitude values.
+The \emph{Audio Output} device allows the machine to produce a two-channel audio signal encoded digitally using Linear Pulse Code Modulation.
+The device must create an audio signal passing through a series of magnitude values specified by the program.
+The bandwith of this audio signal must be less than half of the sampling frequency.
 Each channel value is in the range $\range{0}{2^{16}-1}$.
 
 In order to implement the audio output device, you will need to add one extra case to step \ref{itm:main-case} of the main procedure.
