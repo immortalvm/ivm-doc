@@ -148,7 +148,7 @@ These should be basic operations in your implementation.
 
 \subsection{Testing the Storage Operations}
 
-To test that the storage works as it should, do the following tests several times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N=8$.
+To test that the storage works as it should, do the following tests many times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N=8$.
 
 \subsubsection{Element Values}
 
@@ -257,7 +257,7 @@ The temporary 64-bit element $x$ can now be used by other procedures.
 \subsubsection{\proc{Extend} Sign}
 
 Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
-The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following:
+The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following step:
 \begin{stepnumbers}
 \item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
 \end{stepnumbers}
@@ -331,25 +331,7 @@ To test \proc{Push} and \proc{Pop}, do as follows, with $N=3$:
 \item \proc{Pop} $y$.
 \item Verify that $x=y$.
 \item Verify that the value of $\SP$ is $\hex{08}$.
-\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
-
-\begin{center}
-  \begin{tabular}{@{}lr@{}}
-    \hline
-    Element        & Value    \\
-    \hline
-    $\MEM{\hex{00}}$ & $\hex{EF}$ \\
-    $\MEM{\hex{01}}$ & $\hex{CD}$ \\
-    $\MEM{\hex{02}}$ & $\hex{AB}$ \\
-    $\MEM{\hex{03}}$ & $\hex{89}$ \\
-    $\MEM{\hex{04}}$ & $\hex{67}$ \\
-    $\MEM{\hex{05}}$ & $\hex{45}$ \\
-    $\MEM{\hex{06}}$ & $\hex{23}$ \\
-    $\MEM{\hex{07}}$ & $\hex{01}$ \\
-    \hline
-  \end{tabular}
-\end{center}
 
 \subsubsection{Testing \proc{Fetch} and \proc{Extend}}
 
@@ -414,7 +396,7 @@ The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
 \item \proc{Fetch} 1 octet into $k$.
-\item\label{itm:main-case} If $k$ is
+\item\label{itm:main-case} If the value of $k$ is
   \begin{description}
   \item[\NOP{}] then do nothing.
   \item[\JUMP{}] then
@@ -454,7 +436,7 @@ The main procedure must carry out the following steps.
     \item \proc{Push} $a$.
     \end{stepnumbers}
   \end{description}
-\item If the value does not occur in the list above, then set $\TERM$ to $\T$.
+\item If the value of $k$ does not occur in the list in the previous point, then set $\TERM$ to $\T$.
 \end{stepnumbers}
 
 \subsection{Testing the Basic Machine}
@@ -780,7 +762,7 @@ At this point you should have a machine with fully functional computational capa
 What's missing are the devices that allow the machine to consume data from its environment and to produce data to its environment.
 There are four devices:
 \begin{itemize}
-\item The \emph{Image Input} device allows the machine to consume images as a two-dimensional matrix of gray-scale values.
+\item The \emph{Image Input} device allows the machine to consume images as a two-dimensional array of gray-scale values.
   This device is very important, because it is what enables the machine to load programs encoded as images on the film.
 \item The \emph{Image Output} device allows the machine to produce color images.
   Moving images are supported by producing a time series of still images.
@@ -792,8 +774,8 @@ It is up to you to make sure that the interpretation of real world events is fai
 
 \subsection{Image Input}
 
-The \emph{Image Input} device allows the machine to consume an image as a two-dimensional matrix of points of light intensity values.
-The following figure shows an example of such a matrix, consisting of 32 sampling points arranged in 8 columns and 4 rows.
+The \emph{Image Input} device allows the machine to consume an image as a two-dimensional array of points of light intensity values.
+The following figure shows an example of such an array, consisting of 32 sampling points arranged in 8 columns and 4 rows.
 \begin{center}
   \begin{tikzpicture}[scale=0.75]
     \foreach \x in {0,...,7}
@@ -841,7 +823,7 @@ In order to implement the image input device, you will need to add two extra cas
 
 \subsection{Image Output}
 
-The \emph{Image Output} device allows the machine to produce an image represented as a two-dimensional matrix of points of color space values.
+The \emph{Image Output} device allows the machine to produce an image represented as a two-dimensional array of points of color space values.
 Moving images can be produced as a sequence of images.
 
 \comment{Color space needs to be explained somewhere.}
@@ -914,8 +896,11 @@ In order to implement the text output device, you will need to add one extra cas
 
 \section{Installing the Initial Program}
 
-You first need to obtain the intial program from elsewhere on the film as a sequence of octets.
+You first need to obtain the intial program from elsewhere on the film as a sequence of octets in hexadecimal notation.
 These octets must be stored consecutively in $\MEM{}$, from index $0$ and up.
+
+\comment{Describe how to supply parameters.}
+
 When this is done, the machine can now be started, and it can then load a program from the film and execute it.
 
 \appendix
