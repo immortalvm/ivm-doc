@@ -444,12 +444,12 @@ The main procedure must carry out the following steps.
 
 \subsection{Testing the Basic Machine}
 
-To test the machine, set the following elements to the provided values.
+To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
   \begin{tabular}{@{}ll@{}}
     \hline
-    Element    & Value \\
+    $\MEM{i}$  & Value \\
     \hline
     $\hex{00}$ & $\hex{01}$ \\
     $\hex{01}$ & $\hex{0B}$ \\
@@ -472,7 +472,7 @@ To test the machine, set the following elements to the provided values.
   \hfil
   \begin{tabular}{@{}ll@{}}
     \hline
-    Element    & Value \\
+    $\MEM{i}$  & Value \\
     \hline
     $\hex{10}$ & $\hex{00}$ \\
     $\hex{11}$ & $\hex{00}$ \\
@@ -495,7 +495,7 @@ To test the machine, set the following elements to the provided values.
   \hfil
   \begin{tabular}{@{}ll@{}}
     \hline
-    Element    & Value \\
+    $\MEM{i}$  & Value \\
     \hline
     $\hex{20}$ & $\hex{01}$ \\
     $\hex{21}$ & $\hex{02}$ \\
@@ -517,8 +517,7 @@ To test the machine, set the following elements to the provided values.
   \end{tabular}
 \end{center}
 
-Now start the machine.
-When it terminates, all elements should remain unchanged, except the following ones, which should have the indicated values, otherwise the implementation is incorrect.
+When the machine terminates, all elements should remain unchanged, except the following ones, which should have the indicated values, otherwise the implementation is incorrect.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
@@ -535,27 +534,14 @@ When it terminates, all elements should remain unchanged, except the following o
   \end{tabular}
 \end{center}
 
-\section{Second Version of the Machine}
+\section{Adding Arithmetic to the Machine}
 
-In the next version of the machine you will add several more cases to step \ref{itm:main-case} of the main procedure.
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add arithmetic capabilities to the machine.
 
 \begin{stepnumbers}[start=3]
 \item If $k$ is
   \begin{description}
-  \item[\LOADL{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
-    \item \proc{Pop} $a$.
-    \item \proc{Get} 8 octets from index $a$ into $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \item[\STOREL{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
-    \item \proc{Pop} $a$.
-    \item \proc{Pop} $x$.
-    \item \proc{Put} 8 octets from $x$ into index $a$.
-    \end{stepnumbers}
   \item[\ADD{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
@@ -592,6 +578,202 @@ In the next version of the machine you will add several more cases to step \ref{
       \item otherwise \proc{Push} 0.
       \end{itemize}
     \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{00}$ & $\hex{0B}$ \\
+    $\hex{01}$ & $\hex{98}$ \\
+    $\hex{02}$ & $\hex{E7}$ \\
+    $\hex{03}$ & $\hex{D9}$ \\
+    $\hex{04}$ & $\hex{58}$ \\
+    $\hex{05}$ & $\hex{1B}$ \\
+    $\hex{06}$ & $\hex{C9}$ \\
+    $\hex{07}$ & $\hex{77}$ \\
+    $\hex{08}$ & $\hex{FF}$ \\
+    $\hex{09}$ & $\hex{0B}$ \\
+    $\hex{0A}$ & $\hex{88}$ \\
+    $\hex{0B}$ & $\hex{60}$ \\
+    $\hex{0C}$ & $\hex{09}$ \\
+    $\hex{0D}$ & $\hex{5C}$ \\
+    $\hex{0E}$ & $\hex{7D}$ \\
+    $\hex{0F}$ & $\hex{2C}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{10}$ & $\hex{17}$ \\
+    $\hex{11}$ & $\hex{3F}$ \\
+    $\hex{12}$ & $\hex{20}$ \\
+    $\hex{13}$ & $\hex{0B}$ \\
+    $\hex{14}$ & $\hex{98}$ \\
+    $\hex{15}$ & $\hex{E7}$ \\
+    $\hex{16}$ & $\hex{D9}$ \\
+    $\hex{17}$ & $\hex{58}$ \\
+    $\hex{18}$ & $\hex{1B}$ \\
+    $\hex{19}$ & $\hex{C9}$ \\
+    $\hex{1A}$ & $\hex{77}$ \\
+    $\hex{1B}$ & $\hex{FF}$ \\
+    $\hex{1C}$ & $\hex{0B}$ \\
+    $\hex{1D}$ & $\hex{88}$ \\
+    $\hex{1E}$ & $\hex{60}$ \\
+    $\hex{1F}$ & $\hex{09}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{20}$ & $\hex{5C}$ \\
+    $\hex{21}$ & $\hex{7D}$ \\
+    $\hex{22}$ & $\hex{2C}$ \\
+    $\hex{23}$ & $\hex{17}$ \\
+    $\hex{24}$ & $\hex{3F}$ \\
+    $\hex{25}$ & $\hex{21}$ \\
+    $\hex{26}$ & $\hex{0B}$ \\
+    $\hex{27}$ & $\hex{98}$ \\
+    $\hex{28}$ & $\hex{E7}$ \\
+    $\hex{29}$ & $\hex{D9}$ \\
+    $\hex{2A}$ & $\hex{58}$ \\
+    $\hex{2B}$ & $\hex{1B}$ \\
+    $\hex{2C}$ & $\hex{C9}$ \\
+    $\hex{2D}$ & $\hex{77}$ \\
+    $\hex{2E}$ & $\hex{FF}$ \\
+    $\hex{2F}$ & $\hex{0B}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{30}$ & $\hex{88}$ \\
+    $\hex{31}$ & $\hex{60}$ \\
+    $\hex{32}$ & $\hex{09}$ \\
+    $\hex{33}$ & $\hex{5C}$ \\
+    $\hex{34}$ & $\hex{7D}$ \\
+    $\hex{35}$ & $\hex{2C}$ \\
+    $\hex{36}$ & $\hex{17}$ \\
+    $\hex{37}$ & $\hex{3F}$ \\
+    $\hex{38}$ & $\hex{22}$ \\
+    $\hex{39}$ & $\hex{0B}$ \\
+    $\hex{3A}$ & $\hex{98}$ \\
+    $\hex{3B}$ & $\hex{E7}$ \\
+    $\hex{3C}$ & $\hex{D9}$ \\
+    $\hex{3D}$ & $\hex{58}$ \\
+    $\hex{3E}$ & $\hex{1B}$ \\
+    $\hex{3F}$ & $\hex{C9}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{40}$ & $\hex{77}$ \\
+    $\hex{41}$ & $\hex{FF}$ \\
+    $\hex{42}$ & $\hex{0B}$ \\
+    $\hex{43}$ & $\hex{88}$ \\
+    $\hex{44}$ & $\hex{60}$ \\
+    $\hex{45}$ & $\hex{09}$ \\
+    $\hex{46}$ & $\hex{5C}$ \\
+    $\hex{47}$ & $\hex{7D}$ \\
+    $\hex{48}$ & $\hex{2C}$ \\
+    $\hex{49}$ & $\hex{17}$ \\
+    $\hex{4A}$ & $\hex{3F}$ \\
+    $\hex{4B}$ & $\hex{23}$ \\
+    $\hex{4C}$ & $\hex{00}$ \\
+    \\
+    \\
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E0}$ & $\hex{78}$ \\
+    $\hex{E1}$ & $\hex{65}$ \\
+    $\hex{E2}$ & $\hex{B4}$ \\
+    $\hex{E3}$ & $\hex{E8}$ \\
+    $\hex{E4}$ & $\hex{25}$ \\
+    $\hex{E5}$ & $\hex{17}$ \\
+    $\hex{E6}$ & $\hex{1B}$ \\
+    $\hex{E7}$ & $\hex{03}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E8}$ & $\hex{04}$ \\
+    $\hex{E9}$ & $\hex{00}$ \\
+    $\hex{EA}$ & $\hex{00}$ \\
+    $\hex{EB}$ & $\hex{00}$ \\
+    $\hex{EC}$ & $\hex{00}$ \\
+    $\hex{ED}$ & $\hex{00}$ \\
+    $\hex{EE}$ & $\hex{00}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F0}$ & $\hex{C0}$ \\
+    $\hex{F1}$ & $\hex{08}$ \\
+    $\hex{F2}$ & $\hex{F4}$ \\
+    $\hex{F3}$ & $\hex{AE}$ \\
+    $\hex{F4}$ & $\hex{F4}$ \\
+    $\hex{F5}$ & $\hex{BB}$ \\
+    $\hex{F6}$ & $\hex{CD}$ \\
+    $\hex{F7}$ & $\hex{95}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F8}$ & $\hex{20}$ \\
+    $\hex{F9}$ & $\hex{48}$ \\
+    $\hex{FA}$ & $\hex{E3}$ \\
+    $\hex{FB}$ & $\hex{B4}$ \\
+    $\hex{FC}$ & $\hex{98}$ \\
+    $\hex{FD}$ & $\hex{F5}$ \\
+    $\hex{FE}$ & $\hex{8E}$ \\
+    $\hex{FF}$ & $\hex{3E}$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{Adding More Arithmetic}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add more arithmetic capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
   \item[\LT{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
@@ -603,6 +785,228 @@ In the next version of the machine you will add several more cases to step \ref{
       \item otherwise \proc{Push} 0.
       \end{itemize}
     \end{stepnumbers}
+  \item[\POW{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item If $x < 64$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $2^x$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{00}$ & $\hex{0B}$ \\
+    $\hex{01}$ & $\hex{00}$ \\
+    $\hex{02}$ & $\hex{00}$ \\
+    $\hex{03}$ & $\hex{00}$ \\
+    $\hex{04}$ & $\hex{00}$ \\
+    $\hex{05}$ & $\hex{00}$ \\
+    $\hex{06}$ & $\hex{00}$ \\
+    $\hex{07}$ & $\hex{00}$ \\
+    $\hex{08}$ & $\hex{80}$ \\
+    $\hex{09}$ & $\hex{0B}$ \\
+    $\hex{0A}$ & $\hex{00}$ \\
+    $\hex{0B}$ & $\hex{00}$ \\
+    $\hex{0C}$ & $\hex{00}$ \\
+    $\hex{0D}$ & $\hex{00}$ \\
+    $\hex{0E}$ & $\hex{00}$ \\
+    $\hex{0F}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{10}$ & $\hex{00}$ \\
+    $\hex{11}$ & $\hex{80}$ \\
+    $\hex{12}$ & $\hex{24}$ \\
+    $\hex{13}$ & $\hex{0B}$ \\
+    $\hex{14}$ & $\hex{FF}$ \\
+    $\hex{15}$ & $\hex{FF}$ \\
+    $\hex{16}$ & $\hex{FF}$ \\
+    $\hex{17}$ & $\hex{FF}$ \\
+    $\hex{18}$ & $\hex{FF}$ \\
+    $\hex{19}$ & $\hex{FF}$ \\
+    $\hex{1A}$ & $\hex{FF}$ \\
+    $\hex{1B}$ & $\hex{FF}$ \\
+    $\hex{1C}$ & $\hex{0B}$ \\
+    $\hex{1D}$ & $\hex{00}$ \\
+    $\hex{1E}$ & $\hex{00}$ \\
+    $\hex{1F}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{20}$ & $\hex{00}$ \\
+    $\hex{21}$ & $\hex{00}$ \\
+    $\hex{22}$ & $\hex{00}$ \\
+    $\hex{23}$ & $\hex{00}$ \\
+    $\hex{24}$ & $\hex{00}$ \\
+    $\hex{25}$ & $\hex{24}$ \\
+    $\hex{26}$ & $\hex{0B}$ \\
+    $\hex{27}$ & $\hex{00}$ \\
+    $\hex{28}$ & $\hex{00}$ \\
+    $\hex{29}$ & $\hex{00}$ \\
+    $\hex{2A}$ & $\hex{00}$ \\
+    $\hex{2B}$ & $\hex{00}$ \\
+    $\hex{2C}$ & $\hex{00}$ \\
+    $\hex{2D}$ & $\hex{00}$ \\
+    $\hex{2E}$ & $\hex{00}$ \\
+    $\hex{2F}$ & $\hex{0B}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{30}$ & $\hex{FF}$ \\
+    $\hex{31}$ & $\hex{FF}$ \\
+    $\hex{32}$ & $\hex{FF}$ \\
+    $\hex{33}$ & $\hex{FF}$ \\
+    $\hex{34}$ & $\hex{FF}$ \\
+    $\hex{35}$ & $\hex{FF}$ \\
+    $\hex{36}$ & $\hex{FF}$ \\
+    $\hex{37}$ & $\hex{FF}$ \\
+    $\hex{38}$ & $\hex{24}$ \\
+    $\hex{39}$ & $\hex{0B}$ \\
+    $\hex{3A}$ & $\hex{03}$ \\
+    $\hex{3B}$ & $\hex{00}$ \\
+    $\hex{3C}$ & $\hex{00}$ \\
+    $\hex{3D}$ & $\hex{00}$ \\
+    $\hex{3E}$ & $\hex{00}$ \\
+    $\hex{3F}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{40}$ & $\hex{00}$ \\
+    $\hex{41}$ & $\hex{00}$ \\
+    $\hex{42}$ & $\hex{2C}$ \\
+    $\hex{43}$ & $\hex{0B}$ \\
+    $\hex{44}$ & $\hex{3D}$ \\
+    $\hex{45}$ & $\hex{00}$ \\
+    $\hex{46}$ & $\hex{00}$ \\
+    $\hex{47}$ & $\hex{00}$ \\
+    $\hex{48}$ & $\hex{00}$ \\
+    $\hex{49}$ & $\hex{00}$ \\
+    $\hex{4A}$ & $\hex{00}$ \\
+    $\hex{4B}$ & $\hex{00}$ \\
+    $\hex{4C}$ & $\hex{2C}$ \\
+    $\hex{4D}$ & $\hex{00}$ \\
+    \\
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the following elements should have the indicated values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{D8}$ & $\hex{00}$ \\
+    $\hex{D9}$ & $\hex{00}$ \\
+    $\hex{DA}$ & $\hex{00}$ \\
+    $\hex{DB}$ & $\hex{00}$ \\
+    $\hex{DC}$ & $\hex{00}$ \\
+    $\hex{DD}$ & $\hex{00}$ \\
+    $\hex{DE}$ & $\hex{00}$ \\
+    $\hex{DF}$ & $\hex{20}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E0}$ & $\hex{08}$ \\
+    $\hex{E1}$ & $\hex{00}$ \\
+    $\hex{E2}$ & $\hex{00}$ \\
+    $\hex{E3}$ & $\hex{00}$ \\
+    $\hex{E4}$ & $\hex{00}$ \\
+    $\hex{E5}$ & $\hex{00}$ \\
+    $\hex{E6}$ & $\hex{00}$ \\
+    $\hex{E7}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E8}$ & $\hex{FF}$ \\
+    $\hex{E9}$ & $\hex{FF}$ \\
+    $\hex{EA}$ & $\hex{FF}$ \\
+    $\hex{EB}$ & $\hex{FF}$ \\
+    $\hex{EC}$ & $\hex{FF}$ \\
+    $\hex{ED}$ & $\hex{FF}$ \\
+    $\hex{EE}$ & $\hex{FF}$ \\
+    $\hex{EF}$ & $\hex{FF}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F0}$ & $\hex{00}$ \\
+    $\hex{F1}$ & $\hex{00}$ \\
+    $\hex{F2}$ & $\hex{00}$ \\
+    $\hex{F3}$ & $\hex{00}$ \\
+    $\hex{F4}$ & $\hex{00}$ \\
+    $\hex{F5}$ & $\hex{00}$ \\
+    $\hex{F6}$ & $\hex{00}$ \\
+    $\hex{F7}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F8}$ & $\hex{00}$ \\
+    $\hex{F9}$ & $\hex{00}$ \\
+    $\hex{FA}$ & $\hex{00}$ \\
+    $\hex{FB}$ & $\hex{00}$ \\
+    $\hex{FC}$ & $\hex{00}$ \\
+    $\hex{FD}$ & $\hex{00}$ \\
+    $\hex{FE}$ & $\hex{00}$ \\
+    $\hex{FF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+
+\section{Adding Bitwise Boolean Logic to the Machine}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add bitwise Boolean logic capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
   \item[\AND{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
@@ -650,20 +1054,193 @@ In the next version of the machine you will add several more cases to step \ref{
       \end{itemize}
     \item \proc{Push} the 64-bit value $z$.
     \end{stepnumbers}
-  \item[\POW{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item If $x < 64$,
-      \begin{itemize}[label=]
-      \item then \proc{Push} $2^x$,
-      \item otherwise \proc{Push} 0.
-      \end{itemize}
-    \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
 
-\comment{More tests here.}
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{00}$ & $\hex{0B}$ \\
+    $\hex{01}$ & $\hex{98}$ \\
+    $\hex{02}$ & $\hex{E7}$ \\
+    $\hex{03}$ & $\hex{D9}$ \\
+    $\hex{04}$ & $\hex{58}$ \\
+    $\hex{05}$ & $\hex{1B}$ \\
+    $\hex{06}$ & $\hex{C9}$ \\
+    $\hex{07}$ & $\hex{77}$ \\
+    $\hex{08}$ & $\hex{FF}$ \\
+    $\hex{09}$ & $\hex{0B}$ \\
+    $\hex{0A}$ & $\hex{88}$ \\
+    $\hex{0B}$ & $\hex{60}$ \\
+    $\hex{0C}$ & $\hex{09}$ \\
+    $\hex{0D}$ & $\hex{5C}$ \\
+    $\hex{0E}$ & $\hex{7D}$ \\
+    $\hex{0F}$ & $\hex{2C}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{10}$ & $\hex{17}$ \\
+    $\hex{11}$ & $\hex{3F}$ \\
+    $\hex{12}$ & $\hex{28}$ \\
+    $\hex{13}$ & $\hex{0B}$ \\
+    $\hex{14}$ & $\hex{98}$ \\
+    $\hex{15}$ & $\hex{E7}$ \\
+    $\hex{16}$ & $\hex{D9}$ \\
+    $\hex{17}$ & $\hex{58}$ \\
+    $\hex{18}$ & $\hex{1B}$ \\
+    $\hex{19}$ & $\hex{C9}$ \\
+    $\hex{1A}$ & $\hex{77}$ \\
+    $\hex{1B}$ & $\hex{FF}$ \\
+    $\hex{1C}$ & $\hex{0B}$ \\
+    $\hex{1D}$ & $\hex{88}$ \\
+    $\hex{1E}$ & $\hex{60}$ \\
+    $\hex{1F}$ & $\hex{09}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{20}$ & $\hex{5C}$ \\
+    $\hex{21}$ & $\hex{7D}$ \\
+    $\hex{22}$ & $\hex{2C}$ \\
+    $\hex{23}$ & $\hex{17}$ \\
+    $\hex{24}$ & $\hex{3F}$ \\
+    $\hex{25}$ & $\hex{29}$ \\
+    $\hex{26}$ & $\hex{0B}$ \\
+    $\hex{27}$ & $\hex{98}$ \\
+    $\hex{28}$ & $\hex{E7}$ \\
+    $\hex{29}$ & $\hex{D9}$ \\
+    $\hex{2A}$ & $\hex{58}$ \\
+    $\hex{2B}$ & $\hex{1B}$ \\
+    $\hex{2C}$ & $\hex{C9}$ \\
+    $\hex{2D}$ & $\hex{77}$ \\
+    $\hex{2E}$ & $\hex{FF}$ \\
+    $\hex{2F}$ & $\hex{2A}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{30}$ & $\hex{0B}$ \\
+    $\hex{31}$ & $\hex{98}$ \\
+    $\hex{32}$ & $\hex{E7}$ \\
+    $\hex{33}$ & $\hex{D9}$ \\
+    $\hex{34}$ & $\hex{58}$ \\
+    $\hex{35}$ & $\hex{1B}$ \\
+    $\hex{36}$ & $\hex{C9}$ \\
+    $\hex{37}$ & $\hex{77}$ \\
+    $\hex{38}$ & $\hex{FF}$ \\
+    $\hex{39}$ & $\hex{0B}$ \\
+    $\hex{3A}$ & $\hex{88}$ \\
+    $\hex{3B}$ & $\hex{60}$ \\
+    $\hex{3C}$ & $\hex{09}$ \\
+    $\hex{3D}$ & $\hex{5C}$ \\
+    $\hex{3E}$ & $\hex{7D}$ \\
+    $\hex{3F}$ & $\hex{2C}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{40}$ & $\hex{17}$ \\
+    $\hex{41}$ & $\hex{3F}$ \\
+    $\hex{42}$ & $\hex{2B}$ \\
+    $\hex{43}$ & $\hex{00}$ \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E0}$ & $\hex{10}$ \\
+    $\hex{E1}$ & $\hex{87}$ \\
+    $\hex{E2}$ & $\hex{D0}$ \\
+    $\hex{E3}$ & $\hex{04}$ \\
+    $\hex{E4}$ & $\hex{66}$ \\
+    $\hex{E5}$ & $\hex{E5}$ \\
+    $\hex{E6}$ & $\hex{60}$ \\
+    $\hex{E7}$ & $\hex{C0}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E8}$ & $\hex{67}$ \\
+    $\hex{E9}$ & $\hex{18}$ \\
+    $\hex{EA}$ & $\hex{26}$ \\
+    $\hex{EB}$ & $\hex{A7}$ \\
+    $\hex{EC}$ & $\hex{E4}$ \\
+    $\hex{ED}$ & $\hex{36}$ \\
+    $\hex{EE}$ & $\hex{88}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F0}$ & $\hex{98}$ \\
+    $\hex{F1}$ & $\hex{E7}$ \\
+    $\hex{F2}$ & $\hex{D9}$ \\
+    $\hex{F3}$ & $\hex{5C}$ \\
+    $\hex{F4}$ & $\hex{7F}$ \\
+    $\hex{F5}$ & $\hex{ED}$ \\
+    $\hex{F6}$ & $\hex{77}$ \\
+    $\hex{F7}$ & $\hex{FF}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F8}$ & $\hex{88}$ \\
+    $\hex{F9}$ & $\hex{60}$ \\
+    $\hex{FA}$ & $\hex{09}$ \\
+    $\hex{FB}$ & $\hex{58}$ \\
+    $\hex{FC}$ & $\hex{19}$ \\
+    $\hex{FD}$ & $\hex{08}$ \\
+    $\hex{FE}$ & $\hex{17}$ \\
+    $\hex{FF}$ & $\hex{3F}$ \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \section{Third Version of the Machine}
 
@@ -688,6 +1265,11 @@ In the third version of the machine you will add still more cases to step \ref{i
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $a$ to 0.
     \item \proc{Fetch} 4 octets into $a$.
+    \item \proc{Push} $a$.
+    \end{stepnumbers}
+  \item[\PUSHZ{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $a$ to 0.
     \item \proc{Push} $a$.
     \end{stepnumbers}
   \item[\SIGXB{}] then
@@ -732,6 +1314,13 @@ In the third version of the machine you will add still more cases to step \ref{i
     \item \proc{Get} 4 octets from index $a$ into $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
+  \item[\LOADL{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Get} 8 octets from index $a$ into $x$.
+    \item \proc{Push} $x$.
+    \end{stepnumbers}
   \item[\STOREB{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
@@ -752,6 +1341,13 @@ In the third version of the machine you will add still more cases to step \ref{i
     \item \proc{Pop} $a$.
     \item \proc{Pop} $x$.
     \item \proc{Put} 4 octets from $x$ into index $a$.
+    \end{stepnumbers}
+  \item[\STOREL{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Pop} $a$.
+    \item \proc{Pop} $x$.
+    \item \proc{Put} 8 octets from $x$ into index $a$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
