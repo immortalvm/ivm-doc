@@ -1242,9 +1242,10 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
   \end{tabular}
 \end{center}
 
-\section{Third Version of the Machine}
+\section{Adding Bit-Copying Capabilities to the Machine}
 
-In the third version of the machine you will add still more cases to step \ref{itm:main-case} of the main procedure.
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add bit-copying capabilities to the machine.
 
 \begin{stepnumbers}[start=3]
 \item If $k$ is
@@ -1293,6 +1294,119 @@ In the third version of the machine you will add still more cases to step \ref{i
     \item \proc{Extend} sign for 4 octets in $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{00}$ & $\hex{07}$ \\
+    $\hex{01}$ & $\hex{08}$ \\
+    $\hex{02}$ & $\hex{89}$ \\
+    $\hex{03}$ & $\hex{0C}$ \\
+    $\hex{04}$ & $\hex{09}$ \\
+    $\hex{05}$ & $\hex{AB}$ \\
+    $\hex{06}$ & $\hex{89}$ \\
+    $\hex{07}$ & $\hex{0D}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{08}$ & $\hex{0A}$ \\
+    $\hex{09}$ & $\hex{EF}$ \\
+    $\hex{0A}$ & $\hex{CD}$ \\
+    $\hex{0B}$ & $\hex{AB}$ \\
+    $\hex{0C}$ & $\hex{89}$ \\
+    $\hex{0D}$ & $\hex{0E}$ \\
+    $\hex{0E}$ & $\hex{00}$ \\
+    \\
+    \hline
+  \end{tabular}
+\end{center}
+
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E0}$ & $\hex{EF}$ \\
+    $\hex{E1}$ & $\hex{CD}$ \\
+    $\hex{E2}$ & $\hex{AB}$ \\
+    $\hex{E3}$ & $\hex{89}$ \\
+    $\hex{E4}$ & $\hex{FF}$ \\
+    $\hex{E5}$ & $\hex{FF}$ \\
+    $\hex{E6}$ & $\hex{FF}$ \\
+    $\hex{E7}$ & $\hex{FF}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E8}$ & $\hex{AB}$ \\
+    $\hex{E9}$ & $\hex{89}$ \\
+    $\hex{EA}$ & $\hex{FF}$ \\
+    $\hex{EB}$ & $\hex{FF}$ \\
+    $\hex{EC}$ & $\hex{FF}$ \\
+    $\hex{ED}$ & $\hex{FF}$ \\
+    $\hex{EE}$ & $\hex{FF}$ \\
+    $\hex{EF}$ & $\hex{FF}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F0}$ & $\hex{89}$ \\
+    $\hex{F1}$ & $\hex{FF}$ \\
+    $\hex{F2}$ & $\hex{FF}$ \\
+    $\hex{F3}$ & $\hex{FF}$ \\
+    $\hex{F4}$ & $\hex{FF}$ \\
+    $\hex{F5}$ & $\hex{FF}$ \\
+    $\hex{F6}$ & $\hex{FF}$ \\
+    $\hex{F7}$ & $\hex{FF}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F8}$ & $\hex{00}$ \\
+    $\hex{F9}$ & $\hex{00}$ \\
+    $\hex{FA}$ & $\hex{00}$ \\
+    $\hex{FB}$ & $\hex{00}$ \\
+    $\hex{FC}$ & $\hex{00}$ \\
+    $\hex{FD}$ & $\hex{00}$ \\
+    $\hex{FE}$ & $\hex{00}$ \\
+    $\hex{FF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+
+
+\section{Adding More Bit-Copying Capabilities to the Machine}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add still more bit-copying capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
   \item[\LOADB{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $a$ to 0.
@@ -1353,6 +1467,151 @@ In the third version of the machine you will add still more cases to step \ref{i
 \end{stepnumbers}
 
 \comment{More tests here.}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{00}$ & $\hex{08}$ \\
+    $\hex{01}$ & $\hex{19}$ \\
+    $\hex{02}$ & $\hex{13}$ \\
+    $\hex{03}$ & $\hex{08}$ \\
+    $\hex{04}$ & $\hex{E0}$ \\
+    $\hex{05}$ & $\hex{17}$ \\
+    $\hex{06}$ & $\hex{08}$ \\
+    $\hex{07}$ & $\hex{21}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{08}$ & $\hex{12}$ \\
+    $\hex{09}$ & $\hex{08}$ \\
+    $\hex{0A}$ & $\hex{E8}$ \\
+    $\hex{0B}$ & $\hex{16}$ \\
+    $\hex{0C}$ & $\hex{08}$ \\
+    $\hex{0D}$ & $\hex{25}$ \\
+    $\hex{0E}$ & $\hex{11}$ \\
+    $\hex{0F}$ & $\hex{08}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{10}$ & $\hex{EC}$ \\
+    $\hex{11}$ & $\hex{15}$ \\
+    $\hex{12}$ & $\hex{08}$ \\
+    $\hex{13}$ & $\hex{27}$ \\
+    $\hex{14}$ & $\hex{10}$ \\
+    $\hex{15}$ & $\hex{08}$ \\
+    $\hex{16}$ & $\hex{EE}$ \\
+    $\hex{17}$ & $\hex{14}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{18}$ & $\hex{00}$ \\
+    $\hex{19}$ & $\hex{A0}$ \\
+    $\hex{1A}$ & $\hex{A1}$ \\
+    $\hex{1B}$ & $\hex{A2}$ \\
+    $\hex{1C}$ & $\hex{A3}$ \\
+    $\hex{1D}$ & $\hex{A4}$ \\
+    $\hex{1E}$ & $\hex{A5}$ \\
+    $\hex{1F}$ & $\hex{A6}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{20}$ & $\hex{A7}$ \\
+    $\hex{21}$ & $\hex{A8}$ \\
+    $\hex{22}$ & $\hex{A9}$ \\
+    $\hex{23}$ & $\hex{AA}$ \\
+    $\hex{24}$ & $\hex{AB}$ \\
+    $\hex{25}$ & $\hex{AC}$ \\
+    $\hex{26}$ & $\hex{AD}$ \\
+    $\hex{27}$ & $\hex{AE}$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the following elements should have the indicated values.
+
+\begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E0}$ & $\hex{A0}$ \\
+    $\hex{E1}$ & $\hex{A1}$ \\
+    $\hex{E2}$ & $\hex{A2}$ \\
+    $\hex{E3}$ & $\hex{A3}$ \\
+    $\hex{E4}$ & $\hex{A4}$ \\
+    $\hex{E5}$ & $\hex{A5}$ \\
+    $\hex{E6}$ & $\hex{A6}$ \\
+    $\hex{E7}$ & $\hex{A7}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{E8}$ & $\hex{A8}$ \\
+    $\hex{E9}$ & $\hex{A9}$ \\
+    $\hex{EA}$ & $\hex{AA}$ \\
+    $\hex{EB}$ & $\hex{AB}$ \\
+    $\hex{EC}$ & $\hex{AC}$ \\
+    $\hex{ED}$ & $\hex{AD}$ \\
+    $\hex{EE}$ & $\hex{AE}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F0}$ & $\hex{EE}$ \\
+    $\hex{F1}$ & $\hex{00}$ \\
+    $\hex{F2}$ & $\hex{00}$ \\
+    $\hex{F3}$ & $\hex{00}$ \\
+    $\hex{F4}$ & $\hex{00}$ \\
+    $\hex{F5}$ & $\hex{00}$ \\
+    $\hex{F6}$ & $\hex{00}$ \\
+    $\hex{F7}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+  \hfil
+  \begin{tabular}{@{}ll@{}}
+    \hline
+    $\MEM{i}$  & Value \\
+    \hline
+    $\hex{F8}$ & $\hex{AE}$ \\
+    $\hex{F9}$ & $\hex{00}$ \\
+    $\hex{FA}$ & $\hex{00}$ \\
+    $\hex{FB}$ & $\hex{00}$ \\
+    $\hex{FC}$ & $\hex{00}$ \\
+    $\hex{FD}$ & $\hex{00}$ \\
+    $\hex{FE}$ & $\hex{00}$ \\
+    $\hex{FF}$ & $\hex{00}$ \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \section{Building the Devices}
 \label{sec:building-devices}
