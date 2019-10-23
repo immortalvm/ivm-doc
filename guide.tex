@@ -33,6 +33,12 @@
 \newcommand{\modulo}[2]{#1 \MOD #2}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
 \newcommand{\op}[1]{$#1$}
+\newenvironment{memtable}{%
+  \begin{tabular}{@{}ll@{}}
+    $\MEM{i}$  & Value \\
+    \hline}
+    {\hline
+  \end{tabular}}
 \newcommand{\EXIT}      [1]{\op{\hex{00}}}
 \newcommand{\NOP}       [1]{\op{\hex{01}}}
 \newcommand{\JUMP}      [1]{\op{\hex{02}}}
@@ -290,35 +296,27 @@ To test \proc{Put} and \proc{Get}, do as follows, with $N=4$:
 \end{stepnumbers}
 
 \begin{center}
-  \begin{tabular}{@{}lr@{}}
-    \hline
-    Element        & Value    \\
-    \hline
-    $\hex{0000000000000000}$ & $\hex{00}$ \\
-    $\hex{0000000000000001}$ & $\hex{EF}$ \\
-    $\hex{0000000000000002}$ & $\hex{EF}$ \\
-    $\hex{0000000000000003}$ & $\hex{CD}$ \\
-    $\hex{0000000000000004}$ & $\hex{EF}$ \\
-    $\hex{0000000000000005}$ & $\hex{CD}$ \\
-    $\hex{0000000000000006}$ & $\hex{AB}$ \\
-    $\hex{0000000000000007}$ & $\hex{89}$ \\
-    \hline
-  \end{tabular}
+  \begin{memtable}
+    $\hex{00}$ & $\hex{00}$ \\
+    $\hex{01}$ & $\hex{EF}$ \\
+    $\hex{02}$ & $\hex{EF}$ \\
+    $\hex{03}$ & $\hex{CD}$ \\
+    $\hex{04}$ & $\hex{EF}$ \\
+    $\hex{05}$ & $\hex{CD}$ \\
+    $\hex{06}$ & $\hex{AB}$ \\
+    $\hex{07}$ & $\hex{89}$ \\
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}lr@{}}
-    \hline
-    Element        & Value    \\
-    \hline
-    $\hex{0000000000000008}$ & $\hex{EF}$ \\
-    $\hex{0000000000000009}$ & $\hex{CD}$ \\
-    $\hex{000000000000000A}$ & $\hex{AB}$ \\
-    $\hex{000000000000000B}$ & $\hex{89}$ \\
-    $\hex{000000000000000C}$ & $\hex{67}$ \\
-    $\hex{000000000000000D}$ & $\hex{45}$ \\
-    $\hex{000000000000000E}$ & $\hex{23}$ \\
-    $\hex{000000000000000F}$ & $\hex{01}$ \\
-    \hline
-  \end{tabular}
+  \begin{memtable}
+    $\hex{08}$ & $\hex{EF}$ \\
+    $\hex{09}$ & $\hex{CD}$ \\
+    $\hex{0A}$ & $\hex{AB}$ \\
+    $\hex{0B}$ & $\hex{89}$ \\
+    $\hex{0C}$ & $\hex{67}$ \\
+    $\hex{0D}$ & $\hex{45}$ \\
+    $\hex{0E}$ & $\hex{23}$ \\
+    $\hex{0F}$ & $\hex{01}$ \\
+  \end{memtable}
 \end{center}
 
 \subsubsection{Testing \proc{Push} and \proc{Pop}}
@@ -382,7 +380,6 @@ The values for $N=8$ are given in the table below.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
-    \hline
     Element  & Value                   \\
     \hline
     $\TERM$          & $\F$                      \\
@@ -447,10 +444,7 @@ The main procedure must carry out the following steps.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{01}$ \\
     $\hex{01}$ & $\hex{0B}$ \\
     $\hex{02}$ & $\hex{23}$ \\
@@ -467,13 +461,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{00}$ \\
     $\hex{0E}$ & $\hex{00}$ \\
     $\hex{0F}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{10}$ & $\hex{00}$ \\
     $\hex{11}$ & $\hex{00}$ \\
     $\hex{12}$ & $\hex{00}$ \\
@@ -490,13 +480,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{1D}$ & $\hex{01}$ \\
     $\hex{1E}$ & $\hex{00}$ \\
     $\hex{1F}$ & $\hex{03}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{20}$ & $\hex{01}$ \\
     $\hex{21}$ & $\hex{02}$ \\
     $\hex{22}$ & $\hex{00}$ \\
@@ -513,15 +499,13 @@ To test the machine, set the following elements to the provided values and start
     $\hex{2D}$ & $\hex{00}$ \\
     $\hex{2E}$ & $\hex{04}$ \\
     $\hex{2F}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, all elements should remain unchanged, except the following ones, which should have the indicated values, otherwise the implementation is incorrect.
 
 \begin{center}
   \begin{tabular}{@{}lr@{}}
-    \hline
     Element          & Value                     \\
     \hline
     $\TERM$          & $\T$                      \\
@@ -586,10 +570,7 @@ These cases add arithmetic capabilities to the machine.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{0B}$ \\
     $\hex{01}$ & $\hex{98}$ \\
     $\hex{02}$ & $\hex{E7}$ \\
@@ -606,13 +587,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{5C}$ \\
     $\hex{0E}$ & $\hex{7D}$ \\
     $\hex{0F}$ & $\hex{2C}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{10}$ & $\hex{17}$ \\
     $\hex{11}$ & $\hex{3F}$ \\
     $\hex{12}$ & $\hex{20}$ \\
@@ -629,13 +606,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{1D}$ & $\hex{88}$ \\
     $\hex{1E}$ & $\hex{60}$ \\
     $\hex{1F}$ & $\hex{09}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{20}$ & $\hex{5C}$ \\
     $\hex{21}$ & $\hex{7D}$ \\
     $\hex{22}$ & $\hex{2C}$ \\
@@ -652,13 +625,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{2D}$ & $\hex{77}$ \\
     $\hex{2E}$ & $\hex{FF}$ \\
     $\hex{2F}$ & $\hex{0B}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{30}$ & $\hex{88}$ \\
     $\hex{31}$ & $\hex{60}$ \\
     $\hex{32}$ & $\hex{09}$ \\
@@ -675,13 +644,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{3D}$ & $\hex{58}$ \\
     $\hex{3E}$ & $\hex{1B}$ \\
     $\hex{3F}$ & $\hex{C9}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{40}$ & $\hex{77}$ \\
     $\hex{41}$ & $\hex{FF}$ \\
     $\hex{42}$ & $\hex{0B}$ \\
@@ -698,17 +663,13 @@ To test the machine, set the following elements to the provided values and start
     \\
     \\
     \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E0}$ & $\hex{78}$ \\
     $\hex{E1}$ & $\hex{65}$ \\
     $\hex{E2}$ & $\hex{B4}$ \\
@@ -717,13 +678,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{E5}$ & $\hex{17}$ \\
     $\hex{E6}$ & $\hex{1B}$ \\
     $\hex{E7}$ & $\hex{03}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E8}$ & $\hex{04}$ \\
     $\hex{E9}$ & $\hex{00}$ \\
     $\hex{EA}$ & $\hex{00}$ \\
@@ -732,13 +689,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{ED}$ & $\hex{00}$ \\
     $\hex{EE}$ & $\hex{00}$ \\
     $\hex{EF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F0}$ & $\hex{C0}$ \\
     $\hex{F1}$ & $\hex{08}$ \\
     $\hex{F2}$ & $\hex{F4}$ \\
@@ -747,13 +700,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{F5}$ & $\hex{BB}$ \\
     $\hex{F6}$ & $\hex{CD}$ \\
     $\hex{F7}$ & $\hex{95}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F8}$ & $\hex{20}$ \\
     $\hex{F9}$ & $\hex{48}$ \\
     $\hex{FA}$ & $\hex{E3}$ \\
@@ -762,8 +711,7 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{FD}$ & $\hex{F5}$ \\
     $\hex{FE}$ & $\hex{8E}$ \\
     $\hex{FF}$ & $\hex{3E}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 \section{Adding More Arithmetic}
@@ -803,10 +751,7 @@ These cases add more arithmetic capabilities to the machine.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{0B}$ \\
     $\hex{01}$ & $\hex{00}$ \\
     $\hex{02}$ & $\hex{00}$ \\
@@ -823,13 +768,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{00}$ \\
     $\hex{0E}$ & $\hex{00}$ \\
     $\hex{0F}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{10}$ & $\hex{00}$ \\
     $\hex{11}$ & $\hex{80}$ \\
     $\hex{12}$ & $\hex{24}$ \\
@@ -846,13 +787,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{1D}$ & $\hex{00}$ \\
     $\hex{1E}$ & $\hex{00}$ \\
     $\hex{1F}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{20}$ & $\hex{00}$ \\
     $\hex{21}$ & $\hex{00}$ \\
     $\hex{22}$ & $\hex{00}$ \\
@@ -869,13 +806,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{2D}$ & $\hex{00}$ \\
     $\hex{2E}$ & $\hex{00}$ \\
     $\hex{2F}$ & $\hex{0B}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{30}$ & $\hex{FF}$ \\
     $\hex{31}$ & $\hex{FF}$ \\
     $\hex{32}$ & $\hex{FF}$ \\
@@ -892,13 +825,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{3D}$ & $\hex{00}$ \\
     $\hex{3E}$ & $\hex{00}$ \\
     $\hex{3F}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{40}$ & $\hex{00}$ \\
     $\hex{41}$ & $\hex{00}$ \\
     $\hex{42}$ & $\hex{2C}$ \\
@@ -915,17 +844,13 @@ To test the machine, set the following elements to the provided values and start
     $\hex{4D}$ & $\hex{00}$ \\
     \\
     \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the following elements should have the indicated values.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{D8}$ & $\hex{00}$ \\
     $\hex{D9}$ & $\hex{00}$ \\
     $\hex{DA}$ & $\hex{00}$ \\
@@ -934,13 +859,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the fo
     $\hex{DD}$ & $\hex{00}$ \\
     $\hex{DE}$ & $\hex{00}$ \\
     $\hex{DF}$ & $\hex{20}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E0}$ & $\hex{08}$ \\
     $\hex{E1}$ & $\hex{00}$ \\
     $\hex{E2}$ & $\hex{00}$ \\
@@ -949,13 +870,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the fo
     $\hex{E5}$ & $\hex{00}$ \\
     $\hex{E6}$ & $\hex{00}$ \\
     $\hex{E7}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E8}$ & $\hex{FF}$ \\
     $\hex{E9}$ & $\hex{FF}$ \\
     $\hex{EA}$ & $\hex{FF}$ \\
@@ -964,13 +881,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the fo
     $\hex{ED}$ & $\hex{FF}$ \\
     $\hex{EE}$ & $\hex{FF}$ \\
     $\hex{EF}$ & $\hex{FF}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F0}$ & $\hex{00}$ \\
     $\hex{F1}$ & $\hex{00}$ \\
     $\hex{F2}$ & $\hex{00}$ \\
@@ -979,13 +892,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the fo
     $\hex{F5}$ & $\hex{00}$ \\
     $\hex{F6}$ & $\hex{00}$ \\
     $\hex{F7}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F8}$ & $\hex{00}$ \\
     $\hex{F9}$ & $\hex{00}$ \\
     $\hex{FA}$ & $\hex{00}$ \\
@@ -994,8 +903,7 @@ When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the fo
     $\hex{FD}$ & $\hex{00}$ \\
     $\hex{FE}$ & $\hex{00}$ \\
     $\hex{FF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 
@@ -1062,10 +970,7 @@ These cases add bitwise Boolean logic capabilities to the machine.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{0B}$ \\
     $\hex{01}$ & $\hex{98}$ \\
     $\hex{02}$ & $\hex{E7}$ \\
@@ -1082,13 +987,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{5C}$ \\
     $\hex{0E}$ & $\hex{7D}$ \\
     $\hex{0F}$ & $\hex{2C}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{10}$ & $\hex{17}$ \\
     $\hex{11}$ & $\hex{3F}$ \\
     $\hex{12}$ & $\hex{28}$ \\
@@ -1105,13 +1006,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{1D}$ & $\hex{88}$ \\
     $\hex{1E}$ & $\hex{60}$ \\
     $\hex{1F}$ & $\hex{09}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{20}$ & $\hex{5C}$ \\
     $\hex{21}$ & $\hex{7D}$ \\
     $\hex{22}$ & $\hex{2C}$ \\
@@ -1128,13 +1025,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{2D}$ & $\hex{77}$ \\
     $\hex{2E}$ & $\hex{FF}$ \\
     $\hex{2F}$ & $\hex{2A}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{30}$ & $\hex{0B}$ \\
     $\hex{31}$ & $\hex{98}$ \\
     $\hex{32}$ & $\hex{E7}$ \\
@@ -1151,13 +1044,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{3D}$ & $\hex{5C}$ \\
     $\hex{3E}$ & $\hex{7D}$ \\
     $\hex{3F}$ & $\hex{2C}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{40}$ & $\hex{17}$ \\
     $\hex{41}$ & $\hex{3F}$ \\
     $\hex{42}$ & $\hex{2B}$ \\
@@ -1174,17 +1063,13 @@ To test the machine, set the following elements to the provided values and start
     \\
     \\
     \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E0}$ & $\hex{10}$ \\
     $\hex{E1}$ & $\hex{87}$ \\
     $\hex{E2}$ & $\hex{D0}$ \\
@@ -1193,13 +1078,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{E5}$ & $\hex{E5}$ \\
     $\hex{E6}$ & $\hex{60}$ \\
     $\hex{E7}$ & $\hex{C0}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E8}$ & $\hex{67}$ \\
     $\hex{E9}$ & $\hex{18}$ \\
     $\hex{EA}$ & $\hex{26}$ \\
@@ -1208,13 +1089,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{ED}$ & $\hex{36}$ \\
     $\hex{EE}$ & $\hex{88}$ \\
     $\hex{EF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F0}$ & $\hex{98}$ \\
     $\hex{F1}$ & $\hex{E7}$ \\
     $\hex{F2}$ & $\hex{D9}$ \\
@@ -1223,13 +1100,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{F5}$ & $\hex{ED}$ \\
     $\hex{F6}$ & $\hex{77}$ \\
     $\hex{F7}$ & $\hex{FF}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F8}$ & $\hex{88}$ \\
     $\hex{F9}$ & $\hex{60}$ \\
     $\hex{FA}$ & $\hex{09}$ \\
@@ -1238,8 +1111,7 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{FD}$ & $\hex{08}$ \\
     $\hex{FE}$ & $\hex{17}$ \\
     $\hex{FF}$ & $\hex{3F}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 \section{Adding Bit-Copying Capabilities to the Machine}
@@ -1302,10 +1174,7 @@ These cases add bit-copying capabilities to the machine.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{07}$ \\
     $\hex{01}$ & $\hex{08}$ \\
     $\hex{02}$ & $\hex{89}$ \\
@@ -1314,13 +1183,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{05}$ & $\hex{AB}$ \\
     $\hex{06}$ & $\hex{89}$ \\
     $\hex{07}$ & $\hex{0D}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{08}$ & $\hex{0A}$ \\
     $\hex{09}$ & $\hex{EF}$ \\
     $\hex{0A}$ & $\hex{CD}$ \\
@@ -1329,17 +1194,13 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{0E}$ \\
     $\hex{0E}$ & $\hex{00}$ \\
     \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E0}$ & $\hex{EF}$ \\
     $\hex{E1}$ & $\hex{CD}$ \\
     $\hex{E2}$ & $\hex{AB}$ \\
@@ -1348,13 +1209,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{E5}$ & $\hex{FF}$ \\
     $\hex{E6}$ & $\hex{FF}$ \\
     $\hex{E7}$ & $\hex{FF}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E8}$ & $\hex{AB}$ \\
     $\hex{E9}$ & $\hex{89}$ \\
     $\hex{EA}$ & $\hex{FF}$ \\
@@ -1363,13 +1220,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{ED}$ & $\hex{FF}$ \\
     $\hex{EE}$ & $\hex{FF}$ \\
     $\hex{EF}$ & $\hex{FF}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F0}$ & $\hex{89}$ \\
     $\hex{F1}$ & $\hex{FF}$ \\
     $\hex{F2}$ & $\hex{FF}$ \\
@@ -1378,13 +1231,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{F5}$ & $\hex{FF}$ \\
     $\hex{F6}$ & $\hex{FF}$ \\
     $\hex{F7}$ & $\hex{FF}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F8}$ & $\hex{00}$ \\
     $\hex{F9}$ & $\hex{00}$ \\
     $\hex{FA}$ & $\hex{00}$ \\
@@ -1393,8 +1242,7 @@ When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the fo
     $\hex{FD}$ & $\hex{00}$ \\
     $\hex{FE}$ & $\hex{00}$ \\
     $\hex{FF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 
@@ -1473,10 +1321,7 @@ These cases add still more bit-copying capabilities to the machine.
 To test the machine, set the following elements to the provided values and start the machine.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{00}$ & $\hex{08}$ \\
     $\hex{01}$ & $\hex{19}$ \\
     $\hex{02}$ & $\hex{13}$ \\
@@ -1485,13 +1330,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{05}$ & $\hex{17}$ \\
     $\hex{06}$ & $\hex{08}$ \\
     $\hex{07}$ & $\hex{21}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{08}$ & $\hex{12}$ \\
     $\hex{09}$ & $\hex{08}$ \\
     $\hex{0A}$ & $\hex{E8}$ \\
@@ -1500,13 +1341,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{0D}$ & $\hex{25}$ \\
     $\hex{0E}$ & $\hex{11}$ \\
     $\hex{0F}$ & $\hex{08}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{10}$ & $\hex{EC}$ \\
     $\hex{11}$ & $\hex{15}$ \\
     $\hex{12}$ & $\hex{08}$ \\
@@ -1515,13 +1352,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{15}$ & $\hex{08}$ \\
     $\hex{16}$ & $\hex{EE}$ \\
     $\hex{17}$ & $\hex{14}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{18}$ & $\hex{00}$ \\
     $\hex{19}$ & $\hex{A0}$ \\
     $\hex{1A}$ & $\hex{A1}$ \\
@@ -1530,13 +1363,9 @@ To test the machine, set the following elements to the provided values and start
     $\hex{1D}$ & $\hex{A4}$ \\
     $\hex{1E}$ & $\hex{A5}$ \\
     $\hex{1F}$ & $\hex{A6}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{20}$ & $\hex{A7}$ \\
     $\hex{21}$ & $\hex{A8}$ \\
     $\hex{22}$ & $\hex{A9}$ \\
@@ -1545,17 +1374,13 @@ To test the machine, set the following elements to the provided values and start
     $\hex{25}$ & $\hex{AC}$ \\
     $\hex{26}$ & $\hex{AD}$ \\
     $\hex{27}$ & $\hex{AE}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the following elements should have the indicated values.
 
 \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E0}$ & $\hex{A0}$ \\
     $\hex{E1}$ & $\hex{A1}$ \\
     $\hex{E2}$ & $\hex{A2}$ \\
@@ -1564,13 +1389,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{E5}$ & $\hex{A5}$ \\
     $\hex{E6}$ & $\hex{A6}$ \\
     $\hex{E7}$ & $\hex{A7}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{E8}$ & $\hex{A8}$ \\
     $\hex{E9}$ & $\hex{A9}$ \\
     $\hex{EA}$ & $\hex{AA}$ \\
@@ -1579,13 +1400,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{ED}$ & $\hex{AD}$ \\
     $\hex{EE}$ & $\hex{AE}$ \\
     $\hex{EF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F0}$ & $\hex{EE}$ \\
     $\hex{F1}$ & $\hex{00}$ \\
     $\hex{F2}$ & $\hex{00}$ \\
@@ -1594,13 +1411,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{F5}$ & $\hex{00}$ \\
     $\hex{F6}$ & $\hex{00}$ \\
     $\hex{F7}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
   \hfil
-  \begin{tabular}{@{}ll@{}}
-    \hline
-    $\MEM{i}$  & Value \\
-    \hline
+  \begin{memtable}
     $\hex{F8}$ & $\hex{AE}$ \\
     $\hex{F9}$ & $\hex{00}$ \\
     $\hex{FA}$ & $\hex{00}$ \\
@@ -1609,8 +1422,7 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{FD}$ & $\hex{00}$ \\
     $\hex{FE}$ & $\hex{00}$ \\
     $\hex{FF}$ & $\hex{00}$ \\
-    \hline
-  \end{tabular}
+  \end{memtable}
 \end{center}
 
 \section{Building the Devices}
@@ -1788,7 +1600,6 @@ Each hexadecimal digit corresponds to a group of four binary digits, as shown in
 
 \begin{center}
   \begin{tabular}{@{}ll@{}}
-    \hline
     Hexadecimal digit & Binary digits \\
     \hline
     \num{0}           & \num{0000}   \\
@@ -1803,7 +1614,6 @@ Each hexadecimal digit corresponds to a group of four binary digits, as shown in
   \end{tabular}
   \hfil
   \begin{tabular}{@{}ll@{}}
-    \hline
     Hexadecimal digit & Binary digits \\
     \hline
     \num{8}           & \num{1000}   \\
