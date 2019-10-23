@@ -43,6 +43,7 @@
     $i$ & $\MEM{i}$ \\
     \hline}
     {%
+    \hline
   \end{tabular}}
 \newcommand{\memspace}{\qquad}
 \newcommand{\EXIT}      [1]{\op{\hex{00}}}
@@ -387,19 +388,7 @@ Machine operation proceeds through two phases: first the memory is set up, and t
 \subsection{Setting Up the Memory}
 
 To set up the memory, you need to set all elements to predefined values.
-$\MEM{i}$ is set to 0 for every $i \in \range{0}{2^N-1}$, $\PC$ is set to $0$, and $\SP$ is set to $2^N$.
-The values for $N=8$ are given in the table below.
-
-\begin{memtable}
-  \begin{tabular}{@{}lr@{}}
-    Element  & Value                   \\
-    \hline
-    $\TERM$          & $\F$                      \\
-    $\PC$            & $\hex{0000000000000000}$  \\
-    $\SP$            & $\hex{0000000000000100}$  \\
-    \hline
-  \end{tabular}
-\end{memtable}
+$\MEM{i}$ is set to 0 for every $i \in \range{0}{2^N-1}$, $\TERM$ is set to 0, $\PC$ is set to $0$, and $\SP$ is set to $2^N$ (so in the case of $N=8$, $\SP$ is set to $\hex{100}$).
 
 \subsection{The Main Procedure}
 
@@ -522,21 +511,42 @@ To test the machine, set the following elements to the provided values and start
     $\hex{2F}$ & $\hex{00}$ \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, all elements should remain unchanged, except the following ones, which should have the indicated values, otherwise the implementation is incorrect.
-\begin{trivlist}
-  \item
-  \begin{tabular}{@{}lr@{}}
-    Element          & Value                     \\
-    \hline
-    $\TERM$          & $\T$                      \\
-    $\PC$            & $\hex{0000000000000030}$ \\
-    $\SP$            & $\hex{00000000000000F8}$ \\
-    $\MEM{\hex{E8}}$ & $\hex{F8}$ \\
-    $\MEM{\hex{F0}}$ & $\hex{25}$ \\
-    $\MEM{\hex{F9}}$ & $\hex{01}$ \\
-    \hline
-  \end{tabular}
-\end{trivlist}
+When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{30}$, the value of $\SP$ should be $\hex{F8}$, and the following elements should have the indicated values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{E8}$ & $\hex{F8}$ \\
+    $\hex{E9}$ & $\hex{00}$ \\
+    $\hex{EA}$ & $\hex{00}$ \\
+    $\hex{EB}$ & $\hex{00}$ \\
+    $\hex{EC}$ & $\hex{00}$ \\
+    $\hex{ED}$ & $\hex{00}$ \\
+    $\hex{EE}$ & $\hex{00}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F0}$ & $\hex{25}$ \\
+    $\hex{F1}$ & $\hex{00}$ \\
+    $\hex{F2}$ & $\hex{00}$ \\
+    $\hex{F3}$ & $\hex{00}$ \\
+    $\hex{F4}$ & $\hex{00}$ \\
+    $\hex{F5}$ & $\hex{00}$ \\
+    $\hex{F6}$ & $\hex{00}$ \\
+    $\hex{F7}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F8}$ & $\hex{00}$ \\
+    $\hex{F9}$ & $\hex{01}$ \\
+    $\hex{FA}$ & $\hex{00}$ \\
+    $\hex{FB}$ & $\hex{00}$ \\
+    $\hex{FC}$ & $\hex{00}$ \\
+    $\hex{FD}$ & $\hex{00}$ \\
+    $\hex{FE}$ & $\hex{00}$ \\
+    $\hex{FF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+\end{memtable}
+All other $\MEM{i}$ elements should remain unchanged.
 
 \section{Adding Arithmetic to the Machine}
 
