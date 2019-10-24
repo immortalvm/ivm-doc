@@ -430,10 +430,10 @@ The main procedure must carry out the following steps.
     \item Initialize the temporary 64-bit element $a$ to $\SP$.
     \item \proc{Push} $a$.
     \end{stepnumbers}
-  \item[\PUSHL{}] then
+  \item[\PUSHB{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $a$ to 0.
-    \item \proc{Fetch} 8 octets into $a$.
+    \item \proc{Fetch} 1 octet into $a$.
     \item \proc{Push} $a$.
     \end{stepnumbers}
   \end{description}
@@ -447,21 +447,27 @@ To test the machine, set the following elements to the provided values and start
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{01}$ \\
-    $\hex{01}$ & $\hex{0B}$ \\
-    $\hex{02}$ & $\hex{23}$ \\
-    $\hex{03}$ & $\hex{00}$ \\
-    $\hex{04}$ & $\hex{00}$ \\
-    $\hex{05}$ & $\hex{00}$ \\
-    $\hex{06}$ & $\hex{00}$ \\
-    $\hex{07}$ & $\hex{00}$ \\
+    $\hex{01}$ & $\hex{08}$ \\
+    $\hex{02}$ & $\hex{12}$ \\
+    $\hex{03}$ & $\hex{08}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{08}$ & $\hex{00}$ \\
+    $\hex{04}$ & $\hex{01}$ \\
+    $\hex{05}$ & $\hex{08}$ \\
+    $\hex{06}$ & $\hex{00}$ \\
+    $\hex{07}$ & $\hex{03}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{08}$ & $\hex{01}$ \\
     $\hex{09}$ & $\hex{00}$ \\
-    $\hex{0A}$ & $\hex{0B}$ \\
+    $\hex{0A}$ & $\hex{03}$ \\
     $\hex{0B}$ & $\hex{01}$ \\
-    $\hex{0C}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{0C}$ & $\hex{02}$ \\
     $\hex{0D}$ & $\hex{00}$ \\
     $\hex{0E}$ & $\hex{00}$ \\
     $\hex{0F}$ & $\hex{00}$ \\
@@ -470,54 +476,27 @@ To test the machine, set the following elements to the provided values and start
   \begin{memcolumn}
     $\hex{10}$ & $\hex{00}$ \\
     $\hex{11}$ & $\hex{00}$ \\
-    $\hex{12}$ & $\hex{00}$ \\
-    $\hex{13}$ & $\hex{0B}$ \\
-    $\hex{14}$ & $\hex{00}$ \\
-    $\hex{15}$ & $\hex{00}$ \\
-    $\hex{16}$ & $\hex{00}$ \\
+    $\hex{12}$ & $\hex{06}$ \\
+    $\hex{13}$ & $\hex{05}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{14}$ & $\hex{08}$ \\
+    $\hex{15}$ & $\hex{F8}$ \\
+    $\hex{16}$ & $\hex{04}$ \\
     $\hex{17}$ & $\hex{00}$ \\
   \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{18}$ & $\hex{00}$ \\
-    $\hex{19}$ & $\hex{00}$ \\
-    $\hex{1A}$ & $\hex{00}$ \\
-    $\hex{1B}$ & $\hex{00}$ \\
-    $\hex{1C}$ & $\hex{03}$ \\
-    $\hex{1D}$ & $\hex{01}$ \\
-    $\hex{1E}$ & $\hex{00}$ \\
-    $\hex{1F}$ & $\hex{03}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{20}$ & $\hex{01}$ \\
-    $\hex{21}$ & $\hex{02}$ \\
-    $\hex{22}$ & $\hex{00}$ \\
-    $\hex{23}$ & $\hex{06}$ \\
-    $\hex{24}$ & $\hex{05}$ \\
-    $\hex{25}$ & $\hex{0B}$ \\
-    $\hex{26}$ & $\hex{F8}$ \\
-    $\hex{27}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{28}$ & $\hex{00}$ \\
-    $\hex{29}$ & $\hex{00}$ \\
-    $\hex{2A}$ & $\hex{00}$ \\
-    $\hex{2B}$ & $\hex{00}$ \\
-    $\hex{2C}$ & $\hex{00}$ \\
-    $\hex{2D}$ & $\hex{00}$ \\
-    $\hex{2E}$ & $\hex{04}$ \\
-    $\hex{2F}$ & $\hex{00}$ \\
-  \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{30}$, the value of $\SP$ should be $\hex{F8}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{18}$, the value of $\SP$ should be $\hex{F8}$, and the following elements should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{E8}$ & $\hex{F8}$ \\
     $\hex{E9}$ & $\hex{00}$ \\
     $\hex{EA}$ & $\hex{00}$ \\
     $\hex{EB}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
     $\hex{EC}$ & $\hex{00}$ \\
     $\hex{ED}$ & $\hex{00}$ \\
     $\hex{EE}$ & $\hex{00}$ \\
@@ -525,10 +504,13 @@ When the machine terminates, the value of $\TERM$ should be $\T$, the value of $
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{F0}$ & $\hex{25}$ \\
+    $\hex{F0}$ & $\hex{14}$ \\
     $\hex{F1}$ & $\hex{00}$ \\
     $\hex{F2}$ & $\hex{00}$ \\
     $\hex{F3}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
     $\hex{F4}$ & $\hex{00}$ \\
     $\hex{F5}$ & $\hex{00}$ \\
     $\hex{F6}$ & $\hex{00}$ \\
@@ -540,6 +522,9 @@ When the machine terminates, the value of $\TERM$ should be $\T$, the value of $
     $\hex{F9}$ & $\hex{01}$ \\
     $\hex{FA}$ & $\hex{00}$ \\
     $\hex{FB}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
     $\hex{FC}$ & $\hex{00}$ \\
     $\hex{FD}$ & $\hex{00}$ \\
     $\hex{FE}$ & $\hex{00}$ \\
@@ -548,731 +533,10 @@ When the machine terminates, the value of $\TERM$ should be $\T$, the value of $
 \end{memtable}
 All other $\MEM{i}$ elements should remain unchanged.
 
-\section{Adding Arithmetic to the Machine}
-
-You can now add several more cases to step \ref{itm:main-case} of the main procedure.
-These cases add arithmetic capabilities to the machine.
-
-\begin{stepnumbers}[start=3]
-\item If $k$ is
-  \begin{description}
-  \item[\ADD{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item \proc{Push} $\modulo{(x + y)}{2^{64}}$.
-    \end{stepnumbers}
-  \item[\MULT{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item \proc{Push} $\modulo{(x y)}{2^{64}}$.
-    \end{stepnumbers}
-  \item[\DIV{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item If $x > 0$ and $y > 0$,
-      \begin{itemize}[label=]
-      \item then \proc{Push} $q$, such that $x = qy + r$ and $0 \leq r < y$,
-      \item otherwise \proc{Push} 0.
-      \end{itemize}
-    \end{stepnumbers}
-  \item[\REM{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item If $x > 0$ and $y > 0$,
-      \begin{itemize}[label=]
-      \item then \proc{Push} $r$, such that $x = qy + r$ and $0 \leq r < y$,
-      \item otherwise \proc{Push} 0.
-      \end{itemize}
-    \end{stepnumbers}
-  \end{description}
-\end{stepnumbers}
-
-\subsection{Testing the Machine}
-
-To test the machine, set the following elements to the provided values and start the machine.
-
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{00}$ & $\hex{0B}$ \\
-    $\hex{01}$ & $\hex{98}$ \\
-    $\hex{02}$ & $\hex{E7}$ \\
-    $\hex{03}$ & $\hex{D9}$ \\
-    $\hex{04}$ & $\hex{58}$ \\
-    $\hex{05}$ & $\hex{1B}$ \\
-    $\hex{06}$ & $\hex{C9}$ \\
-    $\hex{07}$ & $\hex{77}$ \\
-    $\hex{08}$ & $\hex{FF}$ \\
-    $\hex{09}$ & $\hex{0B}$ \\
-    $\hex{0A}$ & $\hex{88}$ \\
-    $\hex{0B}$ & $\hex{60}$ \\
-    $\hex{0C}$ & $\hex{09}$ \\
-    $\hex{0D}$ & $\hex{5C}$ \\
-    $\hex{0E}$ & $\hex{7D}$ \\
-    $\hex{0F}$ & $\hex{2C}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{10}$ & $\hex{17}$ \\
-    $\hex{11}$ & $\hex{3F}$ \\
-    $\hex{12}$ & $\hex{20}$ \\
-    $\hex{13}$ & $\hex{0B}$ \\
-    $\hex{14}$ & $\hex{98}$ \\
-    $\hex{15}$ & $\hex{E7}$ \\
-    $\hex{16}$ & $\hex{D9}$ \\
-    $\hex{17}$ & $\hex{58}$ \\
-    $\hex{18}$ & $\hex{1B}$ \\
-    $\hex{19}$ & $\hex{C9}$ \\
-    $\hex{1A}$ & $\hex{77}$ \\
-    $\hex{1B}$ & $\hex{FF}$ \\
-    $\hex{1C}$ & $\hex{0B}$ \\
-    $\hex{1D}$ & $\hex{88}$ \\
-    $\hex{1E}$ & $\hex{60}$ \\
-    $\hex{1F}$ & $\hex{09}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{20}$ & $\hex{5C}$ \\
-    $\hex{21}$ & $\hex{7D}$ \\
-    $\hex{22}$ & $\hex{2C}$ \\
-    $\hex{23}$ & $\hex{17}$ \\
-    $\hex{24}$ & $\hex{3F}$ \\
-    $\hex{25}$ & $\hex{21}$ \\
-    $\hex{26}$ & $\hex{0B}$ \\
-    $\hex{27}$ & $\hex{98}$ \\
-    $\hex{28}$ & $\hex{E7}$ \\
-    $\hex{29}$ & $\hex{D9}$ \\
-    $\hex{2A}$ & $\hex{58}$ \\
-    $\hex{2B}$ & $\hex{1B}$ \\
-    $\hex{2C}$ & $\hex{C9}$ \\
-    $\hex{2D}$ & $\hex{77}$ \\
-    $\hex{2E}$ & $\hex{FF}$ \\
-    $\hex{2F}$ & $\hex{0B}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{30}$ & $\hex{88}$ \\
-    $\hex{31}$ & $\hex{60}$ \\
-    $\hex{32}$ & $\hex{09}$ \\
-    $\hex{33}$ & $\hex{5C}$ \\
-    $\hex{34}$ & $\hex{7D}$ \\
-    $\hex{35}$ & $\hex{2C}$ \\
-    $\hex{36}$ & $\hex{17}$ \\
-    $\hex{37}$ & $\hex{3F}$ \\
-    $\hex{38}$ & $\hex{22}$ \\
-    $\hex{39}$ & $\hex{0B}$ \\
-    $\hex{3A}$ & $\hex{98}$ \\
-    $\hex{3B}$ & $\hex{E7}$ \\
-    $\hex{3C}$ & $\hex{D9}$ \\
-    $\hex{3D}$ & $\hex{58}$ \\
-    $\hex{3E}$ & $\hex{1B}$ \\
-    $\hex{3F}$ & $\hex{C9}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{40}$ & $\hex{77}$ \\
-    $\hex{41}$ & $\hex{FF}$ \\
-    $\hex{42}$ & $\hex{0B}$ \\
-    $\hex{43}$ & $\hex{88}$ \\
-    $\hex{44}$ & $\hex{60}$ \\
-    $\hex{45}$ & $\hex{09}$ \\
-    $\hex{46}$ & $\hex{5C}$ \\
-    $\hex{47}$ & $\hex{7D}$ \\
-    $\hex{48}$ & $\hex{2C}$ \\
-    $\hex{49}$ & $\hex{17}$ \\
-    $\hex{4A}$ & $\hex{3F}$ \\
-    $\hex{4B}$ & $\hex{23}$ \\
-    $\hex{4C}$ & $\hex{00}$ \\
-    \\
-    \\
-    \\
-  \end{memcolumn}
-\end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{E0}$ & $\hex{78}$ \\
-    $\hex{E1}$ & $\hex{65}$ \\
-    $\hex{E2}$ & $\hex{B4}$ \\
-    $\hex{E3}$ & $\hex{E8}$ \\
-    $\hex{E4}$ & $\hex{25}$ \\
-    $\hex{E5}$ & $\hex{17}$ \\
-    $\hex{E6}$ & $\hex{1B}$ \\
-    $\hex{E7}$ & $\hex{03}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{E8}$ & $\hex{04}$ \\
-    $\hex{E9}$ & $\hex{00}$ \\
-    $\hex{EA}$ & $\hex{00}$ \\
-    $\hex{EB}$ & $\hex{00}$ \\
-    $\hex{EC}$ & $\hex{00}$ \\
-    $\hex{ED}$ & $\hex{00}$ \\
-    $\hex{EE}$ & $\hex{00}$ \\
-    $\hex{EF}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F0}$ & $\hex{C0}$ \\
-    $\hex{F1}$ & $\hex{08}$ \\
-    $\hex{F2}$ & $\hex{F4}$ \\
-    $\hex{F3}$ & $\hex{AE}$ \\
-    $\hex{F4}$ & $\hex{F4}$ \\
-    $\hex{F5}$ & $\hex{BB}$ \\
-    $\hex{F6}$ & $\hex{CD}$ \\
-    $\hex{F7}$ & $\hex{95}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F8}$ & $\hex{20}$ \\
-    $\hex{F9}$ & $\hex{48}$ \\
-    $\hex{FA}$ & $\hex{E3}$ \\
-    $\hex{FB}$ & $\hex{B4}$ \\
-    $\hex{FC}$ & $\hex{98}$ \\
-    $\hex{FD}$ & $\hex{F5}$ \\
-    $\hex{FE}$ & $\hex{8E}$ \\
-    $\hex{FF}$ & $\hex{3E}$ \\
-  \end{memcolumn}
-\end{memtable}
-
-\section{Adding More Arithmetic}
-
-You can now add several more cases to step \ref{itm:main-case} of the main procedure.
-These cases add more arithmetic capabilities to the machine.
-
-\begin{stepnumbers}[start=3]
-\item If $k$ is
-  \begin{description}
-  \item[\LT{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item If $x < y$,
-      \begin{itemize}[label=]
-      \item then \proc{Push} $2^{64} - 1$,
-      \item otherwise \proc{Push} 0.
-      \end{itemize}
-    \end{stepnumbers}
-  \item[\POW{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item If $x < 64$,
-      \begin{itemize}[label=]
-      \item then \proc{Push} $2^x$,
-      \item otherwise \proc{Push} 0.
-      \end{itemize}
-    \end{stepnumbers}
-  \end{description}
-\end{stepnumbers}
-
-\subsection{Testing the Machine}
-
-To test the machine, set the following elements to the provided values and start the machine.
-
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{00}$ & $\hex{0B}$ \\
-    $\hex{01}$ & $\hex{00}$ \\
-    $\hex{02}$ & $\hex{00}$ \\
-    $\hex{03}$ & $\hex{00}$ \\
-    $\hex{04}$ & $\hex{00}$ \\
-    $\hex{05}$ & $\hex{00}$ \\
-    $\hex{06}$ & $\hex{00}$ \\
-    $\hex{07}$ & $\hex{00}$ \\
-    $\hex{08}$ & $\hex{80}$ \\
-    $\hex{09}$ & $\hex{0B}$ \\
-    $\hex{0A}$ & $\hex{00}$ \\
-    $\hex{0B}$ & $\hex{00}$ \\
-    $\hex{0C}$ & $\hex{00}$ \\
-    $\hex{0D}$ & $\hex{00}$ \\
-    $\hex{0E}$ & $\hex{00}$ \\
-    $\hex{0F}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{10}$ & $\hex{00}$ \\
-    $\hex{11}$ & $\hex{80}$ \\
-    $\hex{12}$ & $\hex{24}$ \\
-    $\hex{13}$ & $\hex{0B}$ \\
-    $\hex{14}$ & $\hex{FF}$ \\
-    $\hex{15}$ & $\hex{FF}$ \\
-    $\hex{16}$ & $\hex{FF}$ \\
-    $\hex{17}$ & $\hex{FF}$ \\
-    $\hex{18}$ & $\hex{FF}$ \\
-    $\hex{19}$ & $\hex{FF}$ \\
-    $\hex{1A}$ & $\hex{FF}$ \\
-    $\hex{1B}$ & $\hex{FF}$ \\
-    $\hex{1C}$ & $\hex{0B}$ \\
-    $\hex{1D}$ & $\hex{00}$ \\
-    $\hex{1E}$ & $\hex{00}$ \\
-    $\hex{1F}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{20}$ & $\hex{00}$ \\
-    $\hex{21}$ & $\hex{00}$ \\
-    $\hex{22}$ & $\hex{00}$ \\
-    $\hex{23}$ & $\hex{00}$ \\
-    $\hex{24}$ & $\hex{00}$ \\
-    $\hex{25}$ & $\hex{24}$ \\
-    $\hex{26}$ & $\hex{0B}$ \\
-    $\hex{27}$ & $\hex{00}$ \\
-    $\hex{28}$ & $\hex{00}$ \\
-    $\hex{29}$ & $\hex{00}$ \\
-    $\hex{2A}$ & $\hex{00}$ \\
-    $\hex{2B}$ & $\hex{00}$ \\
-    $\hex{2C}$ & $\hex{00}$ \\
-    $\hex{2D}$ & $\hex{00}$ \\
-    $\hex{2E}$ & $\hex{00}$ \\
-    $\hex{2F}$ & $\hex{0B}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{30}$ & $\hex{FF}$ \\
-    $\hex{31}$ & $\hex{FF}$ \\
-    $\hex{32}$ & $\hex{FF}$ \\
-    $\hex{33}$ & $\hex{FF}$ \\
-    $\hex{34}$ & $\hex{FF}$ \\
-    $\hex{35}$ & $\hex{FF}$ \\
-    $\hex{36}$ & $\hex{FF}$ \\
-    $\hex{37}$ & $\hex{FF}$ \\
-    $\hex{38}$ & $\hex{24}$ \\
-    $\hex{39}$ & $\hex{0B}$ \\
-    $\hex{3A}$ & $\hex{03}$ \\
-    $\hex{3B}$ & $\hex{00}$ \\
-    $\hex{3C}$ & $\hex{00}$ \\
-    $\hex{3D}$ & $\hex{00}$ \\
-    $\hex{3E}$ & $\hex{00}$ \\
-    $\hex{3F}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{40}$ & $\hex{00}$ \\
-    $\hex{41}$ & $\hex{00}$ \\
-    $\hex{42}$ & $\hex{2C}$ \\
-    $\hex{43}$ & $\hex{0B}$ \\
-    $\hex{44}$ & $\hex{3D}$ \\
-    $\hex{45}$ & $\hex{00}$ \\
-    $\hex{46}$ & $\hex{00}$ \\
-    $\hex{47}$ & $\hex{00}$ \\
-    $\hex{48}$ & $\hex{00}$ \\
-    $\hex{49}$ & $\hex{00}$ \\
-    $\hex{4A}$ & $\hex{00}$ \\
-    $\hex{4B}$ & $\hex{00}$ \\
-    $\hex{4C}$ & $\hex{2C}$ \\
-    $\hex{4D}$ & $\hex{00}$ \\
-    \\
-    \\
-  \end{memcolumn}
-\end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the following elements should have the indicated values.
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{D8}$ & $\hex{00}$ \\
-    $\hex{D9}$ & $\hex{00}$ \\
-    $\hex{DA}$ & $\hex{00}$ \\
-    $\hex{DB}$ & $\hex{00}$ \\
-    $\hex{DC}$ & $\hex{00}$ \\
-    $\hex{DD}$ & $\hex{00}$ \\
-    $\hex{DE}$ & $\hex{00}$ \\
-    $\hex{DF}$ & $\hex{20}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{E0}$ & $\hex{08}$ \\
-    $\hex{E1}$ & $\hex{00}$ \\
-    $\hex{E2}$ & $\hex{00}$ \\
-    $\hex{E3}$ & $\hex{00}$ \\
-    $\hex{E4}$ & $\hex{00}$ \\
-    $\hex{E5}$ & $\hex{00}$ \\
-    $\hex{E6}$ & $\hex{00}$ \\
-    $\hex{E7}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{E8}$ & $\hex{FF}$ \\
-    $\hex{E9}$ & $\hex{FF}$ \\
-    $\hex{EA}$ & $\hex{FF}$ \\
-    $\hex{EB}$ & $\hex{FF}$ \\
-    $\hex{EC}$ & $\hex{FF}$ \\
-    $\hex{ED}$ & $\hex{FF}$ \\
-    $\hex{EE}$ & $\hex{FF}$ \\
-    $\hex{EF}$ & $\hex{FF}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F0}$ & $\hex{00}$ \\
-    $\hex{F1}$ & $\hex{00}$ \\
-    $\hex{F2}$ & $\hex{00}$ \\
-    $\hex{F3}$ & $\hex{00}$ \\
-    $\hex{F4}$ & $\hex{00}$ \\
-    $\hex{F5}$ & $\hex{00}$ \\
-    $\hex{F6}$ & $\hex{00}$ \\
-    $\hex{F7}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F8}$ & $\hex{00}$ \\
-    $\hex{F9}$ & $\hex{00}$ \\
-    $\hex{FA}$ & $\hex{00}$ \\
-    $\hex{FB}$ & $\hex{00}$ \\
-    $\hex{FC}$ & $\hex{00}$ \\
-    $\hex{FD}$ & $\hex{00}$ \\
-    $\hex{FE}$ & $\hex{00}$ \\
-    $\hex{FF}$ & $\hex{00}$ \\
-  \end{memcolumn}
-\end{memtable}
-
-
-\section{Adding Bitwise Boolean Logic to the Machine}
-
-You can now add several more cases to step \ref{itm:main-case} of the main procedure.
-These cases add bitwise Boolean logic capabilities to the machine.
-
-\begin{stepnumbers}[start=3]
-\item If $k$ is
-  \begin{description}
-  \item[\AND{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1 and $\bitno{y}{i}$ is 1,
-      \begin{itemize}[label=]
-      \item then set $\bitno{z}{i}$ to 1,
-      \item otherwise set $\bitno{z}{i}$ 0.
-      \end{itemize}
-    \item \proc{Push} $z$.
-    \end{stepnumbers}
-  \item[\OR{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 0 and $\bitno{y}{i}$ is 0,
-      \begin{itemize}[label=]
-      \item then set $\bitno{z}{i}$ to 0,
-      \item otherwise set $\bitno{z}{i}$ to 1.
-      \end{itemize}
-    \item \proc{Push} $z$.
-    \end{stepnumbers}
-  \item[\NOT{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$ and $z$ to 0.
-    \item \proc{Pop} $x$.
-    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1,
-      \begin{itemize}[label=]
-      \item then set $\bitno{z}{i}$ to 0,
-      \item otherwise set $\bitno{z}{i}$ to 1.
-      \end{itemize}
-    \item \proc{Push} $z$.
-    \end{stepnumbers}
-  \item[\XOR{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
-    \item \proc{Pop} $y$.
-    \item \proc{Pop} $x$.
-    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is different from $\bitno{y}{i}$,
-      \begin{itemize}[label=]
-      \item then set $\bitno{z}{i}$ to 1,
-      \item otherwise set $\bitno{z}{i}$ to 0.
-      \end{itemize}
-    \item \proc{Push} the 64-bit value $z$.
-    \end{stepnumbers}
-  \end{description}
-\end{stepnumbers}
-
-\subsection{Testing the Machine}
-
-To test the machine, set the following elements to the provided values and start the machine.
-
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{00}$ & $\hex{0B}$ \\
-    $\hex{01}$ & $\hex{98}$ \\
-    $\hex{02}$ & $\hex{E7}$ \\
-    $\hex{03}$ & $\hex{D9}$ \\
-    $\hex{04}$ & $\hex{58}$ \\
-    $\hex{05}$ & $\hex{1B}$ \\
-    $\hex{06}$ & $\hex{C9}$ \\
-    $\hex{07}$ & $\hex{77}$ \\
-    $\hex{08}$ & $\hex{FF}$ \\
-    $\hex{09}$ & $\hex{0B}$ \\
-    $\hex{0A}$ & $\hex{88}$ \\
-    $\hex{0B}$ & $\hex{60}$ \\
-    $\hex{0C}$ & $\hex{09}$ \\
-    $\hex{0D}$ & $\hex{5C}$ \\
-    $\hex{0E}$ & $\hex{7D}$ \\
-    $\hex{0F}$ & $\hex{2C}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{10}$ & $\hex{17}$ \\
-    $\hex{11}$ & $\hex{3F}$ \\
-    $\hex{12}$ & $\hex{28}$ \\
-    $\hex{13}$ & $\hex{0B}$ \\
-    $\hex{14}$ & $\hex{98}$ \\
-    $\hex{15}$ & $\hex{E7}$ \\
-    $\hex{16}$ & $\hex{D9}$ \\
-    $\hex{17}$ & $\hex{58}$ \\
-    $\hex{18}$ & $\hex{1B}$ \\
-    $\hex{19}$ & $\hex{C9}$ \\
-    $\hex{1A}$ & $\hex{77}$ \\
-    $\hex{1B}$ & $\hex{FF}$ \\
-    $\hex{1C}$ & $\hex{0B}$ \\
-    $\hex{1D}$ & $\hex{88}$ \\
-    $\hex{1E}$ & $\hex{60}$ \\
-    $\hex{1F}$ & $\hex{09}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{20}$ & $\hex{5C}$ \\
-    $\hex{21}$ & $\hex{7D}$ \\
-    $\hex{22}$ & $\hex{2C}$ \\
-    $\hex{23}$ & $\hex{17}$ \\
-    $\hex{24}$ & $\hex{3F}$ \\
-    $\hex{25}$ & $\hex{29}$ \\
-    $\hex{26}$ & $\hex{0B}$ \\
-    $\hex{27}$ & $\hex{98}$ \\
-    $\hex{28}$ & $\hex{E7}$ \\
-    $\hex{29}$ & $\hex{D9}$ \\
-    $\hex{2A}$ & $\hex{58}$ \\
-    $\hex{2B}$ & $\hex{1B}$ \\
-    $\hex{2C}$ & $\hex{C9}$ \\
-    $\hex{2D}$ & $\hex{77}$ \\
-    $\hex{2E}$ & $\hex{FF}$ \\
-    $\hex{2F}$ & $\hex{2A}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{30}$ & $\hex{0B}$ \\
-    $\hex{31}$ & $\hex{98}$ \\
-    $\hex{32}$ & $\hex{E7}$ \\
-    $\hex{33}$ & $\hex{D9}$ \\
-    $\hex{34}$ & $\hex{58}$ \\
-    $\hex{35}$ & $\hex{1B}$ \\
-    $\hex{36}$ & $\hex{C9}$ \\
-    $\hex{37}$ & $\hex{77}$ \\
-    $\hex{38}$ & $\hex{FF}$ \\
-    $\hex{39}$ & $\hex{0B}$ \\
-    $\hex{3A}$ & $\hex{88}$ \\
-    $\hex{3B}$ & $\hex{60}$ \\
-    $\hex{3C}$ & $\hex{09}$ \\
-    $\hex{3D}$ & $\hex{5C}$ \\
-    $\hex{3E}$ & $\hex{7D}$ \\
-    $\hex{3F}$ & $\hex{2C}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{40}$ & $\hex{17}$ \\
-    $\hex{41}$ & $\hex{3F}$ \\
-    $\hex{42}$ & $\hex{2B}$ \\
-    $\hex{43}$ & $\hex{00}$ \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-    \\
-  \end{memcolumn}
-\end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{E0}$ & $\hex{10}$ \\
-    $\hex{E1}$ & $\hex{87}$ \\
-    $\hex{E2}$ & $\hex{D0}$ \\
-    $\hex{E3}$ & $\hex{04}$ \\
-    $\hex{E4}$ & $\hex{66}$ \\
-    $\hex{E5}$ & $\hex{E5}$ \\
-    $\hex{E6}$ & $\hex{60}$ \\
-    $\hex{E7}$ & $\hex{C0}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{E8}$ & $\hex{67}$ \\
-    $\hex{E9}$ & $\hex{18}$ \\
-    $\hex{EA}$ & $\hex{26}$ \\
-    $\hex{EB}$ & $\hex{A7}$ \\
-    $\hex{EC}$ & $\hex{E4}$ \\
-    $\hex{ED}$ & $\hex{36}$ \\
-    $\hex{EE}$ & $\hex{88}$ \\
-    $\hex{EF}$ & $\hex{00}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F0}$ & $\hex{98}$ \\
-    $\hex{F1}$ & $\hex{E7}$ \\
-    $\hex{F2}$ & $\hex{D9}$ \\
-    $\hex{F3}$ & $\hex{5C}$ \\
-    $\hex{F4}$ & $\hex{7F}$ \\
-    $\hex{F5}$ & $\hex{ED}$ \\
-    $\hex{F6}$ & $\hex{77}$ \\
-    $\hex{F7}$ & $\hex{FF}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F8}$ & $\hex{88}$ \\
-    $\hex{F9}$ & $\hex{60}$ \\
-    $\hex{FA}$ & $\hex{09}$ \\
-    $\hex{FB}$ & $\hex{58}$ \\
-    $\hex{FC}$ & $\hex{19}$ \\
-    $\hex{FD}$ & $\hex{08}$ \\
-    $\hex{FE}$ & $\hex{17}$ \\
-    $\hex{FF}$ & $\hex{3F}$ \\
-  \end{memcolumn}
-\end{memtable}
-
-\section{Adding Bit-Copying Capabilities to the Machine}
+\section{Adding Bit-Copying Capabilities}
 
 You can now add several more cases to step \ref{itm:main-case} of the main procedure.
 These cases add bit-copying capabilities to the machine.
-
-\begin{stepnumbers}[start=3]
-\item If $k$ is
-  \begin{description}
-  \item[\PUSHB{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
-    \item \proc{Fetch} 1 octet into $a$.
-    \item \proc{Push} $a$.
-    \end{stepnumbers}
-  \item[\PUSHS{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
-    \item \proc{Fetch} 2 octets into $a$.
-    \item \proc{Push} $a$.
-    \end{stepnumbers}
-  \item[\PUSHI{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
-    \item \proc{Fetch} 4 octets into $a$.
-    \item \proc{Push} $a$.
-    \end{stepnumbers}
-  \item[\PUSHZ{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
-    \item \proc{Push} $a$.
-    \end{stepnumbers}
-  \item[\SIGXB{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 1 octet in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \item[\SIGXS{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 2 octets in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \item[\SIGXI{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 4 octets in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \end{description}
-\end{stepnumbers}
-
-\subsection{Testing the Machine}
-
-To test the machine, set the following elements to the provided values and start the machine.
-
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{00}$ & $\hex{07}$ \\
-    $\hex{01}$ & $\hex{08}$ \\
-    $\hex{02}$ & $\hex{89}$ \\
-    $\hex{03}$ & $\hex{0C}$ \\
-    $\hex{04}$ & $\hex{09}$ \\
-    $\hex{05}$ & $\hex{AB}$ \\
-    $\hex{06}$ & $\hex{89}$ \\
-    $\hex{07}$ & $\hex{0D}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{08}$ & $\hex{0A}$ \\
-    $\hex{09}$ & $\hex{EF}$ \\
-    $\hex{0A}$ & $\hex{CD}$ \\
-    $\hex{0B}$ & $\hex{AB}$ \\
-    $\hex{0C}$ & $\hex{89}$ \\
-    $\hex{0D}$ & $\hex{0E}$ \\
-    $\hex{0E}$ & $\hex{00}$ \\
-    \\
-  \end{memcolumn}
-\end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{E0}$ & $\hex{EF}$ \\
-    $\hex{E1}$ & $\hex{CD}$ \\
-    $\hex{E2}$ & $\hex{AB}$ \\
-    $\hex{E3}$ & $\hex{89}$ \\
-    $\hex{E4}$ & $\hex{FF}$ \\
-    $\hex{E5}$ & $\hex{FF}$ \\
-    $\hex{E6}$ & $\hex{FF}$ \\
-    $\hex{E7}$ & $\hex{FF}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{E8}$ & $\hex{AB}$ \\
-    $\hex{E9}$ & $\hex{89}$ \\
-    $\hex{EA}$ & $\hex{FF}$ \\
-    $\hex{EB}$ & $\hex{FF}$ \\
-    $\hex{EC}$ & $\hex{FF}$ \\
-    $\hex{ED}$ & $\hex{FF}$ \\
-    $\hex{EE}$ & $\hex{FF}$ \\
-    $\hex{EF}$ & $\hex{FF}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F0}$ & $\hex{89}$ \\
-    $\hex{F1}$ & $\hex{FF}$ \\
-    $\hex{F2}$ & $\hex{FF}$ \\
-    $\hex{F3}$ & $\hex{FF}$ \\
-    $\hex{F4}$ & $\hex{FF}$ \\
-    $\hex{F5}$ & $\hex{FF}$ \\
-    $\hex{F6}$ & $\hex{FF}$ \\
-    $\hex{F7}$ & $\hex{FF}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{F8}$ & $\hex{00}$ \\
-    $\hex{F9}$ & $\hex{00}$ \\
-    $\hex{FA}$ & $\hex{00}$ \\
-    $\hex{FB}$ & $\hex{00}$ \\
-    $\hex{FC}$ & $\hex{00}$ \\
-    $\hex{FD}$ & $\hex{00}$ \\
-    $\hex{FE}$ & $\hex{00}$ \\
-    $\hex{FF}$ & $\hex{00}$ \\
-  \end{memcolumn}
-\end{memtable}
-
-
-
-\section{Adding More Bit-Copying Capabilities to the Machine}
-
-You can now add several more cases to step \ref{itm:main-case} of the main procedure.
-These cases add still more bit-copying capabilities to the machine.
 
 \begin{stepnumbers}[start=3]
 \item If $k$ is
@@ -1403,6 +667,9 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{E1}$ & $\hex{A1}$ \\
     $\hex{E2}$ & $\hex{A2}$ \\
     $\hex{E3}$ & $\hex{A3}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
     $\hex{E4}$ & $\hex{A4}$ \\
     $\hex{E5}$ & $\hex{A5}$ \\
     $\hex{E6}$ & $\hex{A6}$ \\
@@ -1414,25 +681,157 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{E9}$ & $\hex{A9}$ \\
     $\hex{EA}$ & $\hex{AA}$ \\
     $\hex{EB}$ & $\hex{AB}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
     $\hex{EC}$ & $\hex{AC}$ \\
     $\hex{ED}$ & $\hex{AD}$ \\
     $\hex{EE}$ & $\hex{AE}$ \\
     $\hex{EF}$ & $\hex{00}$ \\
   \end{memcolumn}
-  \memspace
+\end{memtable}
+
+\section{Adding More Bit-Copying Capabilities}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add still more bit-copying capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
+  \item[\PUSHZ{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Push} $a$.
+    \end{stepnumbers}
+  \item[\PUSHS{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 2 octets into $a$.
+    \item \proc{Push} $a$.
+    \end{stepnumbers}
+  \item[\PUSHI{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 4 octets into $a$.
+    \item \proc{Push} $a$.
+    \end{stepnumbers}
+  \item[\PUSHL{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item \proc{Fetch} 8 octets into $a$.
+    \item \proc{Push} $a$.
+    \end{stepnumbers}
+  \item[\SIGXB{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 1 octet in $x$.
+    \item \proc{Push} $x$.
+    \end{stepnumbers}
+  \item[\SIGXS{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 2 octets in $x$.
+    \item \proc{Push} $x$.
+    \end{stepnumbers}
+  \item[\SIGXI{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item \proc{Extend} sign for 4 octets in $x$.
+    \item \proc{Push} $x$.
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{memtable}
   \begin{memcolumn}
-    $\hex{F0}$ & $\hex{EE}$ \\
-    $\hex{F1}$ & $\hex{00}$ \\
-    $\hex{F2}$ & $\hex{00}$ \\
-    $\hex{F3}$ & $\hex{00}$ \\
-    $\hex{F4}$ & $\hex{00}$ \\
-    $\hex{F5}$ & $\hex{00}$ \\
-    $\hex{F6}$ & $\hex{00}$ \\
-    $\hex{F7}$ & $\hex{00}$ \\
+    $\hex{00}$ & $\hex{07}$ \\
+    $\hex{01}$ & $\hex{0B}$ \\
+    $\hex{02}$ & $\hex{10}$ \\
+    $\hex{03}$ & $\hex{32}$ \\
+    $\hex{04}$ & $\hex{54}$ \\
+    $\hex{05}$ & $\hex{76}$ \\
+    $\hex{06}$ & $\hex{98}$ \\
+    $\hex{07}$ & $\hex{BA}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{F8}$ & $\hex{AE}$ \\
+    $\hex{08}$ & $\hex{DC}$ \\
+    $\hex{09}$ & $\hex{FE}$ \\
+    $\hex{0A}$ & $\hex{0A}$ \\
+    $\hex{0B}$ & $\hex{98}$ \\
+    $\hex{0C}$ & $\hex{BA}$ \\
+    $\hex{0D}$ & $\hex{DC}$ \\
+    $\hex{0E}$ & $\hex{FE}$ \\
+    $\hex{0F}$ & $\hex{0E}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{10}$ & $\hex{09}$ \\
+    $\hex{11}$ & $\hex{DC}$ \\
+    $\hex{12}$ & $\hex{FE}$ \\
+    $\hex{13}$ & $\hex{0D}$ \\
+    $\hex{14}$ & $\hex{08}$ \\
+    $\hex{15}$ & $\hex{FE}$ \\
+    $\hex{16}$ & $\hex{0C}$ \\
+    $\hex{17}$ & $\hex{00}$ \\
+  \end{memcolumn}
+\end{memtable}
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{D8}$ & $\hex{FE}$ \\
+    $\hex{D9}$ & $\hex{FF}$ \\
+    $\hex{DA}$ & $\hex{FF}$ \\
+    $\hex{DB}$ & $\hex{FF}$ \\
+    $\hex{DC}$ & $\hex{FF}$ \\
+    $\hex{DD}$ & $\hex{FF}$ \\
+    $\hex{DE}$ & $\hex{FF}$ \\
+    $\hex{DF}$ & $\hex{FF}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E0}$ & $\hex{DC}$ \\
+    $\hex{E1}$ & $\hex{FE}$ \\
+    $\hex{E2}$ & $\hex{FF}$ \\
+    $\hex{E3}$ & $\hex{FF}$ \\
+    $\hex{E4}$ & $\hex{FF}$ \\
+    $\hex{E5}$ & $\hex{FF}$ \\
+    $\hex{E6}$ & $\hex{FF}$ \\
+    $\hex{E7}$ & $\hex{FF}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E8}$ & $\hex{98}$ \\
+    $\hex{E9}$ & $\hex{BA}$ \\
+    $\hex{EA}$ & $\hex{DC}$ \\
+    $\hex{EB}$ & $\hex{FE}$ \\
+    $\hex{EC}$ & $\hex{FF}$ \\
+    $\hex{ED}$ & $\hex{FF}$ \\
+    $\hex{EE}$ & $\hex{FF}$ \\
+    $\hex{EF}$ & $\hex{FF}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F0}$ & $\hex{10}$ \\
+    $\hex{F1}$ & $\hex{32}$ \\
+    $\hex{F2}$ & $\hex{54}$ \\
+    $\hex{F3}$ & $\hex{76}$ \\
+    $\hex{F4}$ & $\hex{98}$ \\
+    $\hex{F5}$ & $\hex{BA}$ \\
+    $\hex{F6}$ & $\hex{DC}$ \\
+    $\hex{F7}$ & $\hex{FE}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F8}$ & $\hex{00}$ \\
     $\hex{F9}$ & $\hex{00}$ \\
     $\hex{FA}$ & $\hex{00}$ \\
     $\hex{FB}$ & $\hex{00}$ \\
@@ -1440,6 +839,519 @@ When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the f
     $\hex{FD}$ & $\hex{00}$ \\
     $\hex{FE}$ & $\hex{00}$ \\
     $\hex{FF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+\end{memtable}
+
+\section{Adding Arithmetic}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add arithmetic capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
+  \item[\ADD{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item \proc{Push} $\modulo{(x + y)}{2^{64}}$.
+    \end{stepnumbers}
+  \item[\MULT{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item \proc{Push} $\modulo{(x y)}{2^{64}}$.
+    \end{stepnumbers}
+  \item[\DIV{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x > 0$ and $y > 0$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $q$, such that $x = qy + r$ and $0 \leq r < y$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
+    \end{stepnumbers}
+  \item[\REM{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x > 0$ and $y > 0$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $r$, such that $x = qy + r$ and $0 \leq r < y$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{00}$ & $\hex{08}$ \\
+    $\hex{01}$ & $\hex{1D}$ \\
+    $\hex{02}$ & $\hex{13}$ \\
+    $\hex{03}$ & $\hex{08}$ \\
+    $\hex{04}$ & $\hex{25}$ \\
+    $\hex{05}$ & $\hex{13}$ \\
+    $\hex{06}$ & $\hex{20}$ \\
+    $\hex{07}$ & $\hex{08}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{08}$ & $\hex{1D}$ \\
+    $\hex{09}$ & $\hex{13}$ \\
+    $\hex{0A}$ & $\hex{08}$ \\
+    $\hex{0B}$ & $\hex{25}$ \\
+    $\hex{0C}$ & $\hex{13}$ \\
+    $\hex{0D}$ & $\hex{21}$ \\
+    $\hex{0E}$ & $\hex{08}$ \\
+    $\hex{0F}$ & $\hex{1D}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{10}$ & $\hex{13}$ \\
+    $\hex{11}$ & $\hex{08}$ \\
+    $\hex{12}$ & $\hex{25}$ \\
+    $\hex{13}$ & $\hex{13}$ \\
+    $\hex{14}$ & $\hex{22}$ \\
+    $\hex{15}$ & $\hex{08}$ \\
+    $\hex{16}$ & $\hex{1D}$ \\
+    $\hex{17}$ & $\hex{13}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{18}$ & $\hex{08}$ \\
+    $\hex{19}$ & $\hex{25}$ \\
+    $\hex{1A}$ & $\hex{13}$ \\
+    $\hex{1B}$ & $\hex{23}$ \\
+    $\hex{1C}$ & $\hex{00}$ \\
+    $\hex{1D}$ & $\hex{98}$ \\
+    $\hex{1E}$ & $\hex{E7}$ \\
+    $\hex{1F}$ & $\hex{D9}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{20}$ & $\hex{58}$ \\
+    $\hex{21}$ & $\hex{1B}$ \\
+    $\hex{22}$ & $\hex{C9}$ \\
+    $\hex{23}$ & $\hex{77}$ \\
+    $\hex{24}$ & $\hex{FF}$ \\
+    $\hex{25}$ & $\hex{88}$ \\
+    $\hex{26}$ & $\hex{60}$ \\
+    $\hex{27}$ & $\hex{09}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{28}$ & $\hex{5C}$ \\
+    $\hex{29}$ & $\hex{7D}$ \\
+    $\hex{2A}$ & $\hex{2C}$ \\
+    $\hex{2B}$ & $\hex{17}$ \\
+    $\hex{2C}$ & $\hex{3F}$ \\
+    \\
+    \\
+    \\
+  \end{memcolumn}
+\end{memtable}
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{E0}$ & $\hex{78}$ \\
+    $\hex{E1}$ & $\hex{65}$ \\
+    $\hex{E2}$ & $\hex{B4}$ \\
+    $\hex{E3}$ & $\hex{E8}$ \\
+    $\hex{E4}$ & $\hex{25}$ \\
+    $\hex{E5}$ & $\hex{17}$ \\
+    $\hex{E6}$ & $\hex{1B}$ \\
+    $\hex{E7}$ & $\hex{03}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E8}$ & $\hex{04}$ \\
+    $\hex{E9}$ & $\hex{00}$ \\
+    $\hex{EA}$ & $\hex{00}$ \\
+    $\hex{EB}$ & $\hex{00}$ \\
+    $\hex{EC}$ & $\hex{00}$ \\
+    $\hex{ED}$ & $\hex{00}$ \\
+    $\hex{EE}$ & $\hex{00}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F0}$ & $\hex{C0}$ \\
+    $\hex{F1}$ & $\hex{08}$ \\
+    $\hex{F2}$ & $\hex{F4}$ \\
+    $\hex{F3}$ & $\hex{AE}$ \\
+    $\hex{F4}$ & $\hex{F4}$ \\
+    $\hex{F5}$ & $\hex{BB}$ \\
+    $\hex{F6}$ & $\hex{CD}$ \\
+    $\hex{F7}$ & $\hex{95}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F8}$ & $\hex{20}$ \\
+    $\hex{F9}$ & $\hex{48}$ \\
+    $\hex{FA}$ & $\hex{E3}$ \\
+    $\hex{FB}$ & $\hex{B4}$ \\
+    $\hex{FC}$ & $\hex{98}$ \\
+    $\hex{FD}$ & $\hex{F5}$ \\
+    $\hex{FE}$ & $\hex{8E}$ \\
+    $\hex{FF}$ & $\hex{3E}$ \\
+  \end{memcolumn}
+\end{memtable}
+
+\section{Adding More Arithmetic}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add more arithmetic capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
+  \item[\LT{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item If $x < y$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $2^{64} - 1$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
+    \end{stepnumbers}
+  \item[\POW{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item If $x < 64$,
+      \begin{itemize}[label=]
+      \item then \proc{Push} $2^x$,
+      \item otherwise \proc{Push} 0.
+      \end{itemize}
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{00}$ & $\hex{08}$ \\
+    $\hex{01}$ & $\hex{24}$ \\
+    $\hex{02}$ & $\hex{13}$ \\
+    $\hex{03}$ & $\hex{08}$ \\
+    $\hex{04}$ & $\hex{24}$ \\
+    $\hex{05}$ & $\hex{13}$ \\
+    $\hex{06}$ & $\hex{24}$ \\
+    $\hex{07}$ & $\hex{08}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{08}$ & $\hex{24}$ \\
+    $\hex{09}$ & $\hex{13}$ \\
+    $\hex{0A}$ & $\hex{08}$ \\
+    $\hex{0B}$ & $\hex{25}$ \\
+    $\hex{0C}$ & $\hex{13}$ \\
+    $\hex{0D}$ & $\hex{24}$ \\
+    $\hex{0E}$ & $\hex{08}$ \\
+    $\hex{0F}$ & $\hex{25}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{10}$ & $\hex{13}$ \\
+    $\hex{11}$ & $\hex{08}$ \\
+    $\hex{12}$ & $\hex{24}$ \\
+    $\hex{13}$ & $\hex{13}$ \\
+    $\hex{14}$ & $\hex{24}$ \\
+    $\hex{15}$ & $\hex{08}$ \\
+    $\hex{16}$ & $\hex{22}$ \\
+    $\hex{17}$ & $\hex{10}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{18}$ & $\hex{2C}$ \\
+    $\hex{19}$ & $\hex{08}$ \\
+    $\hex{1A}$ & $\hex{23}$ \\
+    $\hex{1B}$ & $\hex{10}$ \\
+    $\hex{1C}$ & $\hex{2C}$ \\
+    $\hex{1D}$ & $\hex{08}$ \\
+    $\hex{1E}$ & $\hex{24}$ \\
+    $\hex{1F}$ & $\hex{10}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{20}$ & $\hex{2C}$ \\
+    $\hex{21}$ & $\hex{00}$ \\
+    $\hex{22}$ & $\hex{40}$ \\
+    $\hex{23}$ & $\hex{22}$ \\
+    $\hex{24}$ & $\hex{00}$ \\
+    $\hex{25}$ & $\hex{00}$ \\
+    $\hex{26}$ & $\hex{00}$ \\
+    $\hex{27}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{28}$ & $\hex{00}$ \\
+    $\hex{29}$ & $\hex{00}$ \\
+    $\hex{2A}$ & $\hex{00}$ \\
+    $\hex{2B}$ & $\hex{00}$ \\
+    $\hex{2C}$ & $\hex{A0}$ \\
+    \\
+    \\
+    \\
+  \end{memcolumn}
+\end{memtable}
+When the machine terminates, the value of $\SP$ should be $\hex{D0}$, and the following elements should have the indicated values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{D0}$ & $\hex{01}$ \\
+    $\hex{D1}$ & $\hex{00}$ \\
+    $\hex{D2}$ & $\hex{00}$ \\
+    $\hex{D3}$ & $\hex{00}$ \\
+    $\hex{D4}$ & $\hex{00}$ \\
+    $\hex{D5}$ & $\hex{00}$ \\
+    $\hex{D6}$ & $\hex{00}$ \\
+    $\hex{D7}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{D8}$ & $\hex{00}$ \\
+    $\hex{D9}$ & $\hex{00}$ \\
+    $\hex{DA}$ & $\hex{00}$ \\
+    $\hex{DB}$ & $\hex{00}$ \\
+    $\hex{DC}$ & $\hex{04}$ \\
+    $\hex{DD}$ & $\hex{00}$ \\
+    $\hex{DE}$ & $\hex{00}$ \\
+    $\hex{DF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E0}$ & $\hex{00}$ \\
+    $\hex{E1}$ & $\hex{00}$ \\
+    $\hex{E2}$ & $\hex{00}$ \\
+    $\hex{E3}$ & $\hex{00}$ \\
+    $\hex{E4}$ & $\hex{00}$ \\
+    $\hex{E5}$ & $\hex{00}$ \\
+    $\hex{E6}$ & $\hex{00}$ \\
+    $\hex{E7}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E8}$ & $\hex{00}$ \\
+    $\hex{E9}$ & $\hex{00}$ \\
+    $\hex{EA}$ & $\hex{00}$ \\
+    $\hex{EB}$ & $\hex{00}$ \\
+    $\hex{EC}$ & $\hex{00}$ \\
+    $\hex{ED}$ & $\hex{00}$ \\
+    $\hex{EE}$ & $\hex{00}$ \\
+    $\hex{EF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F0}$ & $\hex{FF}$ \\
+    $\hex{F1}$ & $\hex{FF}$ \\
+    $\hex{F2}$ & $\hex{FF}$ \\
+    $\hex{F3}$ & $\hex{FF}$ \\
+    $\hex{F4}$ & $\hex{FF}$ \\
+    $\hex{F5}$ & $\hex{FF}$ \\
+    $\hex{F6}$ & $\hex{FF}$ \\
+    $\hex{F7}$ & $\hex{FF}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F8}$ & $\hex{00}$ \\
+    $\hex{F9}$ & $\hex{00}$ \\
+    $\hex{FA}$ & $\hex{00}$ \\
+    $\hex{FB}$ & $\hex{00}$ \\
+    $\hex{FC}$ & $\hex{00}$ \\
+    $\hex{FD}$ & $\hex{00}$ \\
+    $\hex{FE}$ & $\hex{00}$ \\
+    $\hex{FF}$ & $\hex{00}$ \\
+  \end{memcolumn}
+\end{memtable}
+
+\section{Adding Bitwise Boolean Logic}
+
+You can now add several more cases to step \ref{itm:main-case} of the main procedure.
+These cases add bitwise Boolean logic capabilities to the machine.
+
+\begin{stepnumbers}[start=3]
+\item If $k$ is
+  \begin{description}
+  \item[\AND{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1 and $\bitno{y}{i}$ is 1,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 1,
+      \item otherwise set $\bitno{z}{i}$ 0.
+      \end{itemize}
+    \item \proc{Push} $z$.
+    \end{stepnumbers}
+  \item[\OR{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 0 and $\bitno{y}{i}$ is 0,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 0,
+      \item otherwise set $\bitno{z}{i}$ to 1.
+      \end{itemize}
+    \item \proc{Push} $z$.
+    \end{stepnumbers}
+  \item[\NOT{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$ and $z$ to 0.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is 1,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 0,
+      \item otherwise set $\bitno{z}{i}$ to 1.
+      \end{itemize}
+    \item \proc{Push} $z$.
+    \end{stepnumbers}
+  \item[\XOR{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $x$, $y$, and $z$ to 0.
+    \item \proc{Pop} $y$.
+    \item \proc{Pop} $x$.
+    \item For every $i \in \range{0}{63}$, if $\bitno{x}{i}$ is different from $\bitno{y}{i}$,
+      \begin{itemize}[label=]
+      \item then set $\bitno{z}{i}$ to 1,
+      \item otherwise set $\bitno{z}{i}$ to 0.
+      \end{itemize}
+    \item \proc{Push} the 64-bit value $z$.
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Testing the Machine}
+
+To test the machine, set the following elements to the provided values and start the machine.
+
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{00}$ & $\hex{08}$ \\
+    $\hex{01}$ & $\hex{1A}$ \\
+    $\hex{02}$ & $\hex{13}$ \\
+    $\hex{03}$ & $\hex{08}$ \\
+    $\hex{04}$ & $\hex{22}$ \\
+    $\hex{05}$ & $\hex{13}$ \\
+    $\hex{06}$ & $\hex{28}$ \\
+    $\hex{07}$ & $\hex{08}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{08}$ & $\hex{1A}$ \\
+    $\hex{09}$ & $\hex{13}$ \\
+    $\hex{0A}$ & $\hex{08}$ \\
+    $\hex{0B}$ & $\hex{22}$ \\
+    $\hex{0C}$ & $\hex{13}$ \\
+    $\hex{0D}$ & $\hex{29}$ \\
+    $\hex{0E}$ & $\hex{08}$ \\
+    $\hex{0F}$ & $\hex{1A}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{10}$ & $\hex{13}$ \\
+    $\hex{11}$ & $\hex{08}$ \\
+    $\hex{12}$ & $\hex{22}$ \\
+    $\hex{13}$ & $\hex{13}$ \\
+    $\hex{14}$ & $\hex{2B}$ \\
+    $\hex{15}$ & $\hex{08}$ \\
+    $\hex{16}$ & $\hex{1A}$ \\
+    $\hex{17}$ & $\hex{13}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{18}$ & $\hex{2A}$ \\
+    $\hex{19}$ & $\hex{00}$ \\
+    $\hex{1A}$ & $\hex{98}$ \\
+    $\hex{1B}$ & $\hex{E7}$ \\
+    $\hex{1C}$ & $\hex{D9}$ \\
+    $\hex{1D}$ & $\hex{58}$ \\
+    $\hex{1E}$ & $\hex{1B}$ \\
+    $\hex{1F}$ & $\hex{C9}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{20}$ & $\hex{77}$ \\
+    $\hex{21}$ & $\hex{FF}$ \\
+    $\hex{22}$ & $\hex{88}$ \\
+    $\hex{23}$ & $\hex{60}$ \\
+    $\hex{24}$ & $\hex{09}$ \\
+    $\hex{25}$ & $\hex{5C}$ \\
+    $\hex{26}$ & $\hex{7D}$ \\
+    $\hex{27}$ & $\hex{2C}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{28}$ & $\hex{17}$ \\
+    $\hex{29}$ & $\hex{3F}$ \\
+    \\
+    \\
+    \\
+    \\
+    \\
+    \\
+  \end{memcolumn}
+\end{memtable}
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{E0}$ & $\hex{67}$ \\
+    $\hex{E1}$ & $\hex{18}$ \\
+    $\hex{E2}$ & $\hex{26}$ \\
+    $\hex{E3}$ & $\hex{A7}$ \\
+    $\hex{E4}$ & $\hex{E4}$ \\
+    $\hex{E5}$ & $\hex{36}$ \\
+    $\hex{E6}$ & $\hex{88}$ \\
+    $\hex{E7}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{E8}$ & $\hex{10}$ \\
+    $\hex{E9}$ & $\hex{87}$ \\
+    $\hex{EA}$ & $\hex{D0}$ \\
+    $\hex{EB}$ & $\hex{04}$ \\
+    $\hex{EC}$ & $\hex{66}$ \\
+    $\hex{ED}$ & $\hex{E5}$ \\
+    $\hex{EE}$ & $\hex{60}$ \\
+    $\hex{EF}$ & $\hex{C0}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F0}$ & $\hex{98}$ \\
+    $\hex{F1}$ & $\hex{E7}$ \\
+    $\hex{F2}$ & $\hex{D9}$ \\
+    $\hex{F3}$ & $\hex{5C}$ \\
+    $\hex{F4}$ & $\hex{7F}$ \\
+    $\hex{F5}$ & $\hex{ED}$ \\
+    $\hex{F6}$ & $\hex{77}$ \\
+    $\hex{F7}$ & $\hex{FF}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{F8}$ & $\hex{88}$ \\
+    $\hex{F9}$ & $\hex{60}$ \\
+    $\hex{FA}$ & $\hex{09}$ \\
+    $\hex{FB}$ & $\hex{58}$ \\
+    $\hex{FC}$ & $\hex{19}$ \\
+    $\hex{FD}$ & $\hex{08}$ \\
+    $\hex{FE}$ & $\hex{17}$ \\
+    $\hex{FF}$ & $\hex{3F}$ \\
   \end{memcolumn}
 \end{memtable}
 
