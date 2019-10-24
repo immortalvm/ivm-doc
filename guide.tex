@@ -379,18 +379,14 @@ To test \proc{Fetch} and \proc{Extend}, do as follows, with $N=4$:
 \item Verify that the value of $\PC$ is 15.
 \end{stepnumbers}
 
-\section{First Version of The Machine}
+\section{A Very Basic Machine}
 
-You can now proceed with implementing a basic version of the machine with $N=8$.
+You can now proceed with implementing a basic machine with $N=8$.
 
-Machine operation proceeds through two phases: first the memory is set up, and then the main procedure is executed.
-
-\subsection{Setting Up the Memory}
+Every time the machine starts, the memory is set up first, and then the main procedure is executed.
 
 To set up the memory, you need to set all elements to predefined values.
 $\MEM{i}$ is set to 0 for every $i \in \range{0}{2^N-1}$, $\TERM$ is set to 0, $\PC$ is set to $0$, and $\SP$ is set to $2^N$ (so in the case of $N=8$, $\SP$ is set to $\hex{100}$).
-
-\subsection{The Main Procedure}
 
 When you have set up the memory, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
@@ -440,10 +436,7 @@ The main procedure must carry out the following steps.
 \item If the value of $k$ does not occur in the list in the previous point, then set $\TERM$ to $\T$.
 \end{stepnumbers}
 
-\subsection{Testing the Basic Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{01}$ \\
@@ -600,10 +593,7 @@ These cases add bit-copying capabilities to the machine.
   \end{description}
 \end{stepnumbers}
 
-\subsection{Testing the Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -746,10 +736,7 @@ These cases add still more bit-copying capabilities to the machine.
   \end{description}
 \end{stepnumbers}
 
-\subsection{Testing the Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{07}$ \\
@@ -889,10 +876,7 @@ These cases add arithmetic capabilities to the machine.
   \end{description}
 \end{stepnumbers}
 
-\subsection{Testing the Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -1039,10 +1023,7 @@ These cases add more arithmetic capabilities to the machine.
   \end{description}
 \end{stepnumbers}
 
-\subsection{Testing the Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -1237,10 +1218,7 @@ These cases add bitwise Boolean logic capabilities to the machine.
   \end{description}
 \end{stepnumbers}
 
-\subsection{Testing the Machine}
-
 To test the machine, set the following elements to the provided values and start the machine.
-
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
