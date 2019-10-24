@@ -334,61 +334,148 @@ To test \proc{Put} and \proc{Get}, do as follows, with $N=4$:
 
 \subsubsection{Testing \proc{Push} and \proc{Pop}}
 
-To test \proc{Push} and \proc{Pop}, do as follows, with $N=3$:
+To test \proc{Push} and \proc{Pop}, do as follows, with $N=4$:
 \begin{stepnumbers}
 \item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
-\item Set $\SP$ to $\hex{08}$.
+\item Set $\SP$ to $\hex{10}$.
 \item Initialize the temporary 64-bit element $x$ to $\hex{0123456789ABCDEF}$.
 \item Initialize the temporary 64-bit element $y$ to $0$.
 \item \proc{Push} $x$.
-\item Verify that the value of $\SP$ is $\hex{00}$.
+\item Verify that the value of $\SP$ is $\hex{08}$.
 \item \proc{Pop} $y$.
 \item Verify that $x=y$.
-\item Verify that the value of $\SP$ is $\hex{08}$.
+\item Verify that the value of $\SP$ is $\hex{10}$.
+\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
 
-\subsubsection{Testing \proc{Fetch} and \proc{Extend}}
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{0}$ & $\hex{00}$ \\
+    $\hex{1}$ & $\hex{00}$ \\
+    $\hex{2}$ & $\hex{00}$ \\
+    $\hex{3}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{4}$ & $\hex{00}$ \\
+    $\hex{5}$ & $\hex{00}$ \\
+    $\hex{6}$ & $\hex{00}$ \\
+    $\hex{7}$ & $\hex{00}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{8}$ & $\hex{EF}$ \\
+    $\hex{9}$ & $\hex{CD}$ \\
+    $\hex{A}$ & $\hex{AB}$ \\
+    $\hex{B}$ & $\hex{89}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{C}$ & $\hex{67}$ \\
+    $\hex{D}$ & $\hex{45}$ \\
+    $\hex{E}$ & $\hex{23}$ \\
+    $\hex{F}$ & $\hex{01}$ \\
+  \end{memcolumn}
+\end{memtable}
 
-To test \proc{Fetch} and \proc{Extend}, do as follows, with $N=4$:
+\subsubsection{Testing \proc{Fetch}}
+
+To test \proc{Fetch}, do as follows, with $N=4$:
 \begin{stepnumbers}
 \item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
 \item Initialize the temporary 64-bit element $w$ to 0.
-\item Initialize the temporary 64-bit element $x$ to $\hex{0000000000000080}$.
+\item Initialize the temporary 64-bit element $x$ to $\hex{FEDCBA9876543210}$.
+
+\item \proc{Put} 8 octets from $x$ into index 0.
+\item \proc{Put} 8 octets from $x$ into index 8.
+
+\item \proc{Fetch} 1 octet into $w$.
+\item Verify that the value of $w$ is $\hex{0000000000000010}$.
+\item Verify that the value of $\PC$ is $\hex{01}$.
+
+\item \proc{Fetch} 2 octets into $w$.
+\item Verify that the value of $w$ is $\hex{0000000000005432}$.
+\item Verify that the value of $\PC$ is $\hex{03}$.
+
+\item \proc{Fetch} 4 octets into $w$.
+\item Verify that the value of $z$ is $\hex{00000000DCBA9876}$.
+\item Verify that the value of $\PC$ is $\hex{07}$.
+
+\item \proc{Fetch} 8 octets into $w$.
+\item Verify that the value of $w$ is $\hex{DCBA9876543210FE}$.
+\item Verify that the value of $\PC$ is $\hex{0F}$.
+
+\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
+\end{stepnumbers}
+
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{0}$ & $\hex{10}$ \\
+    $\hex{1}$ & $\hex{32}$ \\
+    $\hex{2}$ & $\hex{54}$ \\
+    $\hex{3}$ & $\hex{76}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{4}$ & $\hex{98}$ \\
+    $\hex{5}$ & $\hex{BA}$ \\
+    $\hex{6}$ & $\hex{DC}$ \\
+    $\hex{7}$ & $\hex{FE}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{8}$ & $\hex{10}$ \\
+    $\hex{9}$ & $\hex{32}$ \\
+    $\hex{A}$ & $\hex{54}$ \\
+    $\hex{B}$ & $\hex{76}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{C}$ & $\hex{98}$ \\
+    $\hex{D}$ & $\hex{BA}$ \\
+    $\hex{E}$ & $\hex{DC}$ \\
+    $\hex{F}$ & $\hex{FE}$ \\
+  \end{memcolumn}
+\end{memtable}
+
+
+\subsubsection{Testing \proc{Extend}}
+
+To test \proc{Extend}, do as follows:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to $\hex{000000000000007F}$.
+\item \proc{Extend} sign for 1 octet in $x$.
+\item Verify that the value of $x$ is $\hex{000000000000007F}$.
+\item Increment $x$ by 1.
 \item \proc{Extend} sign for 1 octet in $x$.
 \item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
-\item \proc{Put} 8 octets from $x$ into index 0.
-\item \proc{Fetch} 1 octet into $w$.
-\item Verify that the value of $w$ is $\hex{0000000000000080}$.
-\item Verify that the value of $\PC$ is 1.
-\item Initialize the temporary 64-bit element $y$ to $\hex{0000000000008000}$.
-\item \proc{Extend} sign for 2 octets in $y$.
+
+\item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
+\item \proc{Extend} sign for 1 octet in $y$.
+\item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
+\item Increment $y$ by 1.
+\item \proc{Extend} sign for 1 octet in $y$.
 \item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
-\item \proc{Put} 8 octets from $y$ into index 0.
-\item \proc{Fetch} 2 octets into $w$.
-\item Verify that the value of $w$ is $\hex{000000000000FF80}$.
-\item Verify that the value of $\PC$ is 3.
-\item Initialize the temporary 64-bit element $z$ to $\hex{0000000080000000}$.
-\item \proc{Extend} sign for 4 octets in $z$.
+
+\item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
+\item \proc{Extend} sign for 1 octet in $z$.
+\item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
+\item Increment $z$ by 1.
+\item \proc{Extend} sign for 1 octet in $z$.
 \item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
-\item \proc{Put} 8 octets from $z$ into index 0.
-\item \proc{Fetch} 4 octets into $w$.
-\item Verify that the value of $w$ is $\hex{00000000FFFFFF80}$.
-\item Verify that the value of $\PC$ is 7.
-\item \proc{Fetch} 8 octets into $w$.
-\item Verify that the value of $w$ is $\hex{00000000000000FF}$.
-\item Verify that the value of $\PC$ is 15.
 \end{stepnumbers}
 
 \section{A Very Basic Machine}
 
 You can now proceed with implementing a basic machine with $N=8$.
+Every time the machine starts, the memory must be set up first, a program must be loaded into memory, and then the main procedure must be executed.
 
-Every time the machine starts, the memory is set up first, and then the main procedure is executed.
+To set up the memory, set $\TERM$ to 0, set $\PC$ to $0$, and set $\SP$ to $2^N$.
 
-To set up the memory, you need to set all elements to predefined values.
-$\MEM{i}$ is set to 0 for every $i \in \range{0}{2^N-1}$, $\TERM$ is set to 0, $\PC$ is set to $0$, and $\SP$ is set to $2^N$ (so in the case of $N=8$, $\SP$ is set to $\hex{100}$).
+The program is a sequence of $n$ octets which must be stored in $\MEM{i}$ for $i \in \range{0}{n-1}$.
+For the purposes of doing the tests below, $\MEM{i}$ for $i \in \range{n}{2^N-1}$ must be set to 0, but this is not normally needed.
 
-When you have set up the memory, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
+When you have set up the memory and stored the program in $\MEM{}$, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
