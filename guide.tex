@@ -211,9 +211,7 @@ The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, 
 You will need to implement six basic procedures that are frequently used by the machine.
 These use the memory operations described in Section~\ref{sec:memory-operations}.
 
-\subsection{Descriptions of Procedures}
-
-\subsubsection{\proc{Put} Octets}
+\subsection{\proc{Put} Octets}
 
 Assume that we have two temporary 64-bit elements called $x$ and $a$, and that $n$ is either 1, 2, 4, or 8.
 The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the following steps:
@@ -225,64 +223,6 @@ The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the
   \item Increment $i$ by 1.
   \end{stepletters}
 \end{stepnumbers}
-
-\subsubsection{\proc{Get} Octets}
-
-Assume that we have a temporary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
-The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the following steps:
-\begin{stepnumbers}
-\item Initialize the temporary 64-bit element $x$ to 0.
-\item Initialize the temporary 8-bit element $i$ to 0.
-\item Do the following $n$ times:
-  \begin{stepletters}
-  \item Set $\octno{x}{i}$ to $\MEM{a+i}$.
-  \item Increment $i$ by 1.
-  \end{stepletters}
-\end{stepnumbers}
-The temporary 64-bit element $x$ can now be used by other procedures.
-
-\subsubsection{\proc{Push} Element}
-
-Assume that we have a temporary 64-bit element called $x$.
-The expression ``\proc{Push} $x$'' means to do the following steps:
-\begin{stepnumbers}
-\item Decrement $\SP$ by 8.
-\item \proc{Put} 8 octets from $x$ into index $\SP$.
-\end{stepnumbers}
-
-\subsubsection{\proc{Pop} Element}
-
-The expression ``\proc{Pop} $x$'' means to do the following steps:
-\begin{stepnumbers}
-\item Initialize the temporary 64-bit element $x$ to 0.
-\item \proc{Get} 8 octets from index $\SP$ into $x$.
-\item Increment $\SP$ by 8.
-\end{stepnumbers}
-The 64-bit element $x$ can now be used by other procedures.
-
-\subsubsection{\proc{Fetch} Octets}
-
-Assume that $n$ is either 1, 2, 4, or 8.
-The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following steps:
-\begin{stepnumbers}
-\item Initialize the temporary 64-bit element $x$ to 0.
-\item \proc{Get} $n$ octets from index $\PC$ into $x$.
-\item Increment $\PC$ by $n$.
-\end{stepnumbers}
-The temporary 64-bit element $x$ can now be used by other procedures.
-
-\subsubsection{\proc{Extend} Sign}
-
-Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
-The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following step:
-\begin{stepnumbers}
-\item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
-\end{stepnumbers}
-The temporary 64-bit element $x$ can now be used by other procedures.
-
-\subsection{Testing the Basic Procedures}
-
-\subsubsection{Testing \proc{Put}}
 
 To test \proc{Put}, do as follows, with $N=4$:
 \begin{stepnumbers}
@@ -325,7 +265,20 @@ To test \proc{Put}, do as follows, with $N=4$:
   \end{memcolumn}
 \end{memtable}
 
-\subsubsection{Testing \proc{Get}}
+\subsection{\proc{Get} Octets}
+
+Assume that we have a temporary 64-bit element called $a$ and that $n$ is either 1, 2, 4, or 8.
+The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item Initialize the temporary 8-bit element $i$ to 0.
+\item Do the following $n$ times:
+  \begin{stepletters}
+  \item Set $\octno{x}{i}$ to $\MEM{a+i}$.
+  \item Increment $i$ by 1.
+  \end{stepletters}
+\end{stepnumbers}
+The temporary 64-bit element $x$ can now be used by other procedures.
 
 To test \proc{Get}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
 \begin{memtable}
@@ -370,7 +323,14 @@ Then proceed as follows:
 \item Verify that the value of $x$ is $\hex{AFAEADACABAAA9A8}$.
 \end{stepnumbers}
 
-\subsubsection{Testing \proc{Push}}
+\subsection{\proc{Push} Element}
+
+Assume that we have a temporary 64-bit element called $x$.
+The expression ``\proc{Push} $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Decrement $\SP$ by 8.
+\item \proc{Put} 8 octets from $x$ into index $\SP$.
+\end{stepnumbers}
 
 To test \proc{Push}, do as follows, with $N=4$:
 \begin{stepnumbers}
@@ -415,7 +375,15 @@ To test \proc{Push}, do as follows, with $N=4$:
   \end{memcolumn}
 \end{memtable}
 
-\subsubsection{Testing \proc{Pop}}
+\subsection{\proc{Pop} Element}
+
+The expression ``\proc{Pop} $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item \proc{Get} 8 octets from index $\SP$ into $x$.
+\item Increment $\SP$ by 8.
+\end{stepnumbers}
+The 64-bit element $x$ can now be used by other procedures.
 
 To test \proc{Fetch}, first set $N=4$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
 \begin{memtable}
@@ -458,7 +426,16 @@ Then proceed as follows:
 \item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
 
-\subsubsection{Testing \proc{Fetch}}
+\subsection{\proc{Fetch} Octets}
+
+Assume that $n$ is either 1, 2, 4, or 8.
+The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following steps:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to 0.
+\item \proc{Get} $n$ octets from index $\PC$ into $x$.
+\item Increment $\PC$ by $n$.
+\end{stepnumbers}
+The temporary 64-bit element $x$ can now be used by other procedures.
 
 To test \proc{Fetch}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
 \begin{memtable}
@@ -503,7 +480,14 @@ Then proceed as follows:
 \item Verify that $\PC = \hex{0F}$ and that $w = \hex{AEADACABAAA9A8A7}$.
 \end{stepnumbers}
 
-\subsubsection{Testing \proc{Extend}}
+\subsection{\proc{Extend} Sign}
+
+Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
+The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following step:
+\begin{stepnumbers}
+\item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
+\end{stepnumbers}
+The temporary 64-bit element $x$ can now be used by other procedures.
 
 To test \proc{Extend}, do as follows:
 \begin{stepletters}
