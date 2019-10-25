@@ -32,6 +32,7 @@
 \DeclareMathOperator{\MOD}{mod}
 \newcommand{\modulo}[2]{#1 \MOD #2}
 \newcommand{\comment}[1]{\begin{quote}[\textit{#1}]\end{quote}}
+\newcommand{\deviceio}[1]{$\langle$#1$\rangle$}
 \newcommand{\op}[1]{$#1$}
 \newenvironment{memtable}{%
   \begin{trivlist}
@@ -451,17 +452,17 @@ To test \proc{Extend}, do as follows:
 \item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
 
 \item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
-\item \proc{Extend} sign for 1 octet in $y$.
+\item \proc{Extend} sign for 2 octets in $y$.
 \item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
 \item Increment $y$ by 1.
-\item \proc{Extend} sign for 1 octet in $y$.
+\item \proc{Extend} sign for 2 octets in $y$.
 \item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
 
 \item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
-\item \proc{Extend} sign for 1 octet in $z$.
+\item \proc{Extend} sign for 4 octets in $z$.
 \item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
 \item Increment $z$ by 1.
-\item \proc{Extend} sign for 1 octet in $z$.
+\item \proc{Extend} sign for 4 octets in $z$.
 \item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
 \end{stepnumbers}
 
@@ -1428,6 +1429,8 @@ There are four devices:
 \end{itemize}
 The descriptions below will only explain the correspondence between machine events and real world events.
 It is up to you to make sure that the interpretation of real world events is faithfully implemented.
+As before, you will add more cases to the existing machine.
+Cases where real-world interaction is required are indicated \deviceio{like this}.
 
 \subsection{Image Input}
 
@@ -1461,7 +1464,8 @@ In order to implement the image input device, you will need to add two extra cas
   \item[\READFRAME{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $c$ and $r$ to 0.
-    \item Ready the next image to be consumed by the machine, and measure the intensity of light at all sampling points.
+    \item \deviceio{Ready the next image to be consumed by the machine.}
+    \item \deviceio{Find the number of columns and rows in the image.}
     \item Set $c$ to the number of columns in the image.
     \item \proc{Push} $c$.
     \item Set $r$ to the number of rows in the image.
@@ -1472,6 +1476,7 @@ In order to implement the image input device, you will need to add two extra cas
     \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
     \item \proc{Pop} $x$.
     \item \proc{Pop} $y$.
+    \item \deviceio{Measure the intensity of light at column $x$ and row $y$ in the image.}
     \item Set $z$ to the intensity level of light in the image at column $x$ and row $y$.
     \item Push $z$.
     \end{stepnumbers}
@@ -1497,7 +1502,7 @@ In order to implement the image output device, you will need to add two extra ca
     \item \proc{Pop} $r$.
     \item \proc{Pop} $h$.
     \item \proc{Pop} $w$.
-    \item Set the frame rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.
+    \item \deviceio{Set the frame rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.}
     \end{stepnumbers}
   \item[\SETPIXEL{}] then
     \begin{stepnumbers}
@@ -1507,7 +1512,7 @@ In order to implement the image output device, you will need to add two extra ca
     \item \proc{Pop} $r$.
     \item \proc{Pop} $y$.
     \item \proc{Pop} $x$.
-    \item Set the picture element at column $x$ and row $y$ to the point in the color space represented by the tuple $(r,g,b)$.
+    \item \deviceio{Set the picture element at column $x$ and row $y$ to the point in the color space represented by the tuple $(r,g,b)$.}
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
@@ -1529,8 +1534,8 @@ In order to implement the audio output device, you will need to add one extra ca
     \item Initialize the temporary 64-bit elements  $l$ and $r$ to 0.
     \item \proc{Pop} $r$.
     \item \proc{Pop} $l$.
-    \item Set the audio signal magnitude of the left channel to $l$.
-    \item Set the audio signal magnitude of the right channel to $r$.
+    \item \deviceio{Set the audio signal magnitude of the left channel to $l$.}
+    \item \deviceio{Set the audio signal magnitude of the right channel to $r$.}
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
@@ -1547,7 +1552,7 @@ In order to implement the text output device, you will need to add one extra cas
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $c$ to 0.
     \item \proc{Pop} $c$.
-    \item Produce the character with Unicode code point $c$.
+    \item \deviceio{Produce the character with Unicode code point $c$.}
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
