@@ -468,14 +468,12 @@ To test \proc{Extend}, do as follows:
 \section{A Very Basic Machine}
 
 You can now proceed with implementing a basic machine with $N=8$.
-Every time the machine starts, the memory must be set up first, a program must be loaded into memory, and then the main procedure must be executed.
 
-To set up the memory, set $\TERM$ to 0, set $\PC$ to $0$, and set $\SP$ to $2^N$.
+Before the machine is started, a program must be stored in $\MEM{}$.
+The program is a sequence of $n$ octets, which are stored in $\MEM{i}$ for $i \in \range{0}{n-1}$.
+The rest of $\MEM{}$ must be set to 0, that is, $\MEM{i}$ for $i \in \range{n}{2^N-1}$.
 
-The program is a sequence of $n$ octets which must be stored in $\MEM{i}$ for $i \in \range{0}{n-1}$.
-For the purposes of doing the tests below, $\MEM{i}$ for $i \in \range{n}{2^N-1}$ must be set to 0, but this is not normally needed.
-
-When you have set up the memory and stored the program in $\MEM{}$, execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
+Every time the machine starts, set $\TERM$ to 0, set $\PC$ to $0$, and set $\SP$ to $2^N$, then execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
@@ -522,8 +520,7 @@ The main procedure must carry out the following steps.
   \end{description}
 \item If the value of $k$ does not occur in the list in the previous point, then set $\TERM$ to $\T$.
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{01}$ \\
@@ -567,7 +564,7 @@ To test the machine, set the following elements to the provided values and start
     $\hex{17}$ & $\hex{00}$ \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{18}$, the value of $\SP$ should be $\hex{F8}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{18}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{E8}$ & $\hex{F8}$ \\
@@ -679,8 +676,7 @@ These cases add bit-copying capabilities to the machine.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -737,7 +733,7 @@ To test the machine, set the following elements to the provided values and start
     $\hex{27}$ & $\hex{AE}$ \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\SP$ should be $\hex{100}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{E0}$ & $\hex{A0}$ \\
@@ -822,8 +818,7 @@ These cases add still more bit-copying capabilities to the machine.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{07}$ \\
@@ -858,7 +853,7 @@ To test the machine, set the following elements to the provided values and start
     $\hex{17}$ & $\hex{00}$ \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{D8}$ & $\hex{FE}$ \\
@@ -962,8 +957,7 @@ These cases add arithmetic capabilities to the machine.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -1031,7 +1025,7 @@ To test the machine, set the following elements to the provided values and start
     \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{E0}$ & $\hex{78}$ \\
@@ -1109,8 +1103,7 @@ These cases add more arithmetic capabilities to the machine.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -1178,7 +1171,7 @@ To test the machine, set the following elements to the provided values and start
     \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{D0}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\SP$ should be $\hex{D0}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{D0}$ & $\hex{01}$ \\
@@ -1304,8 +1297,7 @@ These cases add bitwise Boolean logic capabilities to the machine.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
-
-To test the machine, set the following elements to the provided values and start the machine.
+To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{00}$ & $\hex{08}$ \\
@@ -1373,7 +1365,7 @@ To test the machine, set the following elements to the provided values and start
     \\
   \end{memcolumn}
 \end{memtable}
-When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements should have the indicated values.
+When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements of $\MEM{}$ should have the indicated values.
 \begin{memtable}
   \begin{memcolumn}
     $\hex{E0}$ & $\hex{67}$ \\
@@ -1480,7 +1472,7 @@ In order to implement the image input device, you will need to add two extra cas
     \item Initialize the temporary 64-bit elements $x$ and $y$ to 0.
     \item \proc{Pop} $x$.
     \item \proc{Pop} $y$.
-    \item Find the intensity of light in the image at column $x$ and row $y$, represented as an 8-bit value, $z$.
+    \item Set $z$ to the intensity level of light in the image at column $x$ and row $y$.
     \item Push $z$.
     \end{stepnumbers}
   \end{description}
@@ -1532,7 +1524,7 @@ In order to implement the audio output device, you will need to add one extra ca
 \begin{stepnumbers}[start=3]
 \item If $k$ is
   \begin{description}
-  \item[\NEWFRAME{}] then
+  \item[\ADDSAMPLE{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements  $l$ and $r$ to 0.
     \item \proc{Pop} $r$.
