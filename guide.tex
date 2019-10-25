@@ -282,102 +282,181 @@ The temporary 64-bit element $x$ can now be used by other procedures.
 
 \subsection{Testing the Basic Procedures}
 
-\subsubsection{Testing \proc{Put} and \proc{Get}}
+\subsubsection{Testing \proc{Put}}
 
-To test \proc{Put} and \proc{Get}, do as follows, with $N=4$:
+To test \proc{Put}, do as follows, with $N=4$:
 \begin{stepnumbers}
 \item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
-\item Initialize the temporary 64-bit element $x$ to $\hex{0123456789ABCDEF}$.
+\item Initialize the temporary 64-bit element $x$ to $\hex{A7A6A5A4A3A2A1A0}$.
 \item \proc{Put} 1 octet  from $x$ into index $\hex{01}$.
 \item \proc{Put} 2 octets from $x$ into index $\hex{02}$.
 \item \proc{Put} 4 octets from $x$ into index $\hex{04}$.
 \item \proc{Put} 8 octets from $x$ into index $\hex{08}$.
-\item \proc{Get} 1 octet  from index $\hex{0E}$ into $x$ .
-\item Verify that the value of $x$ is $\hex{0000000000000023}$.
-\item \proc{Get} 2 octets from index $\hex{0C}$ into $x$ .
-\item Verify that the value of $x$ is $\hex{0000000000004567}$.
-\item \proc{Get} 4 octets from index $\hex{08}$ into $x$ .
-\item Verify that the value of $x$ is $\hex{0000000089ABCDEF}$.
-\item \proc{Get} 8 octets from index $\hex{00}$ into $x$ .
-\item Verify that the value of $x$ is $\hex{89ABCDEFCDEFEF00}$.
-\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
-\end{stepnumbers}
-
-\begin{memtable}
-  \begin{memcolumn}
-    $\hex{00}$ & $\hex{00}$ \\
-    $\hex{01}$ & $\hex{EF}$ \\
-    $\hex{02}$ & $\hex{EF}$ \\
-    $\hex{03}$ & $\hex{CD}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{04}$ & $\hex{EF}$ \\
-    $\hex{05}$ & $\hex{CD}$ \\
-    $\hex{06}$ & $\hex{AB}$ \\
-    $\hex{07}$ & $\hex{89}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{08}$ & $\hex{EF}$ \\
-    $\hex{09}$ & $\hex{CD}$ \\
-    $\hex{0A}$ & $\hex{AB}$ \\
-    $\hex{0B}$ & $\hex{89}$ \\
-  \end{memcolumn}
-  \memspace
-  \begin{memcolumn}
-    $\hex{0C}$ & $\hex{67}$ \\
-    $\hex{0D}$ & $\hex{45}$ \\
-    $\hex{0E}$ & $\hex{23}$ \\
-    $\hex{0F}$ & $\hex{01}$ \\
-  \end{memcolumn}
-\end{memtable}
-
-\subsubsection{Testing \proc{Push} and \proc{Pop}}
-
-To test \proc{Push} and \proc{Pop}, do as follows, with $N=4$:
-\begin{stepnumbers}
-\item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
-\item Set $\SP$ to $\hex{10}$.
-\item Initialize the temporary 64-bit element $x$ to $\hex{0123456789ABCDEF}$.
-\item Initialize the temporary 64-bit element $y$ to $0$.
-\item \proc{Push} $x$.
-\item Verify that the value of $\SP$ is $\hex{08}$.
-\item \proc{Pop} $y$.
-\item Verify that $x=y$.
-\item Verify that the value of $\SP$ is $\hex{10}$.
 \item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
 \end{stepnumbers}
 
 \begin{memtable}
   \begin{memcolumn}
     $\hex{0}$ & $\hex{00}$ \\
-    $\hex{1}$ & $\hex{00}$ \\
-    $\hex{2}$ & $\hex{00}$ \\
-    $\hex{3}$ & $\hex{00}$ \\
+    $\hex{1}$ & $\hex{A0}$ \\
+    $\hex{2}$ & $\hex{A0}$ \\
+    $\hex{3}$ & $\hex{A1}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{4}$ & $\hex{00}$ \\
-    $\hex{5}$ & $\hex{00}$ \\
-    $\hex{6}$ & $\hex{00}$ \\
-    $\hex{7}$ & $\hex{00}$ \\
+    $\hex{4}$ & $\hex{A0}$ \\
+    $\hex{5}$ & $\hex{A1}$ \\
+    $\hex{6}$ & $\hex{A2}$ \\
+    $\hex{7}$ & $\hex{A3}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{8}$ & $\hex{EF}$ \\
-    $\hex{9}$ & $\hex{CD}$ \\
-    $\hex{A}$ & $\hex{AB}$ \\
-    $\hex{B}$ & $\hex{89}$ \\
+    $\hex{8}$ & $\hex{A0}$ \\
+    $\hex{9}$ & $\hex{A1}$ \\
+    $\hex{A}$ & $\hex{A2}$ \\
+    $\hex{B}$ & $\hex{A3}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{C}$ & $\hex{67}$ \\
-    $\hex{D}$ & $\hex{45}$ \\
-    $\hex{E}$ & $\hex{23}$ \\
-    $\hex{F}$ & $\hex{01}$ \\
+    $\hex{C}$ & $\hex{A4}$ \\
+    $\hex{D}$ & $\hex{A5}$ \\
+    $\hex{E}$ & $\hex{A6}$ \\
+    $\hex{F}$ & $\hex{A7}$ \\
   \end{memcolumn}
 \end{memtable}
+
+\subsubsection{Testing \proc{Get}}
+
+To test \proc{Get}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{0}$ & $\hex{A0}$ \\
+    $\hex{1}$ & $\hex{A1}$ \\
+    $\hex{2}$ & $\hex{A2}$ \\
+    $\hex{3}$ & $\hex{A3}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{4}$ & $\hex{A4}$ \\
+    $\hex{5}$ & $\hex{A5}$ \\
+    $\hex{6}$ & $\hex{A6}$ \\
+    $\hex{7}$ & $\hex{A7}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{8}$ & $\hex{A8}$ \\
+    $\hex{9}$ & $\hex{A9}$ \\
+    $\hex{A}$ & $\hex{AA}$ \\
+    $\hex{B}$ & $\hex{AB}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{C}$ & $\hex{AC}$ \\
+    $\hex{D}$ & $\hex{AD}$ \\
+    $\hex{E}$ & $\hex{AE}$ \\
+    $\hex{F}$ & $\hex{AF}$ \\
+  \end{memcolumn}
+\end{memtable}
+Then proceed as follows:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to $0$.
+\item \proc{Get} 1 octet  from index $\hex{01}$ into $x$.
+\item Verify that the value of $x$ is $\hex{00000000000000A1}$.
+\item \proc{Get} 2 octets from index $\hex{02}$ into $x$.
+\item Verify that the value of $x$ is $\hex{000000000000A3A2}$.
+\item \proc{Get} 4 octets from index $\hex{04}$ into $x$.
+\item Verify that the value of $x$ is $\hex{00000000A7A6A5A4}$.
+\item \proc{Get} 8 octets from index $\hex{08}$ into $x$.
+\item Verify that the value of $x$ is $\hex{AFAEADACABAAA9A8}$.
+\end{stepnumbers}
+
+\subsubsection{Testing \proc{Push}}
+
+To test \proc{Push}, do as follows, with $N=4$:
+\begin{stepnumbers}
+\item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
+\item Set $\SP$ to $\hex{10}$.
+\item Initialize the temporary 64-bit element $x$ to $\hex{AFAEADACABAAA9A8}$.
+\item Initialize the temporary 64-bit element $y$ to $\hex{A7A6A5A4A3A2A1A0}$.
+\item \proc{Push} $x$.
+\item Verify that the value of $\SP$ is $\hex{08}$.
+\item \proc{Push} $y$.
+\item Verify that the value of $\SP$ is $\hex{10}$.
+\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
+\end{stepnumbers}
+
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{0}$ & $\hex{A0}$ \\
+    $\hex{1}$ & $\hex{A1}$ \\
+    $\hex{2}$ & $\hex{A2}$ \\
+    $\hex{3}$ & $\hex{A3}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{4}$ & $\hex{A4}$ \\
+    $\hex{5}$ & $\hex{A5}$ \\
+    $\hex{6}$ & $\hex{A6}$ \\
+    $\hex{7}$ & $\hex{A7}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{8}$ & $\hex{A8}$ \\
+    $\hex{9}$ & $\hex{A9}$ \\
+    $\hex{A}$ & $\hex{AA}$ \\
+    $\hex{B}$ & $\hex{AB}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{C}$ & $\hex{AC}$ \\
+    $\hex{D}$ & $\hex{AD}$ \\
+    $\hex{E}$ & $\hex{AE}$ \\
+    $\hex{F}$ & $\hex{AF}$ \\
+  \end{memcolumn}
+\end{memtable}
+
+\subsubsection{Testing \proc{Pop}}
+
+To test \proc{Fetch}, first set $N=4$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
+\begin{memtable}
+  \begin{memcolumn}
+    $\hex{0}$ & $\hex{A0}$ \\
+    $\hex{1}$ & $\hex{A1}$ \\
+    $\hex{2}$ & $\hex{A2}$ \\
+    $\hex{3}$ & $\hex{A3}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{4}$ & $\hex{A4}$ \\
+    $\hex{5}$ & $\hex{A5}$ \\
+    $\hex{6}$ & $\hex{A6}$ \\
+    $\hex{7}$ & $\hex{A7}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{8}$ & $\hex{A8}$ \\
+    $\hex{9}$ & $\hex{A9}$ \\
+    $\hex{A}$ & $\hex{AA}$ \\
+    $\hex{B}$ & $\hex{AB}$ \\
+  \end{memcolumn}
+  \memspace
+  \begin{memcolumn}
+    $\hex{C}$ & $\hex{AC}$ \\
+    $\hex{D}$ & $\hex{AD}$ \\
+    $\hex{E}$ & $\hex{AE}$ \\
+    $\hex{F}$ & $\hex{AF}$ \\
+  \end{memcolumn}
+\end{memtable}
+Then proceed as follows:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $x$ to $0$.
+\item Initialize the temporary 64-bit element $y$ to $0$.
+\item \proc{Pop} $x$.
+\item Verify that $\SP = \hex{08}$ and that $x = \hex{A7A6A5A4A3A2A1A0}$.
+\item \proc{Pop} $y$.
+\item Verify that $\SP = \hex{10}$ and that $y = \hex{AFAEADACABAAA9A8}$.
+\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
+\end{stepnumbers}
 
 \subsubsection{Testing \proc{Fetch}}
 
