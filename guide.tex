@@ -381,90 +381,81 @@ To test \proc{Push} and \proc{Pop}, do as follows, with $N=4$:
 
 \subsubsection{Testing \proc{Fetch}}
 
-To test \proc{Fetch}, do as follows, with $N=4$:
-\begin{stepnumbers}
-\item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
-\item Initialize the temporary 64-bit element $w$ to 0.
-\item Initialize the temporary 64-bit element $x$ to $\hex{FEDCBA9876543210}$.
-
-\item \proc{Put} 8 octets from $x$ into index 0.
-\item \proc{Put} 8 octets from $x$ into index 8.
-
-\item \proc{Fetch} 1 octet into $w$.
-\item Verify that the value of $w$ is $\hex{0000000000000010}$.
-\item Verify that the value of $\PC$ is $\hex{01}$.
-
-\item \proc{Fetch} 2 octets into $w$.
-\item Verify that the value of $w$ is $\hex{0000000000005432}$.
-\item Verify that the value of $\PC$ is $\hex{03}$.
-
-\item \proc{Fetch} 4 octets into $w$.
-\item Verify that the value of $z$ is $\hex{00000000DCBA9876}$.
-\item Verify that the value of $\PC$ is $\hex{07}$.
-
-\item \proc{Fetch} 8 octets into $w$.
-\item Verify that the value of $w$ is $\hex{DCBA9876543210FE}$.
-\item Verify that the value of $\PC$ is $\hex{0F}$.
-
-\item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
-\end{stepnumbers}
-
+To test \proc{Fetch}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
 \begin{memtable}
   \begin{memcolumn}
-    $\hex{0}$ & $\hex{10}$ \\
-    $\hex{1}$ & $\hex{32}$ \\
-    $\hex{2}$ & $\hex{54}$ \\
-    $\hex{3}$ & $\hex{76}$ \\
+    $\hex{0}$ & $\hex{A0}$ \\
+    $\hex{1}$ & $\hex{A1}$ \\
+    $\hex{2}$ & $\hex{A2}$ \\
+    $\hex{3}$ & $\hex{A3}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{4}$ & $\hex{98}$ \\
-    $\hex{5}$ & $\hex{BA}$ \\
-    $\hex{6}$ & $\hex{DC}$ \\
-    $\hex{7}$ & $\hex{FE}$ \\
+    $\hex{4}$ & $\hex{A4}$ \\
+    $\hex{5}$ & $\hex{A5}$ \\
+    $\hex{6}$ & $\hex{A6}$ \\
+    $\hex{7}$ & $\hex{A7}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{8}$ & $\hex{10}$ \\
-    $\hex{9}$ & $\hex{32}$ \\
-    $\hex{A}$ & $\hex{54}$ \\
-    $\hex{B}$ & $\hex{76}$ \\
+    $\hex{8}$ & $\hex{A8}$ \\
+    $\hex{9}$ & $\hex{A9}$ \\
+    $\hex{A}$ & $\hex{AA}$ \\
+    $\hex{B}$ & $\hex{AB}$ \\
   \end{memcolumn}
   \memspace
   \begin{memcolumn}
-    $\hex{C}$ & $\hex{98}$ \\
-    $\hex{D}$ & $\hex{BA}$ \\
-    $\hex{E}$ & $\hex{DC}$ \\
-    $\hex{F}$ & $\hex{FE}$ \\
+    $\hex{C}$ & $\hex{AC}$ \\
+    $\hex{D}$ & $\hex{AD}$ \\
+    $\hex{E}$ & $\hex{AE}$ \\
+    $\hex{F}$ & $\hex{AF}$ \\
   \end{memcolumn}
 \end{memtable}
-
+Then proceed as follows:
+\begin{stepnumbers}
+\item Initialize the temporary 64-bit element $w$ to 0.
+\item \proc{Fetch} 1 octet into $w$.
+\item Verify that $\PC = \hex{01}$ and that $w = \hex{00000000000000A0}$.
+\item \proc{Fetch} 2 octets into $w$.
+\item Verify that $\PC = \hex{03}$ and that $w = \hex{000000000000A2A1}$.
+\item \proc{Fetch} 4 octets into $w$.
+\item Verify that $\PC = \hex{07}$ and that $z = \hex{00000000A6A5A4A3}$.
+\item \proc{Fetch} 8 octets into $w$.
+\item Verify that $\PC = \hex{0F}$ and that $w = \hex{AEADACABAAA9A8A7}$.
+\end{stepnumbers}
 
 \subsubsection{Testing \proc{Extend}}
 
 To test \proc{Extend}, do as follows:
-\begin{stepnumbers}
-\item Initialize the temporary 64-bit element $x$ to $\hex{000000000000007F}$.
-\item \proc{Extend} sign for 1 octet in $x$.
-\item Verify that the value of $x$ is $\hex{000000000000007F}$.
-\item Increment $x$ by 1.
-\item \proc{Extend} sign for 1 octet in $x$.
-\item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
-
-\item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
-\item \proc{Extend} sign for 2 octets in $y$.
-\item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
-\item Increment $y$ by 1.
-\item \proc{Extend} sign for 2 octets in $y$.
-\item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
-
-\item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
-\item \proc{Extend} sign for 4 octets in $z$.
-\item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
-\item Increment $z$ by 1.
-\item \proc{Extend} sign for 4 octets in $z$.
-\item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
-\end{stepnumbers}
+\begin{stepletters}
+\item Test \proc{Extend} sign for 1 octet.
+  \begin{stepnumbers}
+  \item Initialize the temporary 64-bit element $x$ to $\hex{000000000000007F}$.
+  \item \proc{Extend} sign for 1 octet in $x$.
+  \item Verify that the value of $x$ is $\hex{000000000000007F}$.
+  \item Increment $x$ by 1.
+  \item \proc{Extend} sign for 1 octet in $x$.
+  \item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
+  \end{stepnumbers}
+\item Test \proc{Extend} sign for 2 octets.
+  \begin{stepnumbers}
+  \item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
+  \item \proc{Extend} sign for 2 octets in $y$.
+  \item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
+  \item Increment $y$ by 1.
+  \item \proc{Extend} sign for 2 octets in $y$.
+  \item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
+  \end{stepnumbers}
+\item Test \proc{Extend} sign for 4 octets.
+  \begin{stepnumbers}
+  \item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
+  \item \proc{Extend} sign for 4 octets in $z$.
+  \item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
+  \item Increment $z$ by 1.
+  \item \proc{Extend} sign for 4 octets in $z$.
+  \item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
+  \end{stepnumbers}
+\end{stepletters}
 
 \section{A Very Basic Machine}
 
@@ -1427,10 +1418,10 @@ There are four devices:
 \item The \emph{Audio Output} device allows the machine to produce audio signals as a time series of amplitude values.
 \item The \emph{Text Output} device allows the machine to produce text as a stream of characters.
 \end{itemize}
-The descriptions below will only explain the correspondence between machine events and real world events.
-It is up to you to make sure that the interpretation of real world events is faithfully implemented.
+The descriptions below will only explain the correspondence between machine events and external events.
+It is up to you to make sure that the interpretation of external events is faithfully implemented.
 As before, you will add more cases to the existing machine.
-Cases where real-world interaction is required are indicated \deviceio{like this}.
+Wherever external interaction is required, this is written \deviceio{like this}.
 
 \subsection{Image Input}
 
