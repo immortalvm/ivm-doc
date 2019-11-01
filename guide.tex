@@ -36,6 +36,7 @@
 \newcommand{\deviceio}[1]{$\langle$#1$\rangle$}
 \newcommand{\op}[1]{$#1$}
 \theoremstyle{definition}
+\newtheorem{definition}{Definition}
 \newtheorem{test}{Test}
 \newenvironment{memtable}{%
   \begin{trivlist}
@@ -100,9 +101,9 @@
 \maketitle
 
 \noindent
-This film contains programs that can be executed by a machine.
+This film contains programs and data.
+The programs can be executed by a machine to convert the data into documents, pictures, sound, and moving pictures.
 The purpose of this part of the film is to guide you through the process of building this machine.
-Using this guide, it should be possible for one person to build a machine in a week.
 To understand the guide, it is necessary to have knowledge of basic 20th-century mathematics and physics.
 
 When you have finished the machine, you will need to install an initial program in it before you can use it to execute programs.
@@ -111,7 +112,7 @@ This initial program is supplied as part of the film.
 You will start by building a very simple machine, and then you will extend this machine through several stages, so that by the end you will have a fully functional machine.
 Only when you have obtained the correct test results for each stage should you proceed with the following stage.
 
-Number systems used here include decimal, binary, and hexadecimal.
+Number systems used here include decimal (number base 10), binary (number base 2), and hexadecimal (number base 16).
 All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
 Further detail on binary and hexadecimal notation can be found in Appendix~\ref{sec:number-notation}.
 
@@ -123,7 +124,7 @@ To build the machine, you first need some form of memory to represent state cons
 
 An \emph{element} is a group of bits in the memory that forms a unit with respect to naming.
 The number of bits in an element is called the \emph{size} of the element.
-Each element has a unique name, so that it can be unambiguously referred to, and the contents can be retrieved or stored in one atomic operation.
+Each element has a unique name, so that it can be unambiguously referred to.
 The following elements are employed by the machine:
 \begin{description}
 \item[1-bit elements]
@@ -140,11 +141,16 @@ This is explained in Section~\ref{sec:memory-operations}
 
 \subsection{Notation}
 
-For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ in $x$.
+\begin{definition}
+For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ in $x$. (The numbering of bits is defined in Appendix~\ref{sec:binary-notation}.)
+\end{definition}
 
+\begin{definition}
 A group of 8 bits is called an \emph{octet}, and in a 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ in $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
+\end{definition}
 
-To show the contents of $\MEM{}$, we write for example
+\begin{definition}
+The contents of $\MEM{}$ are written as a table where the left column is the index, $i$, and the right column is $\MEM{i}$.  For example,
 \begin{memtable}
   \begin{memcolumn}
     $\hex{0}$ & $\hex{A0}$ \\
@@ -153,48 +159,60 @@ To show the contents of $\MEM{}$, we write for example
     $\hex{3}$ & $\hex{A3}$ \\
   \end{memcolumn}
 \end{memtable}
-The left column is the index, $i$, and the right column is $\MEM{i}$, so for example, $\MEM{2} = \hex{A2}$.
+so in this case $\MEM{2} = \hex{A2}$.
+\end{definition}
 
+\begin{definition}
 The modulo operation, $\modulo{x}{y}$, for $y>0$, is defined here as follows:
 \[ \modulo{x}{y} = x - y \left \lfloor \frac{x}{y} \right \rfloor \]
 where $\left \lfloor x \right \rfloor$ is defined as the unique integer such that $\left \lfloor x \right \rfloor \le x < (\left \lfloor x \right \rfloor + 1)$.
+\end{definition}
 
-\subsection{Operations}
+\subsection{Basic Memory Operations}
 \label{sec:memory-operations}
 
-We need to define a few terms to talk about memory.
-These should be basic operations in your implementation.
-\begin{itemize}
-\item ``The value of an element.'' means the contents as retrieved from that element.
-\item ``To set an element to $x$'' means to store the value of $x$ in that element.
-\item ``The value of an octet.'' means the contents as retrieved from that octet.
-\item ``To set an octet to $x$'' means to store the value of $x$ in that octet, while keeping all other contents unchanged.
-\item ``To increment an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x + n)}{2^s}$, where $s$ is the size of the element.
-\item ``To decrement an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x - n)}{2^s}$, where $s$ is the size of the element.
-\item  ``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
-\end{itemize}
+The following are basic memory operations that must be exist in your implementation.
+
+\begin{definition}
+``The value of an element'' means the contents as retrieved from that element.
+\end{definition}
+
+\begin{definition}
+``To set an element to $x$'' means to store the value of $x$ in that element.
+\end{definition}
+
+\begin{definition}
+``The value of an octet'' means the contents as retrieved from that octet.
+\end{definition}
+
+\begin{definition}
+``To set an octet to $x$'' means to store the value of $x$ in that octet, while keeping all other contents unchanged.
+\end{definition}
+
+\begin{definition}
+``To increment an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x + n)}{2^s}$, where $s$ is the size of the element.
+\end{definition}
+
+\begin{definition}
+``To decrement an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x - n)}{2^s}$, where $s$ is the size of the element.
+\end{definition}
+
+\begin{definition}
+``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
+\end{definition}
 
 \subsection{Testing the Memory Operations}
 
-To test that the memory works as it should, do the following tests many times for $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N=8$.
+To test that the memory operations work as they should, do the following two tests 1000 times.
 
 \begin{test}
-  Verify that your operations for storing and getting the value of an element work for every element, $x$, of size $s$.
-  \begin{stepnumbers}
-  \item Initialize the temporary element, $y$, of size $s$.
-  \item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
-  \item Set $x$ to $y$.
-  \item Verify that $x = y$.
-  \end{stepnumbers}
-\end{test}
-
-\begin{test}
-  Verify that your operations for incrementing and decrementing an element work for every element, $x$, of size $s$.
+  Verify that your operations for storing and getting the value of an element work for every element, $x$, of size $s$, including $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N \ge 8$.
   \begin{stepnumbers}
   \item Initialize the temporary elements, $y$ and $z$, of size $s$.
   \item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
   \item For all $i \in \range{0}{s-1}$, set $\bitno{z}{i}$ to a random bit value.
   \item Set $x$ to $y$.
+  \item Verify that $x = y$.
   \item Increment $x$ by $z$.
   \item Verify that $x = \modulo{(y + z)}{2^s}$.
   \item Decrement $x$ by $z$.
@@ -359,7 +377,7 @@ The expression ``\proc{Push} $x$'' means to do the following steps:
   \item \proc{Push} $x$.
   \item Verify that the value of $\SP$ is $\hex{08}$.
   \item \proc{Push} $y$.
-  \item Verify that the value of $\SP$ is $\hex{10}$.
+  \item Verify that the value of $\SP$ is $\hex{00}$.
   \item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
   \end{stepnumbers}
 
@@ -443,7 +461,6 @@ The 64-bit element $x$ can now be used by other procedures.
   \item Verify that $\SP = \hex{08}$ and that $x = \hex{A7A6A5A4A3A2A1A0}$.
   \item \proc{Pop} $y$.
   \item Verify that $\SP = \hex{10}$ and that $y = \hex{AFAEADACABAAA9A8}$.
-  \item Verify that the contents of the elements in $\MEM{}$ are as in the following table.
   \end{stepnumbers}
 \end{test}
 
@@ -502,10 +519,10 @@ The temporary 64-bit element $x$ can now be used by other procedures.
   \item Verify that $\PC = \hex{0F}$ and that $w = \hex{AEADACABAAA9A8A7}$.
   \end{stepnumbers}
 \end{test}
-\subsection{\proc{Extend} Sign}
+\subsection{\proc{Extend} Octets}
 
 Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
-The expression ``\proc{Extend} sign for $n$ octets in $x$'' means to do the following step:
+The expression ``\proc{Extend} $n$ octets in $x$'' means to do the following step:
 \begin{stepnumbers}
 \item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
 \end{stepnumbers}
@@ -514,31 +531,31 @@ The temporary 64-bit element $x$ can now be used by other procedures.
 \begin{test}
   To test \proc{Extend}, do as follows:
   \begin{stepnumbers}
-  \item Test \proc{Extend} sign for 1 octet.
+  \item Test \proc{Extend} 1 octet.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $x$ to $\hex{000000000000007F}$.
-    \item \proc{Extend} sign for 1 octet in $x$.
+    \item \proc{Extend} 1 octet in $x$.
     \item Verify that the value of $x$ is $\hex{000000000000007F}$.
     \item Increment $x$ by 1.
-    \item \proc{Extend} sign for 1 octet in $x$.
+    \item \proc{Extend} 1 octet in $x$.
     \item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
     \end{stepnumbers}
-  \item Test \proc{Extend} sign for 2 octets.
+  \item Test \proc{Extend} 2 octets.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
-    \item \proc{Extend} sign for 2 octets in $y$.
+    \item \proc{Extend} 2 octets in $y$.
     \item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
     \item Increment $y$ by 1.
-    \item \proc{Extend} sign for 2 octets in $y$.
+    \item \proc{Extend} 2 octets in $y$.
     \item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
     \end{stepnumbers}
-  \item Test \proc{Extend} sign for 4 octets.
+  \item Test \proc{Extend} 4 octets.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
-    \item \proc{Extend} sign for 4 octets in $z$.
+    \item \proc{Extend} 4 octets in $z$.
     \item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
     \item Increment $z$ by 1.
-    \item \proc{Extend} sign for 4 octets in $z$.
+    \item \proc{Extend} 4 octets in $z$.
     \item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
     \end{stepnumbers}
   \end{stepnumbers}
@@ -569,7 +586,7 @@ The main procedure must carry out the following steps.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
     \item \proc{Fetch} 1 octet into $a$.
-    \item \proc{Extend} sign for 1 octet in $a$.
+    \item \proc{Extend} 1 octet in $a$.
     \item \proc{Pop} $x$.
     \item If the value of $x$ is 0, then increment $\PC$ by $a$.
     \end{stepnumbers}
@@ -883,21 +900,21 @@ These cases add still more bit-copying capabilities to the machine.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $x$ to 0.
     \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 1 octet in $x$.
+    \item \proc{Extend} 1 octet in $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\SIGXS{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $x$ to 0.
     \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 2 octets in $x$.
+    \item \proc{Extend} 2 octets in $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\SIGXI{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $x$ to 0.
     \item \proc{Pop} $x$.
-    \item \proc{Extend} sign for 4 octets in $x$.
+    \item \proc{Extend} 4 octets in $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
   \end{description}
