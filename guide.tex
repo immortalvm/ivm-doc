@@ -132,7 +132,7 @@ The following elements are employed by the machine:
 \item[8-bit elements]
   $\MEM{}$ is an array of $2^N$ 8-bit elements that is indexed by an integer in the range from $0$ to $2^N - 1$, for $N \le 64$.
   The element at index $i$ in $\MEM{}$ is named $\MEM{i}$.
-  $N$ is a constant that must be known at the time the machine is started.
+  $N$ is a constant that must be known at the time the machine is started, and it will be given as part of the documentation of the program to be executed.
 \item[64-bit elements]
   $\PC$ and $\SP$ are 64-bit elements.
 \end{description}
@@ -159,7 +159,7 @@ The contents of $\MEM{}$ are written as a table where the left column is the ind
     $\hex{3}$ & $\hex{A3}$ \\
   \end{memcolumn}
 \end{memtable}
-so in this case $\MEM{2} = \hex{A2}$.
+so in this case $\MEM{\hex{2}} = \hex{A2}$.
 \end{definition}
 
 \begin{definition}
@@ -423,7 +423,7 @@ The expression ``\proc{Pop} $x$'' means to do the following steps:
 The 64-bit element $x$ can now be used by other procedures.
 
 \begin{test}
-  To test \proc{Fetch}, first set $N=4$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
+  To test \proc{Pop}, first set $N=4$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{0}$ & $\hex{A0}$ \\
@@ -928,6 +928,9 @@ These cases add still more bit-copying capabilities to the machine.
       $\hex{01}$ & $\hex{0B}$ \\
       $\hex{02}$ & $\hex{10}$ \\
       $\hex{03}$ & $\hex{32}$ \\
+    \end{memcolumn}
+    \memspace
+    \begin{memcolumn}
       $\hex{04}$ & $\hex{54}$ \\
       $\hex{05}$ & $\hex{76}$ \\
       $\hex{06}$ & $\hex{98}$ \\
@@ -939,6 +942,9 @@ These cases add still more bit-copying capabilities to the machine.
       $\hex{09}$ & $\hex{FE}$ \\
       $\hex{0A}$ & $\hex{0A}$ \\
       $\hex{0B}$ & $\hex{98}$ \\
+    \end{memcolumn}
+    \memspace
+    \begin{memcolumn}
       $\hex{0C}$ & $\hex{BA}$ \\
       $\hex{0D}$ & $\hex{DC}$ \\
       $\hex{0E}$ & $\hex{FE}$ \\
@@ -950,6 +956,9 @@ These cases add still more bit-copying capabilities to the machine.
       $\hex{11}$ & $\hex{DC}$ \\
       $\hex{12}$ & $\hex{FE}$ \\
       $\hex{13}$ & $\hex{0D}$ \\
+    \end{memcolumn}
+    \memspace
+    \begin{memcolumn}
       $\hex{14}$ & $\hex{08}$ \\
       $\hex{15}$ & $\hex{FE}$ \\
       $\hex{16}$ & $\hex{0C}$ \\
@@ -1525,11 +1534,11 @@ These cases add bitwise Boolean logic capabilities to the machine.
   \end{memtable}
 \end{test}
 
-\section{Building the Devices}
+\section{Joining the Machine With the Devices}
 \label{sec:building-devices}
 
 At this point you should have a machine with fully functional computational capabilities.
-What's missing are the devices that allow the machine to consume data from its environment and to produce data to its environment.
+What you need to do now is to join the machine with the devices that allow it to consume data from its environment and to produce data to its environment.
 There are four devices:
 \begin{itemize}
 \item The \emph{Image Input} device allows the machine to consume images as a two-dimensional array of gray-scale values.
@@ -1566,8 +1575,6 @@ The spacing between the sampling points must be uniform in both horizontal and v
 Each picture element detects the intensity of light transmitted or reflected at a sampling point in that particular position of the image, represented as one of 256 intensity levels, from 0 (minimum intensity) to 255 (maximum intensity).
 Values between 0 and 255 represent intermediate intensities between these extremes.
 
-\comment{I'm not sure how much of this should be explained in this document or elsewhere.}
-
 In order to implement the image input device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
 
 \begin{stepnumbers}[start=3]
@@ -1600,8 +1607,6 @@ In order to implement the image input device, you will need to add two extra cas
 The \emph{Image Output} device allows the machine to produce an image represented as a two-dimensional array of points of color space values.
 Moving images can be produced as a sequence of images.
 
-\comment{Color space needs to be explained somewhere.}
-
 In order to implement the image output device, you will need to add two extra cases to step \ref{itm:main-case} of the main procedure.
 
 \begin{stepnumbers}[start=3]
@@ -1614,7 +1619,7 @@ In order to implement the image output device, you will need to add two extra ca
     \item \proc{Pop} $r$.
     \item \proc{Pop} $h$.
     \item \proc{Pop} $w$.
-    \item \deviceio{Set the frame rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.}
+    \item \deviceio{Set the audio sample rate to $r$, the width of the frame to $w$, and the height of the frame to $h$.}
     \end{stepnumbers}
   \item[\SETPIXEL{}] then
     \begin{stepnumbers}
@@ -1671,15 +1676,19 @@ In order to implement the text output device, you will need to add one extra cas
 
 \section{Installing the Initial Program}
 
-You first need to obtain the intial program from elsewhere on the film as a sequence of octets in hexadecimal notation.
-These octets must be stored consecutively in $\MEM{}$, from index $0$ and up.
+You first need to obtain the intial program from elsewhere on the film as a sequence of $p$ octets in hexadecimal notation.
+These octets must be stored in $\MEM{i}$, where $i \in \range{0}{p-1}$.
 
-\comment{Describe how to supply parameters.}
-
-When this is done, the machine can now be started, and it can then load a program from the film and execute it.
+The operation of the initial program, and programs loaded by the initial program, can be controlled by a set of parameters represented as a sequence of $q$ octets.
+These octets must also be stored in $M$.
+This is done as follows:
+\begin{stepnumbers}
+  \item \proc{Put} 8 octets from $q$ into index $p$.
+  \item Store the sequence of parameters in elements $\MEM{p+8}$ to $\MEM{p+8+q-1}$.
+\end{stepnumbers}
+When these things have been done, the machine can be started, and it can then load a program from the film and execute it.
 
 \appendix
-
 
 \section{Number Notation}
 \label{sec:number-notation}
