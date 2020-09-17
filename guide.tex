@@ -84,12 +84,13 @@
 \newcommand{\NOT}       [1]{\op{\hex{2A}}}
 \newcommand{\XOR}       [1]{\op{\hex{2B}}}
 \newcommand{\POW}       [1]{\op{\hex{2C}}}
-\newcommand{\NEWFRAME}  [1]{\op{\hex{30}}}
-\newcommand{\SETPIXEL}  [1]{\op{\hex{31}}}
-\newcommand{\ADDSAMPLE} [1]{\op{\hex{32}}}
-\newcommand{\PUTCHAR}   [1]{\op{\hex{34}}}
-\newcommand{\READFRAME} [1]{\op{\hex{38}}}
-\newcommand{\READPIXEL} [1]{\op{\hex{39}}}
+\newcommand{\PUTBYTE}   [1]{\op{\hex{F9}}}
+\newcommand{\PUTCHAR}   [1]{\op{\hex{FA}}}
+\newcommand{\ADDSAMPLE} [1]{\op{\hex{FB}}}
+\newcommand{\SETPIXEL}  [1]{\op{\hex{FC}}}
+\newcommand{\NEWFRAME}  [1]{\op{\hex{FD}}}
+\newcommand{\READPIXEL} [1]{\op{\hex{FE}}}
+\newcommand{\READFRAME} [1]{\op{\hex{FF}}}
 
 \newlist{stepnumbers}{enumerate}{2}
 \setlist[stepnumbers]{label=\textbf{\arabic*},labelsep=0.7em}
