@@ -719,21 +719,21 @@ These cases add bit-copying capabilities to the machine.
   \begin{description}
   \item[\LOADB{}] then
     \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
     \item \proc{Pop} $a$.
     \item \proc{Get} 1 octet from index $a$ into $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\LOADS{}] then
     \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
     \item \proc{Pop} $a$.
     \item \proc{Get} 2 octets from index $a$ into $x$.
     \item \proc{Push} $x$.
     \end{stepnumbers}
   \item[\LOADI{}] then
     \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $a$ to 0.
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
     \item \proc{Pop} $a$.
     \item \proc{Get} 4 octets from index $a$ into $x$.
     \item \proc{Push} $x$.
@@ -1598,7 +1598,7 @@ In order to implement the image input device, you will need to add two extra cas
     \item \proc{Pop} $y$.
     \item \deviceio{Measure the intensity of light at column $x$ and row $y$ in the image.}
     \item Set $z$ to the intensity level of light in the image at column $x$ and row $y$.
-    \item Push $z$.
+    \item \proc{Push} $z$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
