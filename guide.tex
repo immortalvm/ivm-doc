@@ -897,27 +897,6 @@ These cases add still more bit-copying capabilities to the machine.
     \item \proc{Fetch} 8 octets into $a$.
     \item \proc{Push} $a$.
     \end{stepnumbers}
-  \item[\SIGXB{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} 1 octet in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \item[\SIGXS{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} 2 octets in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
-  \item[\SIGXI{}] then
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to 0.
-    \item \proc{Pop} $x$.
-    \item \proc{Extend} 4 octets in $x$.
-    \item \proc{Push} $x$.
-    \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
 
@@ -926,90 +905,72 @@ These cases add still more bit-copying capabilities to the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{07}$ \\
-      $\hex{01}$ & $\hex{0B}$ \\
-      $\hex{02}$ & $\hex{10}$ \\
-      $\hex{03}$ & $\hex{32}$ \\
+      $\hex{01}$ & $\hex{09}$ \\
+      $\hex{02}$ & $\hex{20}$ \\
+      $\hex{03}$ & $\hex{21}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{04}$ & $\hex{54}$ \\
-      $\hex{05}$ & $\hex{76}$ \\
-      $\hex{06}$ & $\hex{98}$ \\
-      $\hex{07}$ & $\hex{BA}$ \\
+      $\hex{04}$ & $\hex{0A}$ \\
+      $\hex{05}$ & $\hex{10}$ \\
+      $\hex{06}$ & $\hex{11}$ \\
+      $\hex{07}$ & $\hex{12}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{08}$ & $\hex{DC}$ \\
-      $\hex{09}$ & $\hex{FE}$ \\
-      $\hex{0A}$ & $\hex{0A}$ \\
-      $\hex{0B}$ & $\hex{98}$ \\
+      $\hex{08}$ & $\hex{13}$ \\
+      $\hex{09}$ & $\hex{0B}$ \\
+      $\hex{0A}$ & $\hex{00}$ \\
+      $\hex{0B}$ & $\hex{01}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{0C}$ & $\hex{BA}$ \\
-      $\hex{0D}$ & $\hex{DC}$ \\
-      $\hex{0E}$ & $\hex{FE}$ \\
-      $\hex{0F}$ & $\hex{0E}$ \\
+      $\hex{0C}$ & $\hex{02}$ \\
+      $\hex{0D}$ & $\hex{03}$ \\
+      $\hex{0E}$ & $\hex{04}$ \\
+      $\hex{0F}$ & $\hex{05}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{10}$ & $\hex{09}$ \\
-      $\hex{11}$ & $\hex{DC}$ \\
-      $\hex{12}$ & $\hex{FE}$ \\
-      $\hex{13}$ & $\hex{0D}$ \\
-    \end{memcolumn}
-    \memspace
-    \begin{memcolumn}
-      $\hex{14}$ & $\hex{08}$ \\
-      $\hex{15}$ & $\hex{FE}$ \\
-      $\hex{16}$ & $\hex{0C}$ \\
-      $\hex{17}$ & $\hex{00}$ \\
+      $\hex{10}$ & $\hex{06}$ \\
+      $\hex{11}$ & $\hex{07}$ \\
+      $\hex{12}$ & $\hex{00}$ \\
+      ~\\
     \end{memcolumn}
   \end{memtable}
-  When the machine terminates, the value of $\SP$ should be $\hex{D8}$, and the following elements of $\MEM{}$ should have the indicated values.
+  When the machine terminates, the value of $\SP$ should be $\hex{E0}$, and the following elements of $\MEM{}$ should have the indicated values.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{D8}$ & $\hex{FE}$ \\
-      $\hex{D9}$ & $\hex{FF}$ \\
-      $\hex{DA}$ & $\hex{FF}$ \\
-      $\hex{DB}$ & $\hex{FF}$ \\
-      $\hex{DC}$ & $\hex{FF}$ \\
-      $\hex{DD}$ & $\hex{FF}$ \\
-      $\hex{DE}$ & $\hex{FF}$ \\
-      $\hex{DF}$ & $\hex{FF}$ \\
+      $\hex{E0}$ & $\hex{00}$ \\
+      $\hex{E1}$ & $\hex{01}$ \\
+      $\hex{E2}$ & $\hex{02}$ \\
+      $\hex{E3}$ & $\hex{03}$ \\
+      $\hex{E4}$ & $\hex{04}$ \\
+      $\hex{E5}$ & $\hex{05}$ \\
+      $\hex{E6}$ & $\hex{06}$ \\
+      $\hex{E7}$ & $\hex{07}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{E0}$ & $\hex{DC}$ \\
-      $\hex{E1}$ & $\hex{FE}$ \\
-      $\hex{E2}$ & $\hex{FF}$ \\
-      $\hex{E3}$ & $\hex{FF}$ \\
-      $\hex{E4}$ & $\hex{FF}$ \\
-      $\hex{E5}$ & $\hex{FF}$ \\
-      $\hex{E6}$ & $\hex{FF}$ \\
-      $\hex{E7}$ & $\hex{FF}$ \\
+      $\hex{E8}$ & $\hex{10}$ \\
+      $\hex{E9}$ & $\hex{11}$ \\
+      $\hex{EA}$ & $\hex{12}$ \\
+      $\hex{EB}$ & $\hex{13}$ \\
+      $\hex{EC}$ & $\hex{00}$ \\
+      $\hex{ED}$ & $\hex{00}$ \\
+      $\hex{EE}$ & $\hex{00}$ \\
+      $\hex{EF}$ & $\hex{00}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{E8}$ & $\hex{98}$ \\
-      $\hex{E9}$ & $\hex{BA}$ \\
-      $\hex{EA}$ & $\hex{DC}$ \\
-      $\hex{EB}$ & $\hex{FE}$ \\
-      $\hex{EC}$ & $\hex{FF}$ \\
-      $\hex{ED}$ & $\hex{FF}$ \\
-      $\hex{EE}$ & $\hex{FF}$ \\
-      $\hex{EF}$ & $\hex{FF}$ \\
-    \end{memcolumn}
-    \memspace
-    \begin{memcolumn}
-      $\hex{F0}$ & $\hex{10}$ \\
-      $\hex{F1}$ & $\hex{32}$ \\
-      $\hex{F2}$ & $\hex{54}$ \\
-      $\hex{F3}$ & $\hex{76}$ \\
-      $\hex{F4}$ & $\hex{98}$ \\
-      $\hex{F5}$ & $\hex{BA}$ \\
-      $\hex{F6}$ & $\hex{DC}$ \\
-      $\hex{F7}$ & $\hex{FE}$ \\
+      $\hex{F0}$ & $\hex{20}$ \\
+      $\hex{F1}$ & $\hex{21}$ \\
+      $\hex{F2}$ & $\hex{00}$ \\
+      $\hex{F3}$ & $\hex{00}$ \\
+      $\hex{F4}$ & $\hex{00}$ \\
+      $\hex{F5}$ & $\hex{00}$ \\
+      $\hex{F6}$ & $\hex{00}$ \\
+      $\hex{F7}$ & $\hex{00}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
