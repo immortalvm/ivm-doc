@@ -239,7 +239,7 @@ The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, 
 
 \section{Basic Procedures}
 
-You will need to implement six basic procedures that are frequently used by the machine.
+You will need to implement five basic procedures that are frequently used by the machine.
 These use the memory operations described in Section~\ref{sec:memory-operations}.
 
 \subsection{\proc{Put} Octets}
@@ -518,47 +518,7 @@ The temporary 64-bit element $x$ can now be used by other procedures.
   \item Verify that $\PC = \hex{0F}$ and that $w = \hex{AEADACABAAA9A8A7}$.
   \end{stepnumbers}
 \end{test}
-\subsection{\proc{Extend} Octets}
 
-Assume that we have a temporary 64-bit element called $x$ and that $n$ is either 1, 2, or 4.
-The expression ``\proc{Extend} $n$ octets in $x$'' means to do the following step:
-\begin{stepnumbers}
-\item If the value of $\bitno{x}{8n-1}$ is 1, then for all $i \in \range{8n}{63}$ set $\bitno{x}{i}$ to 1.
-\end{stepnumbers}
-The temporary 64-bit element $x$ can now be used by other procedures.
-
-\begin{test}
-  To test \proc{Extend}, do as follows:
-  \begin{stepnumbers}
-  \item Test \proc{Extend} 1 octet.
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $x$ to $\hex{000000000000007F}$.
-    \item \proc{Extend} 1 octet in $x$.
-    \item Verify that the value of $x$ is $\hex{000000000000007F}$.
-    \item Increment $x$ by 1.
-    \item \proc{Extend} 1 octet in $x$.
-    \item Verify that the value of $x$ is $\hex{FFFFFFFFFFFFFF80}$.
-    \end{stepnumbers}
-  \item Test \proc{Extend} 2 octets.
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $y$ to $\hex{0000000000007FFF}$.
-    \item \proc{Extend} 2 octets in $y$.
-    \item Verify that the value of $y$ is $\hex{0000000000007FFF}$.
-    \item Increment $y$ by 1.
-    \item \proc{Extend} 2 octets in $y$.
-    \item Verify that the value of $y$ is $\hex{FFFFFFFFFFFF8000}$.
-    \end{stepnumbers}
-  \item Test \proc{Extend} 4 octets.
-    \begin{stepnumbers}
-    \item Initialize the temporary 64-bit element $z$ to $\hex{000000007FFFFFFF}$.
-    \item \proc{Extend} 4 octets in $z$.
-    \item Verify that the value of $z$ is $\hex{000000007FFFFFFF}$.
-    \item Increment $z$ by 1.
-    \item \proc{Extend} 4 octets in $z$.
-    \item Verify that the value of $z$ is $\hex{FFFFFFFF80000000}$.
-    \end{stepnumbers}
-  \end{stepnumbers}
-\end{test}
 \section{A Very Basic Machine}
 
 You can now proceed with implementing a basic machine with $N=8$.
