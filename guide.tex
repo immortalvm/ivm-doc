@@ -54,18 +54,16 @@
 \newcommand{\EXIT}      [1]{\op{\hex{00}}}
 \newcommand{\NOP}       [1]{\op{\hex{01}}}
 \newcommand{\JUMP}      [1]{\op{\hex{02}}}
-\newcommand{\JUMPZERO}  [1]{\op{\hex{03}}}
-\newcommand{\SETSP}     [1]{\op{\hex{04}}}
-\newcommand{\GETPC}     [1]{\op{\hex{05}}}
-\newcommand{\GETSP}     [1]{\op{\hex{06}}}
-\newcommand{\PUSHZ}     [1]{\op{\hex{07}}}
-\newcommand{\PUSHB}     [1]{\op{\hex{08}}}
-\newcommand{\PUSHS}     [1]{\op{\hex{09}}}
-\newcommand{\PUSHI}     [1]{\op{\hex{0A}}}
-\newcommand{\PUSHL}     [1]{\op{\hex{0B}}}
-\newcommand{\SIGXB}     [1]{\op{\hex{0C}}}
-\newcommand{\SIGXS}     [1]{\op{\hex{0D}}}
-\newcommand{\SIGXI}     [1]{\op{\hex{0E}}}
+\newcommand{\JZFWD}     [1]{\op{\hex{03}}}
+\newcommand{\JZBACK}    [1]{\op{\hex{04}}}
+\newcommand{\SETSP}     [1]{\op{\hex{05}}}
+\newcommand{\GETPC}     [1]{\op{\hex{06}}}
+\newcommand{\GETSP}     [1]{\op{\hex{07}}}
+\newcommand{\PUSHZ}     [1]{\op{\hex{08}}}
+\newcommand{\PUSHB}     [1]{\op{\hex{09}}}
+\newcommand{\PUSHS}     [1]{\op{\hex{0A}}}
+\newcommand{\PUSHI}     [1]{\op{\hex{0B}}}
+\newcommand{\PUSHL}     [1]{\op{\hex{0C}}}
 \newcommand{\LOADB}     [1]{\op{\hex{10}}}
 \newcommand{\LOADS}     [1]{\op{\hex{11}}}
 \newcommand{\LOADI}     [1]{\op{\hex{12}}}
@@ -583,13 +581,19 @@ The main procedure must carry out the following steps.
     \item \proc{Pop} $a$.
     \item Set $\PC$ to $a$.
     \end{stepnumbers}
-  \item[\JUMPZERO{}] then
+  \item[\JZFWD{}] then
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
     \item \proc{Fetch} 1 octet into $a$.
-    \item \proc{Extend} 1 octet in $a$.
     \item \proc{Pop} $x$.
     \item If the value of $x$ is 0, then increment $\PC$ by $a$.
+    \end{stepnumbers}
+  \item[\JZBACK{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit elements $a$ and $x$ to 0.
+    \item \proc{Fetch} 1 octet into $a$.
+    \item \proc{Pop} $x$.
+    \item If the value of $x$ is 0, then decrement $\PC$ by $a + 1$.
     \end{stepnumbers}
   \item[\SETSP{}] then
     \begin{stepnumbers}
@@ -622,47 +626,49 @@ The main procedure must carry out the following steps.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{01}$ \\
-      $\hex{01}$ & $\hex{08}$ \\
-      $\hex{02}$ & $\hex{12}$ \\
-      $\hex{03}$ & $\hex{08}$ \\
+      $\hex{01}$ & $\hex{09}$ \\
+      $\hex{02}$ & $\hex{1A}$ \\
+      $\hex{03}$ & $\hex{09}$ \\
+      $\hex{04}$ & $\hex{00}$ \\
+      $\hex{05}$ & $\hex{09}$ \\
+      $\hex{06}$ & $\hex{01}$ \\
+      $\hex{07}$ & $\hex{09}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{04}$ & $\hex{01}$ \\
-      $\hex{05}$ & $\hex{08}$ \\
-      $\hex{06}$ & $\hex{00}$ \\
-      $\hex{07}$ & $\hex{03}$ \\
-    \end{memcolumn}
-    \memspace
-    \begin{memcolumn}
-      $\hex{08}$ & $\hex{01}$ \\
-      $\hex{09}$ & $\hex{00}$ \\
-      $\hex{0A}$ & $\hex{03}$ \\
-      $\hex{0B}$ & $\hex{01}$ \\
-    \end{memcolumn}
-    \memspace
-    \begin{memcolumn}
-      $\hex{0C}$ & $\hex{02}$ \\
-      $\hex{0D}$ & $\hex{00}$ \\
-      $\hex{0E}$ & $\hex{00}$ \\
+      $\hex{08}$ & $\hex{15}$ \\
+      $\hex{09}$ & $\hex{09}$ \\
+      $\hex{0A}$ & $\hex{01}$ \\
+      $\hex{0B}$ & $\hex{09}$ \\
+      $\hex{0C}$ & $\hex{00}$ \\
+      $\hex{0D}$ & $\hex{03}$ \\
+      $\hex{0E}$ & $\hex{01}$ \\
       $\hex{0F}$ & $\hex{00}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{10}$ & $\hex{00}$ \\
-      $\hex{11}$ & $\hex{00}$ \\
-      $\hex{12}$ & $\hex{06}$ \\
-      $\hex{13}$ & $\hex{05}$ \\
+      $\hex{10}$ & $\hex{04}$ \\
+      $\hex{11}$ & $\hex{02}$ \\
+      $\hex{12}$ & $\hex{02}$ \\
+      $\hex{13}$ & $\hex{00}$ \\
+      $\hex{14}$ & $\hex{02}$ \\
+      $\hex{15}$ & $\hex{03}$ \\
+      $\hex{16}$ & $\hex{02}$ \\
+      $\hex{17}$ & $\hex{04}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{14}$ & $\hex{08}$ \\
-      $\hex{15}$ & $\hex{F8}$ \\
-      $\hex{16}$ & $\hex{04}$ \\
-      $\hex{17}$ & $\hex{00}$ \\
+      $\hex{18}$ & $\hex{04}$ \\
+      $\hex{19}$ & $\hex{00}$ \\
+      $\hex{1A}$ & $\hex{07}$ \\
+      $\hex{1B}$ & $\hex{06}$ \\
+      $\hex{1C}$ & $\hex{09}$ \\
+      $\hex{1D}$ & $\hex{F8}$ \\
+      $\hex{1E}$ & $\hex{05}$ \\
+      $\hex{1F}$ & $\hex{00}$ \\
     \end{memcolumn}
   \end{memtable}
-  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{18}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
+  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{20}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{E8}$ & $\hex{F8}$ \\
@@ -679,7 +685,7 @@ The main procedure must carry out the following steps.
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{F0}$ & $\hex{14}$ \\
+      $\hex{F0}$ & $\hex{1C}$ \\
       $\hex{F1}$ & $\hex{00}$ \\
       $\hex{F2}$ & $\hex{00}$ \\
       $\hex{F3}$ & $\hex{00}$ \\
@@ -706,7 +712,6 @@ The main procedure must carry out the following steps.
       $\hex{FF}$ & $\hex{00}$ \\
     \end{memcolumn}
   \end{memtable}
-  All other $\MEM{i}$ elements should remain unchanged.
 \end{test}
 
 \section{Adding Bit-Copying Capabilities}
