@@ -113,7 +113,7 @@ Only when you have obtained the correct test results for each stage should you p
 
 Number systems used here include decimal (number base 10), binary (number base 2), and hexadecimal (number base 16).
 All non-decimal numbers are explictly indicated by subscripts indicating the number base in decimal.
-Further detail on binary and hexadecimal notation can be found in Appendix~\ref{sec:number-notation}.
+Further detail on binary and hexadecimal notation can be found in Section~\ref{sec:number-notation}.
 
 \section{Memory}
 
@@ -122,34 +122,34 @@ To build the machine, you first need some form of memory to represent state cons
 \subsection{Representing State}
 
 An \emph{element} is a group of bits in the memory that forms a unit with respect to naming.
-The number of bits in an element is called the \emph{size} of the element.
+The number of bits in an element is called the \emph{size} of the element, and an element of size $n$ is called an $n$-bit element.
 Each element has a unique name, so that it can be unambiguously referred to.
 The following elements are employed by the machine:
-\begin{description}
-\item[1-bit elements]
-  $\TERM$ is a one 1-bit element.
-\item[8-bit elements]
-  $\MEM{}$ is an array of $2^N$ 8-bit elements that is indexed by an integer in the range from $0$ to $2^N - 1$, for $N \le 64$.
-  The element at index $i$ in $\MEM{}$ is named $\MEM{i}$.
-  $N$ is a constant that must be known at the time the machine is started, and it will be given as part of the documentation of the program to be executed.
-\item[64-bit elements]
-  $\PC$ and $\SP$ are 64-bit elements.
-\end{description}
-In addition to the elements defined in this list, it will be necessary for some tasks to use some temporary elements.
-This is explained in Section~\ref{sec:memory-operations}
+\begin{itemize}
+\item $\TERM$: This is a one 1-bit element.
+\item $\PC$: This is a 64-bit element.
+\item $\SP$: This is a 64-bit element.
+\item $\MEM{i}$ for $i \in \range{0}{2^N-1}, N \le 64$: Each of these is an 8-bit element.
+\end{itemize}
+$N$ is a constant that must be known at the time the machine is started, and it will be given as part of the documentation of the program to be executed.
+
+The collection of all $\MEM{i}$ elements is called $\MEM{}$.
+
+In addition to the elements defined in the list above, it will be necessary for some tasks to introduce \emph{temporary elements}.
+The name and size of these temporary elements will be provided in each case, as explained in Section~\ref{sec:memory-operations}.
 
 \subsection{Notation}
 
 \begin{definition}
-For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ in $x$. (The numbering of bits is defined in Appendix~\ref{sec:binary-notation}.)
+For any element, $x$, the notation $\bitno{x}{i}$ refers to bit $i$ in $x$. (The numbering of bits is defined in Section~\ref{sec:binary-notation}.)
 \end{definition}
 
 \begin{definition}
-A group of 8 bits is called an \emph{octet}, and in a 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ in $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
+A group of 8 bits is called an \emph{octet}, and for any 64-bit element, $x$, the notation $\octno{x}{i}$ refers to octet $i$ in $x$, which is the octet consisting of the bits from $\bitno{x}{8i+7}$ to $\bitno{x}{8i}$.
 \end{definition}
 
 \begin{definition}
-The contents of $\MEM{}$ are written as a table where the left column is the index, $i$, and the right column is $\MEM{i}$.  For example,
+The elements $\MEM{i}$ are written as a table where the left column is $i$ and the right column is $\MEM{i}$.  For example,
 \begin{memtable}
   \begin{memcolumn}
     $\hex{0}$ & $\hex{A0}$ \\
@@ -164,7 +164,7 @@ so in this case $\MEM{\hex{2}} = \hex{A2}$.
 \begin{definition}
 The modulo operation, $\modulo{x}{y}$, for $y>0$, is defined here as follows:
 \[ \modulo{x}{y} = x - y \left \lfloor \frac{x}{y} \right \rfloor \]
-where $\left \lfloor x \right \rfloor$ is defined as the unique integer such that $\left \lfloor x \right \rfloor \le x < (\left \lfloor x \right \rfloor + 1)$.
+where $\left \lfloor z \right \rfloor$ is defined as the unique integer such that $\left \lfloor z \right \rfloor \le z < (\left \lfloor z \right \rfloor + 1)$.
 \end{definition}
 
 \subsection{Basic Memory Operations}
@@ -173,31 +173,31 @@ where $\left \lfloor x \right \rfloor$ is defined as the unique integer such tha
 The following are basic memory operations that must be exist in your implementation.
 
 \begin{definition}
-``The value of an element'' means the contents as retrieved from that element.
+``The value of an element, $x$'' means the contents as retrieved from $x$.
 \end{definition}
 
 \begin{definition}
-``To set an element to $x$'' means to store the value of $x$ in that element.
+``To set an element, $x$, to $v$'' means to store the value of $v$ in $x$.
 \end{definition}
 
 \begin{definition}
-``The value of an octet'' means the contents as retrieved from that octet.
+``The value of an octet, $\octno{x}{i}$'' means the contents as retrieved from that octet.
 \end{definition}
 
 \begin{definition}
-``To set an octet to $x$'' means to store the value of $x$ in that octet, while keeping all other contents unchanged.
+``To set an octet, $\octno{x}{i}$, to $v$'' means to store the value of $v$ in that octet, while keeping all other contents of $x$ unchanged.
 \end{definition}
 
 \begin{definition}
-``To increment an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x + n)}{2^s}$, where $s$ is the size of the element.
+``To initialize the temporary $n$-bit element, $x$, to $v$'' means to create a temporary element of size $n$, name it $x$, and store the value of $v$ in $x$.
 \end{definition}
 
 \begin{definition}
-``To decrement an element by $n$'' means to set $x$ to the value of the element and then set that element to $\modulo{(x - n)}{2^s}$, where $s$ is the size of the element.
+``To increment an element, $x$, by $n$'' means to set $v$ to the value of $x$ and then set $x$ to $\modulo{(v + n)}{2^s}$, where $s$ is the size of $x$.
 \end{definition}
 
 \begin{definition}
-``To initialize the temporary $n$-bit element $x$ to $k$'' means to create a temporary element of size $n$, name it $x$, and store the value of $k$ in $x$.
+``To decrement an element, $x$, by $n$'' means to set $v$ to the value of $x$ and then set $x$ to $\modulo{(v - n)}{2^s}$, where $s$ is the size of $x$.
 \end{definition}
 
 \subsection{Testing the Memory Operations}
@@ -205,7 +205,7 @@ The following are basic memory operations that must be exist in your implementat
 To test that the memory operations work as they should, do the following two tests 1000 times.
 
 \begin{test}
-  Verify that your operations for storing and getting the value of an element work for every element, $x$, of size $s$, including $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N \ge 8$.
+  Verify that your operations for storing and getting the value of an element work for every element, $x$, of sizes 1, 8, and 64, including $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N \ge 8$.
   \begin{stepnumbers}
   \item Initialize the temporary elements, $y$ and $z$, of size $s$.
   \item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
@@ -220,7 +220,7 @@ To test that the memory operations work as they should, do the following two tes
 \end{test}
 
 \begin{test}
-  Verify that your octet operations work for every 64-bit element, $x$, and every octet, $\octno{x}{n}$ where $n \in \range{0}{7}$.
+  Verify that your octet operations work for every 64-bit element, $x$, and every octet, $\octno{x}{n}$ for all $n \in \range{0}{7}$.
   \begin{stepnumbers}
   \item Initialize the temporary element, $y$, of size 64.
   \item Initialize the temporary element, $z$, of size 8.
@@ -235,7 +235,7 @@ To test that the memory operations work as they should, do the following two tes
 
 \subsection{Summary of Memory}
 
-The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, $\MEM{}$, and the constant $N$.
+The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, $\MEM{i}$, and the constant $N$.
 
 \section{Basic Procedures}
 
