@@ -130,11 +130,14 @@ The following elements are employed by the machine:
 \item $\TERM$: This is a one 1-bit element.
 \item $\PC$: This is a 64-bit element.
 \item $\SP$: This is a 64-bit element.
-\item $\MEM{i}$ for $i \in \range{0}{2^N-1}, N \le 64$: Each of these is an 8-bit element.
+\item $\MEM{i}$ for $i \in \range{A}{A+N-1}$: Each of these is an 8-bit element.
 \end{itemize}
-$N$ is a constant that must be known at the time the machine is started, and it will be given as part of the documentation of the program to be executed.
-
 The collection of all $\MEM{i}$ elements is called $\MEM{}$.
+
+$A$ is a constant so that $0 \le A < 2^{64}$, and it represents the start of $\MEM{}$.
+$N$ is a constant so that $0 < N \le 2^{64}-A$, and it represents the number of elements in $\MEM{}$.
+Both $A$ and $N$ must be known at the time the machine is started.
+The minimum acceptable $N$ will be given as part of the documentation of the program to be executed.
 
 A graphical depiction of the machine elements is shown in Section~\ref{sec:machine-elements}.
 
@@ -208,7 +211,7 @@ The following are basic memory operations that must be exist in your implementat
 To test that the memory operations work as they should, do the following two tests 1000 times.
 
 \begin{test}
-  Verify that your operations for storing and getting the value of an element work for every element, $x$, of sizes 1, 8, and 64, including $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^N-1}$ and $N \ge 8$.
+  Verify that your operations for storing and getting the value of an element work for every element, $x$, of sizes 1, 8, and 64, including $\PC$, $\SP$, $\TERM$, and $\MEM{i}$, where $i \in \range{0}{2^8-1}$.
   \begin{stepnumbers}
   \item Initialize the temporary elements, $y$ and $z$, of size $s$.
   \item For all $i \in \range{0}{s-1}$, set $\bitno{y}{i}$ to a random bit value.
@@ -238,7 +241,7 @@ To test that the memory operations work as they should, do the following two tes
 
 \subsection{Summary of Memory}
 
-The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, $\MEM{i}$, and the constant $N$.
+The entire state of the machine is contained in elements $\PC$, $\SP$, $\TERM$, $\MEM{i}$, and the constants $A$ and $N$.
 
 \section{Basic Procedures}
 
@@ -259,9 +262,9 @@ The expression ``\proc{Put} $n$ octets from $x$ into index $a$'' means to do the
 \end{stepnumbers}
 
 \begin{test}
-  To test \proc{Put}, do as follows, with $N=4$:
+  To test \proc{Put}, do as follows, with $A=0$ and $N=16$:
   \begin{stepnumbers}
-  \item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
+  \item Set $\MEM{i}$ to 0 for all $i \in \range{0}{2^4-1}$.
   \item Initialize the temporary 64-bit element $x$ to $\hex{A7A6A5A4A3A2A1A0}$.
   \item \proc{Put} 1 octet  from $x$ into index $\hex{01}$.
   \item \proc{Put} 2 octets from $x$ into index $\hex{02}$.
@@ -317,7 +320,7 @@ The expression ``\proc{Get} $n$ octets from index $a$ into $x$'' means to do the
 The temporary 64-bit element $x$ can now be used by other procedures.
 
 \begin{test}
-  To test \proc{Get}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
+  To test \proc{Get}, first set $N=16$, and set the following elements of $\MEM{}$ to the provided values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{0}$ & $\hex{A0}$ \\
@@ -370,9 +373,9 @@ The expression ``\proc{Push} $x$'' means to do the following steps:
 \end{stepnumbers}
 
 \begin{test}
-  To test \proc{Push}, do as follows, with $N=4$:
+  To test \proc{Push}, do as follows, with $N=16$:
   \begin{stepnumbers}
-  \item Set $M[i]$ to 0 for all $i \in \range{0}{2^N-1}$.
+  \item Set $\MEM{i}$ to 0 for all $i \in \range{0}{2^N-1}$.
   \item Set $\SP$ to $\hex{10}$.
   \item Initialize the temporary 64-bit element $x$ to $\hex{AFAEADACABAAA9A8}$.
   \item Initialize the temporary 64-bit element $y$ to $\hex{A7A6A5A4A3A2A1A0}$.
@@ -425,7 +428,7 @@ The expression ``\proc{Pop} $x$'' means to do the following steps:
 The 64-bit element $x$ can now be used by other procedures.
 
 \begin{test}
-  To test \proc{Pop}, first set $N=4$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
+  To test \proc{Pop}, first set $N=16$, set $S=0$, and set the following elements of $\MEM{}$ to the provided values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{0}$ & $\hex{A0}$ \\
@@ -478,7 +481,7 @@ The expression ``\proc{Fetch} $n$ octets into $x$'' means to do the following st
 The temporary 64-bit element $x$ can now be used by other procedures.
 
 \begin{test}
-  To test \proc{Fetch}, first set $N=4$, and set the following elements of $\MEM{}$ to the provided values.
+  To test \proc{Fetch}, first set $N=16$, and set the following elements of $\MEM{}$ to the provided values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{0}$ & $\hex{A0}$ \\
@@ -522,15 +525,26 @@ The temporary 64-bit element $x$ can now be used by other procedures.
   \end{stepnumbers}
 \end{test}
 
+\subsection{Initialization of Memory}
+\label{sec:initialization-of-memory}
+
+Before the machine is started, the memory must be initialized.
+With constants $A$ and $N$ known, the memory elements is initialized as follows.
+\begin{itemize}
+\item Set $\TERM$ to 0.
+\item Set $\PC$ to $A$.
+\item Set $\SP$ to $A+N$.
+\item Store a program in $\MEM{}$.
+  The program is a sequence of $n$ octets, and it is stored in $\MEM{i}$ for $i \in \range{A}{A+n-1}$.
+  The rest of $\MEM{}$, that is, $\MEM{i}$ for $i \in \range{A+n}{A+N-1}$, must be set to 0.
+\end{itemize}
+
 \section{A Very Basic Machine}
 
-You can now proceed with implementing a basic machine with $N=8$.
+You can now proceed with implementing a basic machine with $A=0$ and $N=265$.
 
-Before the machine is started, a program must be stored in $\MEM{}$.
-The program is a sequence of $n$ octets, which are stored in $\MEM{i}$ for $i \in \range{0}{n-1}$.
-The rest of $\MEM{}$ must be set to 0, that is, $\MEM{i}$ for $i \in \range{n}{2^N-1}$.
-
-Every time the machine starts, set $\TERM$ to 0, set $\PC$ to $0$, and set $\SP$ to $2^N$, then execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
+Every time the machine starts, initialize the memory  as described in Section~\ref{sec:initialization-of-memory}.
+Then execute the main procedure repeatedly until the value of $\TERM$ is $\T$.
 The main procedure must carry out the following steps.
 \begin{stepnumbers}
 \item Initialize the temporary 64-bit element $k$ to 0.
@@ -1532,6 +1546,7 @@ In order to implement the image input device, you will need to add two extra cas
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
+In the last case, it is safe to assume that $0 \le x < c$ and $0 \le y < r$.
 
 \subsection{Image Output}
 
@@ -1564,6 +1579,10 @@ In order to implement the image output device, you will need to add two extra ca
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}
+In the last case, it is safe to assume that $0 \le x < w$ and $0 \le y < h$.
+It is also safe to assume that all picture elements of a frame will have been set before it is finished and rendered.
+
+When $\TERM{}$ is set to $\T$, the frame constructed so far must be rendered.
 
 \subsection{Audio Output}
 
@@ -1627,10 +1646,10 @@ In order to implement the octet output device, you will need to add one extra ca
 \section{Installing the Initial Program}
 
 You first need to obtain the intial program from elsewhere on the film as a sequence of $p$ octets in hexadecimal notation.
-These octets must be stored in $\MEM{i}$, where $i \in \range{0}{p-1}$.
+These octets must be stored in $\MEM{i}$, where $i \in \range{A}{A+p-1}$.
 
 The operation of the initial program, and programs loaded by the initial program, can be controlled by a set of parameters represented as a sequence of $q$ octets.
-These octets must also be stored in $M$.
+These octets must also be stored in $\MEM{}$.
 This is done as follows:
 \begin{stepnumbers}
   \item \proc{Put} 8 octets from $q$ into index $p$.
@@ -1701,7 +1720,7 @@ The following is a graphical depiction of the machine elements.
   \begin{tikzpicture}[scale=0.5]
     \foreach \y in {0,...,7}
     {
-      \draw (0, 7-\y) node[anchor=east] {$\MEM{\y}$};
+      \draw (0, 7-\y) node[anchor=east] {$\MEM{A+\y}$};
       \draw (0.5, \y) node[anchor=west,minimum width=16mm,minimum height=4mm,draw] {};
     }
     \draw (0, -1) node[anchor=east,minimum width=16mm] {$\vdots$};
@@ -1713,7 +1732,7 @@ The following is a graphical depiction of the machine elements.
     \draw (0.5, 9) node[anchor=west,minimum width=128mm,minimum height=4mm,draw] {};
     \draw (0.5, 13) node[anchor=west,minimum width=2mm,minimum height=4mm,draw] {};
     \draw[decorate,decoration=brace] (5,7.5) -- (5,-1.5);
-    \draw (6,3) node {$2^N$};
+    \draw (6,3) node {$N$};
   \end{tikzpicture}
 \end{trivlist}
 
