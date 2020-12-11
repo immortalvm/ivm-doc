@@ -536,7 +536,6 @@ With constants $A$ and $N$ known, the memory elements is initialized as follows.
 \item Set $\SP$ to $A+N$.
 \item Store a program in $\MEM{}$.
   The program is a sequence of $n$ octets, and it is stored in $\MEM{i}$ for $i \in \range{A}{A+n-1}$.
-  The rest of $\MEM{}$, that is, $\MEM{i}$ for $i \in \range{A+n}{A+N-1}$, must be set to 0.
 \end{itemize}
 
 \section{A Very Basic Machine}
@@ -599,7 +598,7 @@ The main procedure must carry out the following steps.
 \end{stepnumbers}
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{01}$ \\
@@ -759,7 +758,7 @@ These cases add bit-copying capabilities to the machine.
 \end{stepnumbers}
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{08}$ \\
@@ -883,7 +882,7 @@ These cases add still more bit-copying capabilities to the machine.
 \end{stepnumbers}
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{07}$ \\
@@ -1017,7 +1016,7 @@ These cases add arithmetic capabilities to the machine.
 Note that in the preceding two cases, $q$ corresponds to the integer quotient, and $r$ corresponds to the integer remainder, of dividing $x$ by $y$.
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{08}$ \\
@@ -1166,7 +1165,7 @@ These cases add more arithmetic capabilities to the machine.
 \end{stepnumbers}
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{08}$ \\
@@ -1363,7 +1362,7 @@ These cases add bitwise Boolean logic capabilities to the machine.
 \end{stepnumbers}
 
 \begin{test}
-  To test the machine, set the following elements of $\MEM{}$ to the provided values and start the machine.
+  To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{00}$ & $\hex{08}$ \\
