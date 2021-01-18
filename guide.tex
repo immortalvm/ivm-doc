@@ -1740,7 +1740,7 @@ Each line consists of the following parts:
 \begin{itemize}
 \item The sequence number, $s$, is a 12-bit number (3 digits) that represents the position of the line in the entire sequence of lines, starting from 0.
 \item The checksum, $c$, is a 12-bit number (3 digits) that is computed as follows from the sequence number and the program octets on the same line:
-  \[ c = \modulo{\left ( \sum_{i=0}^{n-1} (256 s + i + 2) P_i \right )}{4093} \]
+  \[ c = \modulo{\left ( \sum_{i=0}^{n-1} (256 s + i + 2) P_i + 1 \right )}{4093} \]
 \item A sequence of $n$ program octets (2 digits each), $P_i$ for $i \in \range{0}{n-1}$, that are assigned consecutively to $\MEM{}$.
 \end{itemize}
 For any given line, an error is detected if the checksum is incorrect.
@@ -1748,15 +1748,15 @@ For the whole program, an error is detected if there are duplicated or missing s
 
 Here is an example of a line containing 16 program octets:
 \begin{verbatim}
-200 e05 2406097920102c06097420102c06096f
+200 e15 2406097920102c06097420102c06096f
 \end{verbatim}
 The checksum changes if the same octets are repeated at the next sequence number:
 \begin{verbatim}
-201 37a 2406097920102c06097420102c06096f
+201 38a 2406097920102c06097420102c06096f
 \end{verbatim}
 The checksum also changes if the last bit of the last octet is changed to 0:
 \begin{verbatim}
-200 d94 2406097920102c06097420102c06096e
+200 da4 2406097920102c06097420102c06096e
 \end{verbatim}
 
 \section{Machine Elements}
