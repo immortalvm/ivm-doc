@@ -489,7 +489,7 @@ The following table summarizes the instruction semantics.
     \MULT{c}      & \MULT{m}      & Multiply                 & --             & $y,x$       & --                                & $\Mul(x, y)$           \\
     \DIV{c}       & \DIV{m}       & Divide                   & --             & $y,x$       & --                                & $\Div(x, y)$           \\
     \REM{c}       & \REM{m}       & Find remainder           & --             & $y,x$       & --                                & $\Rem(x, y)$           \\
-    \LT{c}        & \LT{m}        & Less than                & --             & $y,x$       & --                                & $\IfThEl(x < y, 1, 0)$ \\
+    \LT{c}        & \LT{m}        & Less than                & --             & $y,x$       & --                                & $\IfThEl(x < y, -1, 0)$\\
     \AND{c}       & \AND{m}       & Bitwise ``and''          & --             & $y,x$       & --                                & $\BitAnd(x, y)$        \\
     \OR{c}        & \OR{m}        & Bitwise ``or''           & --             & $y,x$       & --                                & $\BitOr(x, y)$         \\
     \NOT{c}       & \NOT{m}       & Bitwise ``not''          & --             & $x$         & --                                & $\BitNot(x, y)$        \\
