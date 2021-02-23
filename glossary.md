@@ -17,7 +17,7 @@ Term | Definition
 **reel** | Sequence of **frames**.
 **control frame** | First frame in reel. The frame contains information of how to decode the rest of the reel and the location of the ivm-app.
 **TOC** | Table of contents.
-**initial program** | Description of program needed to be feed to the **ivm** to start the *restore* process. The initial program is stored on **analog frames*.
+**initial program** | Description of program needed to be feed to the **ivm** to start the *restore* process. The initial program is stored on *analog frames*.
 **ivm-ip** | Short for **initial program**.
 **ivm-app** | The part of the initial program that is responsible for the **decoding** and **rendering** processes. It is stored on the **reel** as **digital frames** and is loaded by the **ivm-ip**.
 **file-format** | Software library supporting decoding of one file format specification.
