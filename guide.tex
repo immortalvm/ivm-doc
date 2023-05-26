@@ -619,7 +619,7 @@ The main procedure must carry out the following steps.
     \begin{stepnumbers}
     \item Initialize the temporary 64-bit element $x$ to 0.
     \item \proc{Pop} $x$.
-    \item If the value of $x$ is greater than 1, set $\TERM$ to $\T$.
+    \item If the value of $x$ is greater than 1, indicate that the machine is not capable of executing the program and set $\TERM$ to $\T$.
     \end{stepnumbers}
   \end{description}
 \item If the value of $k$ does not occur in the list in the previous point, then set $\TERM$ to $\T$.
