@@ -83,6 +83,7 @@
 \newcommand{\NOT}       [1]{\op{\hex{2A}}}
 \newcommand{\XOR}       [1]{\op{\hex{2B}}}
 \newcommand{\POW}       [1]{\op{\hex{2C}}}
+\newcommand{\CHECK}     [1]{\op{\hex{30}}}
 \newcommand{\PUTBYTE}   [1]{\op{\hex{F9}}}
 \newcommand{\PUTCHAR}   [1]{\op{\hex{FA}}}
 \newcommand{\ADDSAMPLE} [1]{\op{\hex{FB}}}
@@ -614,6 +615,12 @@ The main procedure must carry out the following steps.
     \item \proc{Fetch} 1 octet into $a$.
     \item \proc{Push} $a$.
     \end{stepnumbers}
+  \item[\CHECK{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $x$ to 0.
+    \item \proc{Pop} $x$.
+    \item If the value of $x$ is greater than 1, set $\TERM$ to $\T$.
+    \end{stepnumbers}
   \end{description}
 \item If the value of $k$ does not occur in the list in the previous point, then set $\TERM$ to $\T$.
 \end{stepnumbers}
@@ -660,12 +667,23 @@ The main procedure must carry out the following steps.
       $\hex{1A}$ & $\hex{07}$ \\
       $\hex{1B}$ & $\hex{06}$ \\
       $\hex{1C}$ & $\hex{09}$ \\
-      $\hex{1D}$ & $\hex{F8}$ \\
-      $\hex{1E}$ & $\hex{05}$ \\
-      $\hex{1F}$ & $\hex{00}$ \\
+      $\hex{1D}$ & $\hex{01}$ \\
+      $\hex{1E}$ & $\hex{30}$ \\
+      $\hex{1F}$ & $\hex{09}$ \\
+    \end{memcolumn}
+    \memspace
+    \begin{memcolumn}
+      $\hex{20}$ & $\hex{F8}$ \\
+      $\hex{21}$ & $\hex{05}$ \\
+      $\hex{22}$ & $\hex{09}$ \\
+      $\hex{23}$ & $\hex{02}$ \\
+      $\hex{24}$ & $\hex{30}$ \\
+      $\hex{25}$ & $\hex{09}$ \\
+      $\hex{26}$ & $\hex{00}$ \\
+      $\hex{27}$ & $\hex{00}$ \\
     \end{memcolumn}
   \end{memtable}
-  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{20}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
+  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{25}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{E8}$ & $\hex{F8}$ \\
@@ -682,7 +700,7 @@ The main procedure must carry out the following steps.
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{F0}$ & $\hex{1C}$ \\
+      $\hex{F0}$ & $\hex{02}$ \\
       $\hex{F1}$ & $\hex{00}$ \\
       $\hex{F2}$ & $\hex{00}$ \\
       $\hex{F3}$ & $\hex{00}$ \\

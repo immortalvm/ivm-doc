@@ -104,6 +104,7 @@
 \newcommand{\NOT}       [1]{\op{#1}{NOT}        {\hex{2A}}}
 \newcommand{\XOR}       [1]{\op{#1}{XOR}        {\hex{2B}}}
 \newcommand{\POW}       [1]{\op{#1}{POW2}       {\hex{2C}}}
+\newcommand{\CHECK}     [1]{\op{#1}{CHECK}      {\hex{30}}}
 \newcommand{\PUTBYTE}   [1]{\op{#1}{PUT\_BYTE}  {\hex{F9}}}
 \newcommand{\PUTCHAR}   [1]{\op{#1}{PUT\_CHAR}  {\hex{FA}}}
 \newcommand{\ADDSAMPLE} [1]{\op{#1}{ADD\_SAMPLE}{\hex{FB}}}
@@ -495,6 +496,7 @@ The following table summarizes the instruction semantics.
     \NOT{c}       & \NOT{m}       & Bitwise ``not''          & --             & $x$         & --                                & $\BitNot(x, y)$        \\
     \XOR{c}       & \XOR{m}       & Bitwise ``exclusive or'' & --             & $y,x$       & --                                & $\BitXor(x, y)$        \\
     \POW{c}       & \POW{m}       & Binary power             & --             & $x$         & --                                & $\BinPow(x)$           \\
+    \CHECK{c}     & \CHECK{m}     & Check machine version    & --             & $x$         & $\set{\TERM}{\IfThEl(x>1, 1, 0)}$ & --                     \\
     \PUTBYTE{c}   & \PUTBYTE{m}   & Put byte                 & --             & $x$         & $\PutByte{x}$                     & --                     \\
     \PUTCHAR{c}   & \PUTCHAR{m}   & Put character            & --             & $c$         & $\PutChar{c}$                     & --                     \\
     \ADDSAMPLE{c} & \ADDSAMPLE{m} & Put audio sample         & --             & $r,l$       & $\AddSample{l, r}$                & --                     \\
