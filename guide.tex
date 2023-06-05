@@ -84,6 +84,7 @@
 \newcommand{\XOR}       [1]{\op{\hex{2B}}}
 \newcommand{\POW}       [1]{\op{\hex{2C}}}
 \newcommand{\CHECK}     [1]{\op{\hex{30}}}
+\newcommand{\READCHAR}   [1]{\op{\hex{F8}}}
 \newcommand{\PUTBYTE}   [1]{\op{\hex{F9}}}
 \newcommand{\PUTCHAR}   [1]{\op{\hex{FA}}}
 \newcommand{\ADDSAMPLE} [1]{\op{\hex{FB}}}
@@ -1677,6 +1678,23 @@ In order to implement the octet output device, you will need to add one extra ca
     \item \proc{Pop} $x$.
     \item For all $i \in \range{0}{7}$ set $\bitno{o}{i}$ to $\bitno{x}{i}$.
     \item \deviceio{Produce the number $o$.}
+    \end{stepnumbers}
+  \end{description}
+\end{stepnumbers}
+
+\subsection{Text Input}
+
+In order to implement the text input device, you will need to add one extra case to step \ref{itm:main-case} of the main procedure.
+
+\begin{stepnumbers}[start=3]
+  \setcounter{enumi}{2}
+\item If $k$ is
+  \begin{description}
+  \item[\READCHAR{}] then
+    \begin{stepnumbers}
+    \item Initialize the temporary 64-bit element $c$ to 0.
+    \item \deviceio{Read the next character and set $c$ to its Unicode code point.}
+    \item \proc{Push} $c$.
     \end{stepnumbers}
   \end{description}
 \end{stepnumbers}

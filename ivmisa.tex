@@ -1,7 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[includeheadfoot,hmargin=20mm,vmargin=16mm]{geometry}
+\usepackage[includeheadfoot,hmargin=20mm,vmargin=14mm]{geometry}
 \usepackage{times}
 \usepackage{booktabs}
 \usepackage[small]{titlesec}
@@ -45,6 +45,7 @@
 \newcommand{\Fetch}[1]{\mathrm{fetch}(#1)}
 \newcommand{\PutByte}[1]{\mathrm{putbyte}(#1)}
 \newcommand{\PutChar}[1]{\mathrm{putchar}(#1)}
+\newcommand{\ReadChar}[1]{\mathrm{readchar}(#1)}
 \newcommand{\AddSample}[1]{\mathrm{addsample}(#1)}
 \newcommand{\SetPixel}[1]{\mathrm{setpixel}(#1)}
 \newcommand{\NewFrame}[1]{\mathrm{newframe}(#1)}
@@ -105,6 +106,7 @@
 \newcommand{\XOR}       [1]{\op{#1}{XOR}        {\hex{2B}}}
 \newcommand{\POW}       [1]{\op{#1}{POW2}       {\hex{2C}}}
 \newcommand{\CHECK}     [1]{\op{#1}{CHECK}      {\hex{30}}}
+\newcommand{\READCHAR}  [1]{\op{#1}{READ\_CHAR} {\hex{F8}}}
 \newcommand{\PUTBYTE}   [1]{\op{#1}{PUT\_BYTE}  {\hex{F9}}}
 \newcommand{\PUTCHAR}   [1]{\op{#1}{PUT\_CHAR}  {\hex{FA}}}
 \newcommand{\ADDSAMPLE} [1]{\op{#1}{ADD\_SAMPLE}{\hex{FB}}}
@@ -454,6 +456,16 @@ The \emph{Text Output} device allows the machine to produce a stream of 8-bit nu
   \[ \PutByte{x} \]
 \end{definition}
 
+\subsection{Text Input}
+\label{sec:text-input}
+
+The \emph{Text Input} device allows the machine to read a stream of text.
+
+\begin{definition}[Read character]
+  The $\ReadChar{}$ operation reads a new character, whose Unicode code point is $c$.
+  \[ c = \ReadChar{} \]
+\end{definition}
+
 %\newpage
 
 \section{Instruction Semantics}
@@ -497,6 +509,7 @@ The following table summarizes the instruction semantics.
     \XOR{c}       & \XOR{m}       & Bitwise ``exclusive or'' & --             & $y,x$       & --                                & $\BitXor(x, y)$        \\
     \POW{c}       & \POW{m}       & Binary power             & --             & $x$         & --                                & $\BinPow(x)$           \\
     \CHECK{c}     & \CHECK{m}     & Check machine version    & --             & $x$         & $\set{\TERM}{\IfThEl(x>1, 1, 0)}$ & --                     \\
+    \READCHAR{c}  & \READCHAR{m}  & Read character           & --             &             & $\set{c}{\ReadChar{}}$            & $c$                    \\
     \PUTBYTE{c}   & \PUTBYTE{m}   & Put byte                 & --             & $x$         & $\PutByte{x}$                     & --                     \\
     \PUTCHAR{c}   & \PUTCHAR{m}   & Put character            & --             & $c$         & $\PutChar{c}$                     & --                     \\
     \ADDSAMPLE{c} & \ADDSAMPLE{m} & Put audio sample         & --             & $r,l$       & $\AddSample{l, r}$                & --                     \\
