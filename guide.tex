@@ -676,15 +676,15 @@ The main procedure must carry out the following steps.
     \begin{memcolumn}
       $\hex{20}$ & $\hex{F8}$ \\
       $\hex{21}$ & $\hex{05}$ \\
-      $\hex{22}$ & $\hex{09}$ \\
-      $\hex{23}$ & $\hex{02}$ \\
-      $\hex{24}$ & $\hex{30}$ \\
-      $\hex{25}$ & $\hex{09}$ \\
-      $\hex{26}$ & $\hex{00}$ \\
-      $\hex{27}$ & $\hex{00}$ \\
+      $\hex{22}$ & $\hex{00}$ \\
+      \\
+      \\
+      \\
+      \\
+      \\
     \end{memcolumn}
   \end{memtable}
-  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{25}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
+  When the machine terminates, the value of $\TERM$ should be $\T$, the value of $\PC$ should be $\hex{23}$, the value of $\SP$ should be $\hex{F8}$, and the following elements of $\MEM{}$ should have the indicated values.
   \begin{memtable}
     \begin{memcolumn}
       $\hex{E8}$ & $\hex{F8}$ \\
@@ -701,7 +701,7 @@ The main procedure must carry out the following steps.
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{F0}$ & $\hex{02}$ \\
+      $\hex{F0}$ & $\hex{1C}$ \\
       $\hex{F1}$ & $\hex{00}$ \\
       $\hex{F2}$ & $\hex{00}$ \\
       $\hex{F3}$ & $\hex{00}$ \\
@@ -801,34 +801,34 @@ These cases add bit-copying capabilities to the machine.
   To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{00}$ & $\hex{08}$ \\
+      $\hex{00}$ & $\hex{09}$ \\
       $\hex{01}$ & $\hex{19}$ \\
       $\hex{02}$ & $\hex{13}$ \\
-      $\hex{03}$ & $\hex{08}$ \\
+      $\hex{03}$ & $\hex{09}$ \\
       $\hex{04}$ & $\hex{E0}$ \\
       $\hex{05}$ & $\hex{17}$ \\
-      $\hex{06}$ & $\hex{08}$ \\
+      $\hex{06}$ & $\hex{09}$ \\
       $\hex{07}$ & $\hex{21}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{08}$ & $\hex{12}$ \\
-      $\hex{09}$ & $\hex{08}$ \\
+      $\hex{09}$ & $\hex{09}$ \\
       $\hex{0A}$ & $\hex{E8}$ \\
       $\hex{0B}$ & $\hex{16}$ \\
-      $\hex{0C}$ & $\hex{08}$ \\
+      $\hex{0C}$ & $\hex{09}$ \\
       $\hex{0D}$ & $\hex{25}$ \\
       $\hex{0E}$ & $\hex{11}$ \\
-      $\hex{0F}$ & $\hex{08}$ \\
+      $\hex{0F}$ & $\hex{09}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{10}$ & $\hex{EC}$ \\
       $\hex{11}$ & $\hex{15}$ \\
-      $\hex{12}$ & $\hex{08}$ \\
+      $\hex{12}$ & $\hex{09}$ \\
       $\hex{13}$ & $\hex{27}$ \\
       $\hex{14}$ & $\hex{10}$ \\
-      $\hex{15}$ & $\hex{08}$ \\
+      $\hex{15}$ & $\hex{09}$ \\
       $\hex{16}$ & $\hex{EE}$ \\
       $\hex{17}$ & $\hex{14}$ \\
     \end{memcolumn}
@@ -925,14 +925,14 @@ These cases add still more bit-copying capabilities to the machine.
   To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{00}$ & $\hex{07}$ \\
-      $\hex{01}$ & $\hex{09}$ \\
+      $\hex{00}$ & $\hex{08}$ \\
+      $\hex{01}$ & $\hex{0A}$ \\
       $\hex{02}$ & $\hex{20}$ \\
       $\hex{03}$ & $\hex{21}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{04}$ & $\hex{0A}$ \\
+      $\hex{04}$ & $\hex{0B}$ \\
       $\hex{05}$ & $\hex{10}$ \\
       $\hex{06}$ & $\hex{11}$ \\
       $\hex{07}$ & $\hex{12}$ \\
@@ -940,7 +940,7 @@ These cases add still more bit-copying capabilities to the machine.
     \memspace
     \begin{memcolumn}
       $\hex{08}$ & $\hex{13}$ \\
-      $\hex{09}$ & $\hex{0B}$ \\
+      $\hex{09}$ & $\hex{0C}$ \\
       $\hex{0A}$ & $\hex{00}$ \\
       $\hex{0B}$ & $\hex{01}$ \\
     \end{memcolumn}
@@ -1059,40 +1059,40 @@ Note that in the preceding two cases, $q$ corresponds to the integer quotient, a
   To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{00}$ & $\hex{08}$ \\
+      $\hex{00}$ & $\hex{09}$ \\
       $\hex{01}$ & $\hex{1D}$ \\
       $\hex{02}$ & $\hex{13}$ \\
-      $\hex{03}$ & $\hex{08}$ \\
+      $\hex{03}$ & $\hex{09}$ \\
       $\hex{04}$ & $\hex{25}$ \\
       $\hex{05}$ & $\hex{13}$ \\
       $\hex{06}$ & $\hex{20}$ \\
-      $\hex{07}$ & $\hex{08}$ \\
+      $\hex{07}$ & $\hex{09}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{08}$ & $\hex{1D}$ \\
       $\hex{09}$ & $\hex{13}$ \\
-      $\hex{0A}$ & $\hex{08}$ \\
+      $\hex{0A}$ & $\hex{09}$ \\
       $\hex{0B}$ & $\hex{25}$ \\
       $\hex{0C}$ & $\hex{13}$ \\
       $\hex{0D}$ & $\hex{21}$ \\
-      $\hex{0E}$ & $\hex{08}$ \\
+      $\hex{0E}$ & $\hex{09}$ \\
       $\hex{0F}$ & $\hex{1D}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{10}$ & $\hex{13}$ \\
-      $\hex{11}$ & $\hex{08}$ \\
+      $\hex{11}$ & $\hex{09}$ \\
       $\hex{12}$ & $\hex{25}$ \\
       $\hex{13}$ & $\hex{13}$ \\
       $\hex{14}$ & $\hex{22}$ \\
-      $\hex{15}$ & $\hex{08}$ \\
+      $\hex{15}$ & $\hex{09}$ \\
       $\hex{16}$ & $\hex{1D}$ \\
       $\hex{17}$ & $\hex{13}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
-      $\hex{18}$ & $\hex{08}$ \\
+      $\hex{18}$ & $\hex{09}$ \\
       $\hex{19}$ & $\hex{25}$ \\
       $\hex{1A}$ & $\hex{13}$ \\
       $\hex{1B}$ & $\hex{23}$ \\
@@ -1208,45 +1208,45 @@ These cases add more arithmetic capabilities to the machine.
   To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{00}$ & $\hex{08}$ \\
+      $\hex{00}$ & $\hex{09}$ \\
       $\hex{01}$ & $\hex{24}$ \\
       $\hex{02}$ & $\hex{13}$ \\
-      $\hex{03}$ & $\hex{08}$ \\
+      $\hex{03}$ & $\hex{09}$ \\
       $\hex{04}$ & $\hex{24}$ \\
       $\hex{05}$ & $\hex{13}$ \\
       $\hex{06}$ & $\hex{24}$ \\
-      $\hex{07}$ & $\hex{08}$ \\
+      $\hex{07}$ & $\hex{09}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{08}$ & $\hex{24}$ \\
       $\hex{09}$ & $\hex{13}$ \\
-      $\hex{0A}$ & $\hex{08}$ \\
+      $\hex{0A}$ & $\hex{09}$ \\
       $\hex{0B}$ & $\hex{25}$ \\
       $\hex{0C}$ & $\hex{13}$ \\
       $\hex{0D}$ & $\hex{24}$ \\
-      $\hex{0E}$ & $\hex{08}$ \\
+      $\hex{0E}$ & $\hex{09}$ \\
       $\hex{0F}$ & $\hex{25}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{10}$ & $\hex{13}$ \\
-      $\hex{11}$ & $\hex{08}$ \\
+      $\hex{11}$ & $\hex{09}$ \\
       $\hex{12}$ & $\hex{24}$ \\
       $\hex{13}$ & $\hex{13}$ \\
       $\hex{14}$ & $\hex{24}$ \\
-      $\hex{15}$ & $\hex{08}$ \\
+      $\hex{15}$ & $\hex{09}$ \\
       $\hex{16}$ & $\hex{22}$ \\
       $\hex{17}$ & $\hex{10}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{18}$ & $\hex{2C}$ \\
-      $\hex{19}$ & $\hex{08}$ \\
+      $\hex{19}$ & $\hex{09}$ \\
       $\hex{1A}$ & $\hex{23}$ \\
       $\hex{1B}$ & $\hex{10}$ \\
       $\hex{1C}$ & $\hex{2C}$ \\
-      $\hex{1D}$ & $\hex{08}$ \\
+      $\hex{1D}$ & $\hex{09}$ \\
       $\hex{1E}$ & $\hex{24}$ \\
       $\hex{1F}$ & $\hex{10}$ \\
     \end{memcolumn}
@@ -1405,34 +1405,34 @@ These cases add bitwise Boolean logic capabilities to the machine.
   To test the machine, set the following elements of $\MEM{}$ to the provided values, set all other elements of $\MEM{}$ to 0, and start the machine.
   \begin{memtable}
     \begin{memcolumn}
-      $\hex{00}$ & $\hex{08}$ \\
+      $\hex{00}$ & $\hex{09}$ \\
       $\hex{01}$ & $\hex{1A}$ \\
       $\hex{02}$ & $\hex{13}$ \\
-      $\hex{03}$ & $\hex{08}$ \\
+      $\hex{03}$ & $\hex{09}$ \\
       $\hex{04}$ & $\hex{22}$ \\
       $\hex{05}$ & $\hex{13}$ \\
       $\hex{06}$ & $\hex{28}$ \\
-      $\hex{07}$ & $\hex{08}$ \\
+      $\hex{07}$ & $\hex{09}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{08}$ & $\hex{1A}$ \\
       $\hex{09}$ & $\hex{13}$ \\
-      $\hex{0A}$ & $\hex{08}$ \\
+      $\hex{0A}$ & $\hex{09}$ \\
       $\hex{0B}$ & $\hex{22}$ \\
       $\hex{0C}$ & $\hex{13}$ \\
       $\hex{0D}$ & $\hex{29}$ \\
-      $\hex{0E}$ & $\hex{08}$ \\
+      $\hex{0E}$ & $\hex{09}$ \\
       $\hex{0F}$ & $\hex{1A}$ \\
     \end{memcolumn}
     \memspace
     \begin{memcolumn}
       $\hex{10}$ & $\hex{13}$ \\
-      $\hex{11}$ & $\hex{08}$ \\
+      $\hex{11}$ & $\hex{09}$ \\
       $\hex{12}$ & $\hex{22}$ \\
       $\hex{13}$ & $\hex{13}$ \\
       $\hex{14}$ & $\hex{2B}$ \\
-      $\hex{15}$ & $\hex{08}$ \\
+      $\hex{15}$ & $\hex{09}$ \\
       $\hex{16}$ & $\hex{1A}$ \\
       $\hex{17}$ & $\hex{13}$ \\
     \end{memcolumn}
